@@ -1,11 +1,33 @@
 <template>
   <v-app>
-    <v-app-bar app fixed>
-      <v-toolbar flat dense>
+    <v-app-bar app fixed class="timerbar  "   >
+      Till next info update: <v-progress-linear
+        :value="progressValue"
+        color="primary"
+        height="10"
+        rounded
+        striped
+         :model-value="progressValue"
+      ></v-progress-linear>
+      Till next transaction possible: <v-progress-linear
+        :value="progressValue"
+        color="warning"
+        height="10"
+        rounded
+        striped
+         :model-value="progressValue"
+      ></v-progress-linear>
+    </v-app-bar>
+    <v-app-bar app fixed  class="my-3">
+      
+      <v-toolbar  v-if="true">
+       
         <v-card class="mx-3">
           <v-card-text>
-            <vue-countdown v-if="remainingTime" :time="remainingTime" v-slot="{ days, hours, minutes, seconds }">
-              Time Remaining:
+            <vue-countdown @progress="updTime" @end="restartTimer"
+            v-if="remainingTime" :time="remainingTime" v-slot="{ days, hours, minutes, seconds }">
+              Time Remaining: {{ progressValue }}
+              remaining time{{ remainingTime.totalMilliseconds }}
               {{ minutes }} minutes, {{ seconds }} seconds.
             </vue-countdown>
           </v-card-text>
@@ -53,8 +75,9 @@
 
         <!-- Include other market fundamentals and inventory status here -->
       </v-toolbar>
+    
     </v-app-bar>
-    <commandTool />
+
     <v-main>
       <v-container>
         <v-row>
@@ -69,7 +92,7 @@
         </v-row>
         <v-row class="equal-height-columns">
           <v-col lg="6" sm="12" class="d-flex flex-column">
-             <div>BLANK: TBD</div>
+            <div>BLANK: TBD</div>
           </v-col>
           <v-col lg="6" sm="12" class="d-flex flex-column">
             <sellingBlock />
@@ -106,10 +129,17 @@ import HistoryChart from "@/components/HistoryChart.vue";
 import sellingBlock from "./sellingBlock.vue";
 import messageBlock from "./messageBlock.vue";
 import staticInfoBlock from "./staticInfoBlock.vue";
-import { onMounted, computed } from "vue";
+
 import { useRouter } from "vue-router";
 import { useFormatNumber } from "@/composables/utils";
+const updTime = (time) => {
+  remainingTime.value = time.totalMilliseconds;
+};
+const restartTimer = () => {
+  remainingTime.value = totalTime;
+  // how i can restart the timer
 
+};
 const { formatNumber } = useFormatNumber();
 const router = useRouter();
 const goalMessage = {
@@ -118,16 +148,21 @@ const goalMessage = {
 };
 import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
-import { watch } from "vue";
+import { watch, ref, onMounted, computed } from "vue";
 
 const { gameParams, shares, cash, initial_shares, dayOver } =
   storeToRefs(useTraderStore());
 
-const remainingTime = computed(() => {
-  const currentTime = new Date().getTime();
-  const endTime = new Date(gameParams.value.end_time).getTime();
-  return endTime - currentTime;
-});
+const totalTime = 15000;  // 15 seconds in milliseconds
+const remainingTime = ref(totalTime);
+
+// Compute progress percentage for the progress bar
+const progressValue = computed(() => (remainingTime.value / totalTime) * 100);
+// const remainingTime = computed(() => {
+//   const currentTime = new Date().getTime();
+//   const endTime = new Date(gameParams.value.end_time).getTime();
+//   return endTime - currentTime;
+// });
 
 
 
@@ -157,14 +192,22 @@ watch(
 );
 </script>
 
-
+<style>
+header.timerbar .v-toolbar__content {
+  display: flex !important;
+  flex-direction: column !important;
+}</style>
 
 <style scoped>
+header.timerbar .v-toolbar__content {
+  display: flex !important;
+  flex-direction: column !important;
+}
 .equal-height-columns>.v-col {
   display: flex;
   flex: 1;
 }
- 
+
 .flex-container {
   height: 100%;
   /* Ensure the flex container fills the entire drawer */
