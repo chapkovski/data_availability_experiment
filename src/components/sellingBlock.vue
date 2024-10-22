@@ -1,41 +1,49 @@
 <template>
-
   <v-card height="100%" elevation="3">
-    <v-card-title class="cardtitle">Decision block</v-card-title>
-    <v-card-subtitle> Click on red buttons to sell or buy immediately</v-card-subtitle>
+    <v-card-title class="cardtitle">Decision Block</v-card-title>
+    <v-card-subtitle>Click on buttons to buy or sell immediately</v-card-subtitle>
     <v-card-text>
       <v-container>
         <v-row>
-          <v-col cols="12" sm="6">
-            <h3>Buy Orders</h3>
-            <div v-for="(price, index) in buyPrices" :key="'buy-' + index" class="my-1">
-              <v-btn :disabled="isBuyButtonDisabled" @click="sendOrder(1, price)" outlined
-                :color="getButtonColor(price, 'buy')" width="150">Buy at {{ price.toFixed(2) }}</v-btn>
-            </div>
+          <!-- Buy Button -->
+          <v-col cols="12" sm="6" class="d-flex justify-center">
+            <v-btn
+              large
+              color="green"
+              :disabled="isBuyButtonDisabled"
+              @click="sendOrder(1, bestAsk)"
+              width="100%"
+            >
+              Buy @ {{ bestAsk ? bestAsk.toFixed(2) : 'N/A' }}
+            </v-btn>
           </v-col>
-          <v-col cols="12" sm="6">
-            <h3>Sell Orders</h3>
-            <div v-for="(price, index) in sellPrices" :key="'sell-' + index" class="my-1">
-              <v-btn :disabled="isSellButtonDisabled" @click="sendOrder(-1, price)" outlined
-                :color="getButtonColor(price, 'sell')" width="150">Sell for {{ price.toFixed(2) }}</v-btn>
-            </div>
+
+          <!-- Sell Button -->
+          <v-col cols="12" sm="6" class="d-flex justify-center">
+            <v-btn
+              large
+              color="red"
+              :disabled="isSellButtonDisabled"
+              @click="sendOrder(-1, bestBid)"
+              width="100%"
+            >
+              Sell @ {{ bestBid ? bestBid.toFixed(2) : 'N/A' }}
+            </v-btn>
           </v-col>
         </v-row>
       </v-container>
     </v-card-text>
   </v-card>
-
 </template>
 
 <script setup>
 import { computed } from "vue";
 import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
+
 const tradingStore = useTraderStore();
 const { sendMessage } = tradingStore;
-const { gameParams, bidData, askData } = storeToRefs(tradingStore);
-
-const step = computed(() => gameParams.value.step)
+const { bidData, askData } = storeToRefs(tradingStore);
 
 // Compute the availability of ask and bid data
 const hasAskData = computed(() => askData.value.length > 0);
@@ -45,22 +53,14 @@ const hasBidData = computed(() => bidData.value.length > 0);
 const bestBid = computed(() => hasBidData.value ? Math.max(...bidData.value.map(bid => bid.x)) : null);
 const bestAsk = computed(() => hasAskData.value ? Math.min(...askData.value.map(ask => ask.x)) : null);
 
-// Generating price levels for buy and sell buttons
-const buyPrices = computed(() => bestAsk.value !== null ? Array.from({ length: 5 }, (_, i) => bestAsk.value - step.value * i) : []);
-const sellPrices = computed(() => bestBid.value !== null ? Array.from({ length: 5 }, (_, i) => bestBid.value + step.value * i) : []);
-
 // Specific conditions for disabling buy and sell buttons
-const isBuyButtonDisabled = computed(() => !hasAskData.value);
-const isSellButtonDisabled = computed(() => !hasBidData.value);
+const isBuyButtonDisabled = computed(() => !hasAskData.value || bestAsk.value === null);
+const isSellButtonDisabled = computed(() => !hasBidData.value || bestBid.value === null);
 
+// Sending order with type (1 for buy, -1 for sell) and the best available price
 function sendOrder(type, price) {
-  sendMessage("add_order", { type, price, amount: 1 });
-}
-function getButtonColor(price, orderType) {
-  if (orderType === "buy") {
-    return price === bestAsk.value ? "red" : "grey";
-  } else if (orderType === "sell") {
-    return price === bestBid.value ? "red" : "grey";
+  if (price !== null) {
+    sendMessage("add_order", { type, price, amount: 1 });
   }
 }
 </script>
