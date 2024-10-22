@@ -31,6 +31,7 @@ export const useTraderStore = defineStore("trader", {
     market_signal_strength: null,
     data_latency: null,
     tradingSessionUUID: null,
+    traderUUID: null,
   }),
   getters: {
 
@@ -61,151 +62,81 @@ export const useTraderStore = defineStore("trader", {
 
       console.log("Generated history:", this.history);
     },
-  },
 
-  initializeTradingSystem(formData) {
-    // Destructure the formData
-    const {
-      treatment,
-      tick_frequency,
-      day_duration,
-      market_signal_strength,
-      data_latency,
-      tradingSessionUUID
-    } = formData;
+    async initializeTradingSystem(formData) {
+      // Destructure the formData
+      const {
+        treatment,
+        tick_frequency,
+        day_duration,
+        market_signal_strength,
+        data_latency,
+        tradingSessionUUID,
+        traderUUID
+      } = formData;
 
-    // Assign formData to gameParams
-    this.gameParams = { ...formData };
+      // Assign formData to gameParams
+      this.gameParams = { ...formData };
 
-    // Assign individual values to top-level state properties
-    this.treatment = treatment;
-    this.tick_frequency = tick_frequency;
-    this.day_duration = day_duration;
-    this.market_signal_strength = market_signal_strength;
-    this.data_latency = data_latency;
-    this.tradingSessionUUID = tradingSessionUUID;
+      // Assign individual values to top-level state properties
+      this.treatment = treatment;
+      this.tick_frequency = tick_frequency;
+      this.day_duration = day_duration;
+      this.market_signal_strength = market_signal_strength;
+      this.data_latency = data_latency;
+      this.tradingSessionUUID = tradingSessionUUID;
+      this.traderUUID = traderUUID;
 
-    // Log to verify initialization
-    console.log("Trading system initialized with the following parameters:", {
-      treatment: this.treatment,
-      tick_frequency: this.tick_frequency,
-      day_duration: this.day_duration,
-      market_signal_strength: this.market_signal_strength,
-      data_latency: this.data_latency,
-      tradingSessionUUID: this.tradingSessionUUID,
-    });
+      // Log to verify initialization
+      console.log("Trading system initialized with the following parameters:", {
+        treatment: this.treatment,
+        tick_frequency: this.tick_frequency,
+        day_duration: this.day_duration,
+        market_signal_strength: this.market_signal_strength,
+        data_latency: this.data_latency,
+        tradingSessionUUID: this.tradingSessionUUID,
+        traderUUID: this.traderUUID,
+      });
 
-    // Generate history after initialization
-    this.generateHistory();
-  },
+      // Generate history after initialization
+      this.generateHistory();
+    },
 
-  handle_update(data) {
-    const {
-
-      history,
-      spread,
-      midpoint,
-      transaction_price,
-      inventory,
-      trader_orders,
-
-      initial_shares,
-    } = data;
-
-    if (transaction_price && midpoint && spread) {
-      const market_level_data = {
-        transaction_price,
-        midpoint,
-        spread
-      };
-      this.updateExtraParams(market_level_data);
-    }
-
-
-
-    const orderTypeMapping = {
-      '-1': 'ask',
-      '1': 'bid'
-    };
-    if (trader_orders && trader_orders.length > 0) {
-      const remappedOrders = trader_orders.map(order => ({
-        ...order,
-        order_type: orderTypeMapping[order.order_type.toString()],
-        status: 'active'
-      }));
-      this.myOrders = remappedOrders;
-    }
-
-
-
-    if (inventory) {
-      const { shares, cash } = inventory;
-      this.shares = shares;
-      this.cash = cash;
-    }
-    if (order_book) {
-      const { bids, asks } = order_book;
-
-
-      this.initial_shares = initial_shares;
-
-      this.midPoint = midpoint || findMidpoint(bids, asks);
-      this.chartData = [
-
-        {
-          name: "Bids",
-          color: "blue",
-          data: this.bidData,
+    async initializeWebSocket() {
+      const that = this;
+      this.ws = useWebSocket(this.ws_path, {
+        autoReconnect: true,
+        onConnected: async () => {
+          console.debug("Connected!");
+          that.status = "connected";
         },
-        {
-          name: "Asks",
-          color: "red",
-          data: this.askData,
-        },
-      ];
 
-      this.history = history;
-      this.spread = spread;
+        onMessage: (e) => {
+          const json_data = JSON.parse(this.ws.data);
 
+          this.messages.push(json_data);
 
-    }
-  },
-
-  async initializeWebSocket() {
-    const that = this;
-    this.ws = useWebSocket(this.ws_path, {
-      autoReconnect: true,
-      onConnected: async () => {
-        console.debug("Connected!");
-        that.status = "connected";
-      },
-
-      onMessage: (e) => {
-        const json_data = JSON.parse(this.ws.data);
-
-        this.messages.push(json_data);
-
-        if (json_data) {
-          const newMessage = json_data;
-          // console.debug("message", newMessage);
-          // todo.philipp: ideally we MAY think about passing a dynamic handler
-          // but for now we just update the incoming data. for most of the cases this is enough
-          if (newMessage.type === "closure") {
-            // router push to the result page
-            console.debug("CLOSURE", newMessage);
-            this.dayOver = true;
+          if (json_data) {
+            const newMessage = json_data;
+            // console.debug("message", newMessage);
+            // todo.philipp: ideally we MAY think about passing a dynamic handler
+            // but for now we just update the incoming data. for most of the cases this is enough
+            if (newMessage.type === "closure") {
+              // router push to the result page
+              console.debug("CLOSURE", newMessage);
+              this.dayOver = true;
+            }
+            this.handle_update(newMessage);
           }
-          this.handle_update(newMessage);
-        }
-      },
-    });
-  },
-  async sendMessage(type, data) {
-    // Use the 'send' function from the state
+        },
+      });
+    },
+    async sendMessage(type, data) {
+      // Use the 'send' function from the state
 
-    if (this.ws.status === "OPEN") {
-      this.ws.send(JSON.stringify({ type, data }));
-    }
+      if (this.ws.status === "OPEN") {
+        this.ws.send(JSON.stringify({ type, data }));
+      }
+    },
   },
-},
 });

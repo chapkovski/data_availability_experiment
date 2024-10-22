@@ -17,13 +17,13 @@ const routes = [
     component: CreateTradingSession,
   },
   {
-    path: "/trader/:traderUuid",
+    path: "/trader/:traderUUID",
     name: "TradingSystem",
     component: TradingSystem,
     props: true,
   },
   {
-    path: "/day-over/:traderUuid",
+    path: "/day-over/:traderUUID",
     name: "DayOver",
     component: dayOver,
     props: true,
@@ -45,8 +45,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const traderStore = useTraderStore();
 
-  // Check if navigating to the TradingSystem without a traderUuid
-  if (to.name === "TradingSystem" && !to.params.traderUuid) {
+  // Check if navigating to the TradingSystem without a traderUUID
+  if (to.name === "TradingSystem" && !to.params.traderUUID) {
     next({ name: "CreateTradingSession" });
   } else {
     next();

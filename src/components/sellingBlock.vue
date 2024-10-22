@@ -14,7 +14,7 @@
               @click="sendOrder(1, bestAsk)"
               width="100%"
             >
-              Buy @ {{ bestAsk ? bestAsk.toFixed(2) : 'N/A' }}
+              Buy @ BEST BID
             </v-btn>
           </v-col>
 
@@ -27,7 +27,7 @@
               @click="sendOrder(-1, bestBid)"
               width="100%"
             >
-              Sell @ {{ bestBid ? bestBid.toFixed(2) : 'N/A' }}
+              Sell @ BEST ASK
             </v-btn>
           </v-col>
         </v-row>
@@ -46,16 +46,16 @@ const { sendMessage } = tradingStore;
 const { bidData, askData } = storeToRefs(tradingStore);
 
 // Compute the availability of ask and bid data
-const hasAskData = computed(() => askData.value.length > 0);
-const hasBidData = computed(() => bidData.value.length > 0);
+// const hasAskData = computed(() => askData.value.length > 0);
+// const hasBidData = computed(() => bidData.value.length > 0);
 
 // Best bid and best ask calculations
-const bestBid = computed(() => hasBidData.value ? Math.max(...bidData.value.map(bid => bid.x)) : null);
-const bestAsk = computed(() => hasAskData.value ? Math.min(...askData.value.map(ask => ask.x)) : null);
+// const bestBid = computed(() => hasBidData.value ? Math.max(...bidData.value.map(bid => bid.x)) : null);
+// const bestAsk = computed(() => hasAskData.value ? Math.min(...askData.value.map(ask => ask.x)) : null);
 
 // Specific conditions for disabling buy and sell buttons
-const isBuyButtonDisabled = computed(() => !hasAskData.value || bestAsk.value === null);
-const isSellButtonDisabled = computed(() => !hasBidData.value || bestBid.value === null);
+// const isBuyButtonDisabled = computed(() => !hasAskData.value || bestAsk.value === null);
+// const isSellButtonDisabled = computed(() => !hasBidData.value || bestBid.value === null);
 
 // Sending order with type (1 for buy, -1 for sell) and the best available price
 function sendOrder(type, price) {

@@ -56,7 +56,7 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 
 const props = defineProps({
-  traderUuid: String,
+  traderUUID: String,
 });
 
 // Reactive state to store trader information

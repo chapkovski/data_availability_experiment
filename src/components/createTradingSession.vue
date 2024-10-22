@@ -5,47 +5,24 @@
         <v-col cols="12" sm="8" md="6" lg="6">
           <v-form class="my-3">
             <v-row>
-              <v-col
-                cols="12"
-                sm="6"
-                v-for="field in formFields"
-                :key="field.name"
-              >
+              <v-col cols="12" sm="6" v-for="field in formFields" :key="field.name">
                 <!-- Checkbox for Treatment -->
-                <v-checkbox
-                  v-if="field.type === 'checkbox'"
-                  :label="field.title"
-                  v-model="formState[field.name]"
-                ></v-checkbox>
+                <v-checkbox v-if="field.type === 'checkbox'" :label="field.title"
+                  v-model="formState[field.name]"></v-checkbox>
 
                 <!-- Dropdown (v-select) for Market Signal Strength -->
-                <v-select
-                  v-if="field.type === 'select'"
-                  :label="field.title"
-                  v-model="formState[field.name]"
-                  :items="field.options"
-                ></v-select>
+                <v-select v-if="field.type === 'select'" :label="field.title" v-model="formState[field.name]"
+                  :items="field.options"></v-select>
 
                 <!-- Text fields for other inputs -->
-                <v-text-field
-                  v-else
-                  :label="field.title"
-                  v-model="formState[field.name]"
-                  :type="field.type === 'number' ? 'number' : 'text'"
-                  :hint="field.hint"
-                  variant="solo"
-                  persistent-hint
-                ></v-text-field>
+                <v-text-field v-else :label="field.title" v-model="formState[field.name]"
+                  :type="field.type === 'number' ? 'number' : 'text'" :hint="field.hint" variant="solo"
+                  persistent-hint></v-text-field>
               </v-col>
             </v-row>
           </v-form>
-          <v-btn
-            color="primary"
-            large
-            @click="initializeTrader"
-            :disabled="!serverActive"
-            >{{ connectionServerMessage }}</v-btn
-          >
+          <v-btn color="primary" large @click="initializeTrader" :disabled="!serverActive">{{ connectionServerMessage
+            }}</v-btn>
         </v-col>
       </v-row>
     </v-container>
@@ -109,18 +86,24 @@ const { tradingSessionData } = storeToRefs(useTraderStore());
 const initializeTrader = async () => {
   // Add the random UUID to the formState
   formState.value.tradingSessionUUID = crypto.randomUUID();
-  
+  formState.value.traderUUID = crypto.randomUUID();
+
   await traderStore.initializeTradingSystem(formState.value);
-  
+
   // redirect to the trading system page with the generated UUID
-  router.push({ 
-    name: "TradingSystem", 
-    params: { tradingSessionUUID: formState.value.tradingSessionUUID }
+  router.push({
+    name: "TradingSystem",
+    params: {
+      tradingSessionUUID: formState.value.tradingSessionUUID,
+      traderUUID: formState.value.traderUUID
+    }
+
   });
 };
 
 onMounted(() => {
   serverActive.value = true;
+  console.debug(traderStore.initializeTradingSystem)
 });
 </script>
 

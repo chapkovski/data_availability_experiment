@@ -134,7 +134,7 @@ const remainingTime = computed(() => {
 const finalizingDay = () => {
   //let's just refresh page
   // location.reload();
-  router.push({ name: "DayOver", params: { traderUuid: props.traderUuid } });
+  router.push({ name: "DayOver", params: { traderUUID: props.traderUUID } });
 };
 watch(
   gameParams,
