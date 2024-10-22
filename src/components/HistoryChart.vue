@@ -37,8 +37,12 @@ const original_options = {
   series: [
     {
       name: "Price",
-      data: [],
-    },
+      data: history.value.map(item => [
+        new Date(item.timestamp).getTime(),  // Convert ISO timestamp to milliseconds
+        item.price  // Price value
+      ]),
+      type: "line",
+    }
   ],
   lang: {
     noData: "No data to display",
@@ -62,20 +66,22 @@ const original_options = {
 
 const chartOptions = reactive(original_options);
 
-watch(
-  history,
-  (newHistory) => {
-    if (newHistory && newHistory.length) {
-      chartOptions.series[0].data = newHistory.map((item) => ({
-        x: new Date(item.timestamp).getTime(),
-        y: item.price,
-      }));
-    }
-  },
-  { deep: true }
-);
+// watch(
+//   history,
+//   (newHistory) => {
+//     if (newHistory && newHistory.length) {
+//       chartOptions.series[0].data = newHistory.map((item) => ({
+//         x: new Date(item.timestamp).getTime(),
+//         y: item.price,
+//       }));
+//     }
+//   },
+//   { deep: true }
+// );
 
 onMounted(async () => {
+  console.debug("Price graph mounted");
+  console.debug(history.value);
   await nextTick();
   //   priceGraph.value.chart.setSize(100, 200);
   //   priceGraph.value.chart.reflow();
