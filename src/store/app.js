@@ -64,32 +64,39 @@ export const useTraderStore = defineStore("trader", {
     current_price: null,
     showSnackbar: false,
     snackbarText: "",
+    // data from the session initialization
+    treatment: null,
+    tick_frequency: null,
+    day_duration: null,
+    market_signal_strength: null,
+    data_latency: null,
+    tradingSessionUUID: null,
   }),
   getters: {
     
   },
   actions: {
      
-    async initializeTradingSystem(formState) {
+    initializeTradingSystem(formData) {
+      // Update the state directly with form data
+      this.treatment = formData.treatment;
+      this.tick_frequency = formData.tick_frequency;
+      this.day_duration = formData.day_duration;
+      this.market_signal_strength = formData.market_signal_strength;
+      this.data_latency = formData.data_latency;
+      this.tradingSessionUUID = formData.tradingSessionUUID;
       
-      try {
-        this.gameParams = formState;
-        // Connect to WebSocket or perform other actions
-      } catch (error) {
-        // Handle error appropriately
-      }
+      // Perform any other initializations if needed
+      console.log("Trading system initialized with the following parameters:", {
+        treatment: this.treatment,
+        tick_frequency: this.tick_frequency,
+        day_duration: this.day_duration,
+        market_signal_strength: this.market_signal_strength,
+        data_latency: this.data_latency,
+        tradingSessionUUID: this.tradingSessionUUID,
+      });
     },
-    async getTradingSessionData(tradingSessionUUID) {
-      const httpUrl = import.meta.env.VITE_HTTP_URL;
-      try {
-        const response = await axios.get(`${httpUrl}trading_session/${tradingSessionUUID}`);
-        console.debug(response.data.data);
-        this.tradingSessionData = response.data.data;
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
+    
     handle_update(data) {
       const {
         
