@@ -1,22 +1,14 @@
 <template>
   <v-app>
     <v-app-bar app fixed class="timerbar  "   >
-      Till next info update: <v-progress-linear
+      Till the end of the day: <v-progress-linear
         :value="progressValue"
         color="primary"
         height="10"
         rounded
         striped
          :model-value="progressValue"
-      ></v-progress-linear>
-      Till next transaction possible: <v-progress-linear
-        :value="progressValue"
-        color="warning"
-        height="10"
-        rounded
-        striped
-         :model-value="progressValue"
-      ></v-progress-linear>
+      >
     </v-app-bar>
     <v-app-bar app fixed  class="my-3">
       
