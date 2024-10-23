@@ -21,17 +21,9 @@
     <v-app-bar app fixed  class="my-3">
       
       <v-toolbar  v-if="true">
-       
-        <v-card class="mx-3">
-          <v-card-text>
-            <vue-countdown @progress="updTime" @end="restartTimer"
-            v-if="remainingTime" :time="remainingTime" v-slot="{ days, hours, minutes, seconds }">
-              Time Remaining: {{ progressValue }}
-              remaining time{{ remainingTime.totalMilliseconds }}
-              {{ minutes }} minutes, {{ seconds }} seconds.
-            </vue-countdown>
-          </v-card-text>
-        </v-card>
+       <CountdownCard title="Till next decision" :total-time="25" progress-bar-color="red"> </CountdownCard>
+       <CountdownCard title="Till next info update" :total-time="8" progress-bar-color="blue"> </CountdownCard>
+      
         <v-spacer></v-spacer>
 
         <v-card class="mx-2" outlined>
@@ -129,7 +121,7 @@ import HistoryChart from "@/components/HistoryChart.vue";
 import sellingBlock from "./sellingBlock.vue";
 import messageBlock from "./messageBlock.vue";
 import staticInfoBlock from "./staticInfoBlock.vue";
-
+import CountdownCard from "./CountdownCard.vue";
 import { useRouter } from "vue-router";
 import { useFormatNumber } from "@/composables/utils";
 const updTime = (time) => {
