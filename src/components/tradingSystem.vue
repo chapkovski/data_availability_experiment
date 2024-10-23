@@ -9,6 +9,7 @@
         striped
          :model-value="progressValue"
       >
+      </v-progress-linear>
     </v-app-bar>
     <v-app-bar app fixed  class="my-3">
       
