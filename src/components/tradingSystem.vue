@@ -19,18 +19,15 @@
       
         <v-spacer></v-spacer>
 
+        
         <v-card class="mx-2" outlined>
-          <v-card-text>
-            VWAP: <span>VWAP</span>
+          <v-card-text class="font-weight-bold">
+            Proportion of informed traders
+             
+              <span  >50%</span>
+            
           </v-card-text>
         </v-card>
-        <v-card class="mx-2" outlined>
-          <v-card-text>
-            PnL: <span>PNL</span>
-          </v-card-text>
-        </v-card>
-
-        <!-- Spread -->
 
 
         <!-- Shares -->
@@ -41,7 +38,7 @@
             <span>
               <span>{{ initial_shares }}</span>
               <Transition enter-active-class="fade-in-highlight" :key="shares">
-                <v-badge color="error" :content="formatDelta" inline></v-badge>
+               
               </Transition>
             </span>
 
@@ -68,7 +65,7 @@
         <v-row>
           <v-col lg="6" sm="12">
             <div>
-              BLANK: TBD
+              <BidAskTable></BidAskTable>
             </div>
           </v-col>
           <v-col lg="6" sm="12">
@@ -77,7 +74,7 @@
         </v-row>
         <v-row class="equal-height-columns">
           <v-col lg="6" sm="12" class="d-flex flex-column">
-            <div>BLANK: TBD</div>
+          <staticInfoBlock /> 
           </v-col>
           <v-col lg="6" sm="12" class="d-flex flex-column">
             <sellingBlock />
@@ -88,14 +85,14 @@
     </v-main>
     <!-- bottom fixed bar -->
 
-    <v-navigation-drawer app fixed location="right" permanent width="350" :border="false" :rail="false">
+    <v-navigation-drawer app fixed location="right" permanent width="350" :border="false" :rail="false" v-if="false">
       <div class="flex-container mr-3">
         <messageBlock class="flex-child my-3"></messageBlock>
         <staticInfoBlock class="flex-child my-3"></staticInfoBlock>
       </div>
     </v-navigation-drawer>
 
-    <v-footer app>
+    <v-footer app v-if="false">
       <v-alert v-if="goalMessage" :class="goalMessage.type" :color="goalMessage.type">
         <b>{{ goalMessage.text }}</b>
       </v-alert>
@@ -111,6 +108,7 @@ import commandTool from "@/components/commandToolBar.vue";
 
 // import BidAskChart from "@/components/BidAskChart.vue";
 import HistoryChart from "@/components/HistoryChart.vue";
+import BidAskTable from "./BidAskTable.vue";
 import sellingBlock from "./sellingBlock.vue";
 import messageBlock from "./messageBlock.vue";
 import staticInfoBlock from "./staticInfoBlock.vue";

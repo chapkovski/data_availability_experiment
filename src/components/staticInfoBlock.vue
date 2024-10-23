@@ -1,59 +1,101 @@
 <template>
-  <v-card height="100%" elevation="3">
-    <v-card-title class="cardtitle">Additional market info</v-card-title>
-    <v-card-text style="height: 300px; overflow-y: auto" ref="messageContainer">
-      <v-list lines="two">
-        <v-list-item v-for="i, index in extraParams" :key="i.var_name">
-          {{ i.display_name }}
-          <v-tooltip      location="bottom" :text="i.explanation" max-width="300">
-            <template v-slot:activator="{ props }">
-              <v-icon small v-bind="props">mdi-help-circle-outline</v-icon>
-            </template>
-          </v-tooltip>
-          <template v-slot:append  >
-            <v-badge width=50 color="error" :content="i.value" inline></v-badge>
+  <v-card class="mx-auto"  height="100%" elevation="3" width="100%">
+    <v-card-title class="text-h6">Trading Dashboard</v-card-title>
 
-          </template>
-        </v-list-item>
-      </v-list>
+    <v-card-subtitle>Market Summary</v-card-subtitle>
+    <v-card-text>
+      <v-row class="mb-2">
+        <v-col>
+          <strong>Midpoint Price:</strong>
+        </v-col>
+        <v-col>{{ midpointPrice.toFixed(2) }} USD</v-col>
+      </v-row>
+
+      <v-row class="mb-2">
+        <v-col>
+          <strong>Best Bid:</strong>
+        </v-col>
+        <v-col>{{ bestBid.toFixed(2) }} USD</v-col>
+      </v-row>
+
+      <v-row class="mb-2">
+        <v-col>
+          <strong>Best Ask:</strong>
+        </v-col>
+        <v-col>{{ bestAsk.toFixed(2) }} USD</v-col>
+      </v-row>
+
+      <v-row class="mb-2">
+        <v-col>
+          <strong>Spread:</strong>
+        </v-col>
+        <v-col>{{ spread.toFixed(2) }} USD</v-col>
+      </v-row>
     </v-card-text>
+
+    <v-card-subtitle>Account Summary</v-card-subtitle>
+    <v-card-text>
+      <v-row class="mb-2">
+        <v-col>
+          <strong>Shares Owned:</strong>
+        </v-col>
+        <v-col>{{ sharesOwned }}</v-col>
+      </v-row>
+
+      <v-row class="mb-2">
+        <v-col>
+          <strong>Profit (Today):</strong>
+        </v-col>
+        <v-col :class="profit > 0 ? 'text--success' : 'text--error'">
+          {{ profit.toFixed(2) }} USD
+        </v-col>
+      </v-row>
+
+      <v-row class="mb-2">
+        <v-col>
+          <strong>Current Cash:</strong>
+        </v-col>
+        <v-col>{{ currentCash.toFixed(2) }} USD</v-col>
+      </v-row>
+    </v-card-text>
+
+    <v-card-actions>
+      <v-btn color="primary" @click="executeTrade">Execute Trade</v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, reactive, computed } from "vue";
-import { storeToRefs } from "pinia";
-import { useTraderStore } from "@/store/app";
-const {  extraParams } = storeToRefs(useTraderStore());
+import { ref, computed } from 'vue';
 
+// Simulating some trading data (you would probably get this from an API)
+const midpointPrice = ref(105.25);
+const bestBid = ref(104.90);
+const bestAsk = ref(105.60);
+const sharesOwned = ref(100);
+const startingPrice = ref(100); // Starting price of the stock at the beginning of the day
+const currentCash = ref(15000);
 
+// Calculated fields
+const spread = computed(() => bestAsk.value - bestBid.value);
+const profit = computed(() => (midpointPrice.value - startingPrice.value) * sharesOwned.value);
 
-
-onMounted(() => {
-  
-});
-
+// Method to execute a trade (this is a placeholder)
+const executeTrade = () => {
+  console.log("Executing a trade...");
+  // Trade logic here...
+};
 </script>
+
 <style scoped>
-.cardtitle {
-  font-size: 20px;
-  font-weight: bold;
-  background: darkcyan;
-  color: white;
+.v-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
 }
-</style>
-<style scoped>
-.v-list-item__append {
-  display: flex;
-  align-items: end!important;
+.text--success {
+  color: green;
 }
-.rounded-icon {
-  border-radius: 50%; /* Makes the background completely round */
-  padding: 0px; /* Adjust padding to your preference */
-  background-color: #e0e0e0; /* Light grey background, adjust as needed */
-  color: black; /* Icon color */
-  display: inline-flex; /* Centers the icon within the padding */
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+.text--error {
+  color: red;
 }
 </style>
