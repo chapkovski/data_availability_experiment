@@ -61,37 +61,27 @@
     </v-app-bar>
 
     <v-main>
-      <v-container>
-        <v-row>
-          <v-col lg="6" sm="12">
-            <div>
-              <BidAskTable></BidAskTable>
-            </div>
-          </v-col>
-          <v-col lg="6" sm="12">
-            <HistoryChart></HistoryChart>
-          </v-col>
-        </v-row>
-        <v-row class="equal-height-columns">
-          <v-col lg="6" sm="12" class="d-flex flex-column">
-          <staticInfoBlock /> 
-          </v-col>
-          <v-col lg="6" sm="12" class="d-flex flex-column">
-            <sellingBlock />
-          </v-col>
-        </v-row>
-      </v-container>
+      <splitpanes class="default-theme" horizontal :push-other-panes="false" style="height: 100%">
+  <pane>
+    <span>1</span>
+  </pane>
+  <pane>
+    <splitpanes :push-other-panes="false">
+       
+      <pane>
+        <span>3</span>
+      </pane>
+      <pane>
+        <span>4</span>
+      </pane>
+    </splitpanes>
+  </pane>
 
+</splitpanes>
     </v-main>
     <!-- bottom fixed bar -->
 
-    <v-navigation-drawer app fixed location="right" permanent width="350" :border="false" :rail="false" v-if="false">
-      <div class="flex-container mr-3">
-        <messageBlock class="flex-child my-3"></messageBlock>
-        <staticInfoBlock class="flex-child my-3"></staticInfoBlock>
-      </div>
-    </v-navigation-drawer>
-
+    
     <v-footer app v-if="false">
       <v-alert v-if="goalMessage" :class="goalMessage.type" :color="goalMessage.type">
         <b>{{ goalMessage.text }}</b>
@@ -107,6 +97,10 @@ const props = defineProps({
 import commandTool from "@/components/commandToolBar.vue";
 
 // import BidAskChart from "@/components/BidAskChart.vue";
+
+import { Splitpanes, Pane } from 'splitpanes'
+import 'splitpanes/dist/splitpanes.css'
+
 import HistoryChart from "@/components/HistoryChart.vue";
 import BidAskTable from "./BidAskTable.vue";
 import sellingBlock from "./sellingBlock.vue";
