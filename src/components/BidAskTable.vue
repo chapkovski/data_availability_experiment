@@ -49,39 +49,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
-const actions = ref([]); // Keep actions local within the component
+
  
 import { useTraderStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
-
-const {  data_latency, market_signal_strength } = storeToRefs(useTraderStore());
+const store = useTraderStore();
+const {  data_latency, market_signal_strength ,actions} = storeToRefs(useTraderStore());
 
 // Function to generate random actions with new fields: price, size, and condition
-const generateRandomAction = () => {
-  const randomPrice = parseFloat((Math.random() * 100 + 100).toFixed(2)); // Random price between 100 and 200
-  const size = Math.floor(Math.random() * 100) + 1; // Random size between 1 and 100
-  const condition = Math.random() > 0.5 ? 'At ask' : 'At bid'; // Randomly select condition
-
-  return {
-    random_id: Math.random().toString(36).substr(2, 9), // Generate a random ID
-    timestamp: Date.now(),
-    price: randomPrice,
-    size: size,
-    condition: condition,
-  };
-};
-
-// Add a new action every second
-setInterval(() => {
-  const newAction = generateRandomAction();
-  actions.value.unshift(newAction); // Add the new action to the top of the table
-  if (actions.value.length > 10) {
-    actions.value.pop(); // Optional: limit to 10 entries to avoid infinite growth
-  }
-}, data_latency.value*1000);
-
+ 
+onMounted(() => {
+  store.startGeneratingActions();
+});
 </script>
 
 <style scoped>

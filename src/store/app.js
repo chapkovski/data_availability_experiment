@@ -9,6 +9,7 @@ const wsROOT = "ws://localhost:8000/trader";
 
 export const useTraderStore = defineStore("trader", {
   state: () => ({
+    actions: [],
     dayOver: false,
     midPoint: 0,
     spread: 0,
@@ -39,6 +40,31 @@ export const useTraderStore = defineStore("trader", {
   actions: {
     generateRandomPrice() {
       return Math.random() * (200 - 100) + 100;
+    },
+    generateRandomAction() {
+      const randomPrice = parseFloat((Math.random() * 100 + 100).toFixed(2));
+      const size = Math.floor(Math.random() * 100) + 1;
+      const condition = Math.random() > 0.5 ? 'At ask' : 'At bid';
+      
+      const newAction = {
+        random_id: Math.random().toString(36).substr(2, 9),
+        timestamp: Date.now(),
+        price: randomPrice,
+        size: size,
+        condition: condition,
+      };
+
+      // Add the new action to the top of the actions array
+      this.actions.unshift(newAction);
+      if (this.actions.length > 10) {
+        this.actions.pop(); // Limit to 10 entries if desired
+      }
+    },
+    startGeneratingActions() {
+      // Initialize a periodic interval to add new actions
+      setInterval(() => {
+        this.generateRandomAction();
+      }, this.data_latency * 1000);
     },
 
     // Function to generate the history array for the last 5 minutes and the next 5 minutes
