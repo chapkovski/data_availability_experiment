@@ -190,6 +190,7 @@ header.timerbar .v-toolbar__content {
 .splitpanes--vertical>.splitpanes__splitter::after,.splitpanes--vertical>.splitpanes__splitter::before {
   background-color: rgb(33,33,33)!important;
     width: 2px!important;
+    border-radius: 0.5px!important;
     /* margin:0px!important; */
     padding:0px!important;
     left: 40%!important;
