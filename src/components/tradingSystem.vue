@@ -1,15 +1,13 @@
 <template>
   <v-app>
     <v-app-bar app fixed class="timerbar  "   >
-      Till the end of the day: <v-progress-linear
-        :value="progressValue"
-        color="primary"
-        height="10"
-        rounded
-        striped
-         :model-value="progressValue"
-      >
-      </v-progress-linear>
+      <CountdownCard
+        title="Till the end of the day"
+        :total-time="day_duration*60"
+        progress-bar-color="primary"
+        progress-type="linear"
+      />
+      
     </v-app-bar>
     <v-app-bar app fixed  class="my-3">
       
@@ -129,7 +127,7 @@ import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 import { watch, ref, onMounted, computed } from "vue";
 
-const { gameParams, shares, cash, initial_shares, dayOver, data_latency } =
+const { gameParams, shares, cash, initial_shares, dayOver, data_latency, day_duration } =
   storeToRefs(useTraderStore());
 
 const totalTime = 15000;  // 15 seconds in milliseconds

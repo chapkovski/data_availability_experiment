@@ -1,14 +1,29 @@
 <template>
-  <v-card class="mx-2 p-1">
+  <v-card class="mx-2 p-1" :style="cardStyle">
     <v-card-text class="timertext">
-      <v-progress-circular :model-value="progressValue" :color="progressBarColor"></v-progress-circular>
+      <v-progress-circular
+        v-if="progressType === 'circular'"
+        :model-value="progressValue"
+        :color="progressBarColor"
+      ></v-progress-circular>
+      
+      <v-progress-linear
+        v-else
+         :model-value="progressValue"
+        :value="progressValue"
+        :color="progressBarColor"
+        height="10"
+        rounded
+        striped
+      ></v-progress-linear>
+
       <!-- Updated remainingTime to remainingTime.value -->
       <vue-countdown @progress="updTime" @end="restartTimer" :time="totTimeInMilliseconds"
       :key="resetKey"  
         v-slot="{ days, hours, minutes, seconds }">
       
 
-        <div>{{ title }}: {{ Math.floor(remainingTime / 1000) }} seconds</div>
+        <div>{{ title }}: <b>{{ Math.floor(remainingTime / 1000) }} seconds</b></div>
       </vue-countdown>
     </v-card-text>
   </v-card>
@@ -16,7 +31,15 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-const props=defineProps(['title', 'progressBarColor','totalTime'])
+const props = defineProps({
+  title: String,
+  progressBarColor: String,
+  totalTime: Number,
+  progressType: {
+    type: String,
+    default: 'circular', // Default to circular
+  },
+});
 // Reactive state for remainingTime and progressValue
 
  // A dynamic key to force the vue-countdown component to re-render when the timer restarts
@@ -35,6 +58,7 @@ const restartTimer = () => {
     // Trigger a countdown restart by incrementing the key, forcing re-render
     resetKey.value += 1;
 }; 
+const cardStyle = computed(() => (props.progressType === 'linear' ? { width: '100%' } : {}));
 
 </script>
 
