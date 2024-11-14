@@ -45,22 +45,36 @@ export const useTraderStore = defineStore("trader", {
     generateHistory() {
       const now = new Date();
       const history = [];
-
-      // Generate data for the last 5 minutes
-      for (let i = -5; i <= 5; i++) {
-        const timestamp = new Date(now.getTime() + i * 60 * 1000); // 1 minute intervals
-        const price = this.generateRandomPrice(); // Generate random price
-
+    
+      let basePrice = this.generateRandomPrice(); // Starting point for the trend
+      const isUpwardTrend = Math.random() > 0.5; // Randomly choose upward or downward trend
+    
+      // Generate data for the last 100 intervals (around 10 minutes)
+      for (let i = -50; i <= 50; i++) {
+        const timestamp = new Date(now.getTime() + i * 6 * 1000); // 6-second intervals
+    
+        // Adjust base price slightly to create a trend
+        basePrice += isUpwardTrend ? Math.random() * 0.5 : -Math.random() * 0.5; // Gradual increase or decrease
+    
+        // Generate open, high, low, and close with larger variation
+        const open = basePrice + (Math.random() - 0.5) * 5; // Moderate random variation around base price
+        const high = open + Math.random() * 8; // Higher variation for the high price
+        const low = open - Math.random() * 8;  // Lower variation for the low price
+        const close = open + (Math.random() - 0.5) * 6; // Close with moderate variation around open
+    
         history.push({
           timestamp: timestamp.toISOString(),  // Convert to ISO string
-          price: price,
+          open: parseFloat(open.toFixed(2)),
+          high: parseFloat(Math.max(high, open + 1).toFixed(2)), // Ensure high is above open
+          low: parseFloat(Math.min(low, open - 1).toFixed(2)),   // Ensure low is below open
+          close: parseFloat(close.toFixed(2)),
         });
       }
-
+    
       // Set the generated history array to the store's state
       this.history = history;
-
-      console.log("Generated history:", this.history);
+    
+      console.log("Generated candlestick history with taller candles:", this.history);
     },
 
     async initializeTradingSystem(formData) {
