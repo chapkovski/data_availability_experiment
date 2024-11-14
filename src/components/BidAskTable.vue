@@ -1,8 +1,14 @@
 <template>
   <v-card class="mx-auto">
     <v-card-title>Time & Sales</v-card-title>
-    <v-card-text>
-      <v-table class="scrollable-table" fixed-header>
+    <v-card-text
+      :class="{ 'full-height-center': market_signal_strength === 'Low' }"
+    >
+      <!-- Conditional rendering based on market_signal_strength -->
+      <div v-if="market_signal_strength === 'Low'" class="no-access">
+        You do not have level 2 privileges for TSX
+      </div>
+      <v-table v-else class="scrollable-table" fixed-header>
         <thead>
           <tr>
             <th class="text-left">Timestamp</th>
@@ -15,15 +21,17 @@
           <tr
             v-for="item in actions"
             :key="item.random_id"
-            class=""
-            :class="{'at-ask': item.condition === 'At ask', 'at-bid': item.condition === 'At bid'}"
+            :class="{
+              'at-ask': item.condition === 'At ask',
+              'at-bid': item.condition === 'At bid'
+            }"
           >
             <td>{{ new Date(item.timestamp).toLocaleTimeString() }}</td>
             <td>{{ item.price.toFixed(2) }} USD</td>
             <td>{{ item.size }}</td>
             <td>{{ item.condition }}</td>
           </tr>
-        </transition-group> 
+        </transition-group>
       </v-table>
     </v-card-text>
   </v-card>
@@ -32,7 +40,12 @@
 <script setup>
 import { ref } from 'vue';
 
-const actions = ref([]);
+const actions = ref([]); // Keep actions local within the component
+ 
+import { useTraderStore } from '@/store/app';
+import { storeToRefs } from 'pinia';
+
+const {  market_signal_strength } = storeToRefs(useTraderStore());
 
 // Function to generate random actions with new fields: price, size, and condition
 const generateRandomAction = () => {
@@ -61,13 +74,23 @@ setInterval(() => {
 </script>
 
 <style scoped>
-tr {
-  transition: transform 1s; /* Smooth movement transition */
-  font-weight: bold;
-}
 .scrollable-table {
   max-height: 300px; /* Set a fixed height */
   overflow-y: auto; /* Enable vertical scrolling */
+}
+
+/* Only applies when market_signal_strength is Low */
+.full-height-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px; /* Full height to center content */
+}
+
+.no-access {
+  font-weight: bold;
+  color: gray;
+  text-align: center;
 }
 
 /* Conditional row styling */
@@ -79,23 +102,6 @@ tr {
   color: red;
 }
 
-/* Transition styles */
-.fade-move {
-  transition: transform 1s; /* Smooth movement transition */
-}
-
-.fade-enter-active {
-  animation: fadeInHighlight 1s ease-out; /* Entry animation for new items */
-}
-
-@keyframes fadeInHighlight {
-  from {
-    background-color: yellow;
-  }
-  to {
-    background-color: transparent;
-  }
-}
 /* Transition styles for new items */
 .highlight-enter-active {
   animation: fadeInHighlight 1s ease-out; /* Fade-in animation for new rows */
