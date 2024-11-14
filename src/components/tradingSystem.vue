@@ -15,7 +15,7 @@
       
       <v-toolbar  v-if="true">
        <CountdownCard title="Till next decision" :total-time="25" progress-bar-color="red"> </CountdownCard>
-       <CountdownCard title="Till next info update" :total-time="8" progress-bar-color="blue"> </CountdownCard>
+       <CountdownCard title="Till next info update" :total-time="data_latency" progress-bar-color="blue"> </CountdownCard>
       
         <v-spacer></v-spacer>
 
@@ -129,7 +129,7 @@ import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 import { watch, ref, onMounted, computed } from "vue";
 
-const { gameParams, shares, cash, initial_shares, dayOver } =
+const { gameParams, shares, cash, initial_shares, dayOver, data_latency } =
   storeToRefs(useTraderStore());
 
 const totalTime = 15000;  // 15 seconds in milliseconds

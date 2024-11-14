@@ -56,7 +56,7 @@ const actions = ref([]); // Keep actions local within the component
 import { useTraderStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
 
-const {  market_signal_strength } = storeToRefs(useTraderStore());
+const {  data_latency, market_signal_strength } = storeToRefs(useTraderStore());
 
 // Function to generate random actions with new fields: price, size, and condition
 const generateRandomAction = () => {
@@ -80,7 +80,7 @@ setInterval(() => {
   if (actions.value.length > 10) {
     actions.value.pop(); // Optional: limit to 10 entries to avoid infinite growth
   }
-}, 3000);
+}, data_latency.value*1000);
 
 </script>
 

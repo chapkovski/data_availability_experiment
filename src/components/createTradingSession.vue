@@ -56,24 +56,24 @@ const formFields = ref([
   },
   {
     name: "day_duration",
-    title: "Overall Day Duration (seconds)",
+    title: "Overall Day Duration (minutes)",
     type: "number",
-    hint: "Enter duration in seconds",
-    default: 86400,
+    hint: "Enter duration in minutes",
+    default: 3,
   },
   {
     name: "market_signal_strength",
     title: "Market Signal Strength",
     type: "select",  // Changed to dropdown
     options: ["High", "Low"],  // Options for the dropdown
-    default: "Low",
+    default: "High",
   },
   {
-    name: "f",
+    name: "data_latency",
     title: "Data Latency (seconds)",
     type: "number",
     hint: "Enter data latency in seconds",
-    default: 10,
+    default: 3,
   },
 ]);
 // Initialize formState with default values
