@@ -44,7 +44,14 @@ const original_options = {
     },
     pointFormat: 'Open: {point.open}<br>High: {point.high}<br>Low: {point.low}<br>Close: {point.close}',
   },
-  
+  xAxis: {
+    type: 'datetime',
+    ordinal: false,
+    gridLineColor: '#505053',
+    labels: { 
+      style: { color: '#FFFFFF' } // Set label color to white for visibility
+    },
+  },
   yAxis: {
     gridLineColor: '#505053',
     labels: {
@@ -132,8 +139,8 @@ onMounted(async () => {
   console.debug("Price graph mounted");
   console.debug(history.value);
   await nextTick();
-  //   priceGraph.value.chart.setSize(100, 200);
-  //   priceGraph.value.chart.reflow();
+    // priceGraph.value.chart.setSize(1000, 300);
+    priceGraph.value.chart.reflow();
 });
 
 StockCharts(HighCharts);
