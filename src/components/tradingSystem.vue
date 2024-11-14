@@ -63,7 +63,7 @@
     <v-main>
       <splitpanes class="default-theme" horizontal :push-other-panes="false" style="height: 100%">
   <pane>
-    <span>1</span>
+    <HistoryChart></HistoryChart>
   </pane>
   <pane>
     <splitpanes :push-other-panes="false">
