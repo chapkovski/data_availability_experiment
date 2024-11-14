@@ -222,4 +222,11 @@ header.timerbar .v-toolbar__content {
 .fade-in-highlight {
   animation: fadeInHighlight 1s ease;
 }
+
+.splitpanes__panes{
+    background: rgb(33, 33, 33) !important;
+}
+.splitpanes.default-theme .splitpanes__pane{
+  background: rgb(33, 33, 33) !important;  
+}
 </style>
