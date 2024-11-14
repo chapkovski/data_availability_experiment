@@ -74,7 +74,7 @@
         <BidAskTable></BidAskTable>
       </pane>
       <pane>
-        <span>4</span>
+        <sellingBlock />
       </pane>
     </splitpanes>
   </pane>

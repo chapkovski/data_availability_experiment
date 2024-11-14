@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto">
-    <v-card-title>Live Trading Actions</v-card-title>
+    <v-card-title>Time & Sales</v-card-title>
     <v-card-text>
       <v-table class="scrollable-table"   fixed-header>
         <thead>
