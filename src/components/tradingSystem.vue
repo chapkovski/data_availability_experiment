@@ -175,7 +175,38 @@ watch(
 header.timerbar .v-toolbar__content {
   display: flex !important;
   flex-direction: column !important;
-}</style>
+}
+ .splitpanes--horizontal>.splitpanes__splitter {
+    height: 12px!important;;
+    
+}
+
+.splitpanes--horizontal>.splitpanes__splitter::after,.splitpanes--horizontal>.splitpanes__splitter::before {
+    background-color: rgb(33,33,33)!important;
+    height: 2px!important;
+    
+}
+
+.splitpanes--vertical>.splitpanes__splitter::after,.splitpanes--vertical>.splitpanes__splitter::before {
+  background-color: rgb(33,33,33)!important;
+    width: 2px!important;
+    /* margin:0px!important; */
+    padding:0px!important;
+    left: 40%!important;
+
+    
+}
+
+.splitpanes__splitter::after,.splitpanes__splitter::before {
+ 
+ 
+    
+}
+
+.splitpanes--vertical>.splitpanes__splitter {
+    width: 12px!important;;
+}
+</style>
 
 <style scoped>
 header.timerbar .v-toolbar__content {
@@ -229,4 +260,7 @@ header.timerbar .v-toolbar__content {
 .splitpanes.default-theme .splitpanes__pane{
   background: rgb(33, 33, 33) !important;  
 }
+
+
+
 </style>
