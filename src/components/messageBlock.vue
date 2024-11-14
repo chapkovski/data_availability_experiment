@@ -4,15 +4,7 @@
     <v-card-title class="cardtitle">Message Board</v-card-title>
     <v-card-text style="height: 300px; overflow-y: auto" ref="messageContainer">
       <v-container>
-        <div id="goto-container-example">
-          <TransitionGroup name="message" tag="div" class="messages-container">
-          <div 
-            class="message animate__animated animate__heartBeat"
-            v-for="(message, index) in messages" :key="index" :ref="setRef" :id="`message_${index}`">
-            {{ message }}
-          </div>
-        </TransitionGroup>
-        </div>
+       
       </v-container>
     </v-card-text>
   </v-card>

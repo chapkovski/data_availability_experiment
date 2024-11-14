@@ -22,7 +22,7 @@
         
         <v-card class="mx-2" outlined>
           <v-card-text class="font-weight-bold">
-            Proportion of informed traders
+            Share of insiders
              
               <span  >50%</span>
             
