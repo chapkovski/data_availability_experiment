@@ -11,11 +11,11 @@
             <th class="text-left">Condition</th>
           </tr>
         </thead>
-        <tbody is="transition-group" name="animate__animated animate__bounce">
+        <transition-group name="highlight" tag="tbody">
           <tr
             v-for="item in actions"
             :key="item.random_id"
-            class="animate__fadeIn animate__animated animate__slow"
+            class=""
             :class="{'at-ask': item.condition === 'At ask', 'at-bid': item.condition === 'At bid'}"
           >
             <td>{{ new Date(item.timestamp).toLocaleTimeString() }}</td>
@@ -23,7 +23,7 @@
             <td>{{ item.size }}</td>
             <td>{{ item.condition }}</td>
           </tr>
-        </tbody>
+        </transition-group> 
       </v-table>
     </v-card-text>
   </v-card>
@@ -96,7 +96,17 @@ tr {
     background-color: transparent;
   }
 }
-:root {
-  background-color: blue;
+/* Transition styles for new items */
+.highlight-enter-active {
+  animation: fadeInHighlight 1s ease-out; /* Fade-in animation for new rows */
+}
+
+@keyframes fadeInHighlight {
+  from {
+    background-color: yellow;
+  }
+  to {
+    background-color: transparent;
+  }
 }
 </style>
