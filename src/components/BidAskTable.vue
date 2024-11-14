@@ -1,24 +1,23 @@
 <template>
-  <v-card class="mx-auto" >
+  <v-card class="mx-auto">
     <v-card-title>Live Trading Actions</v-card-title>
     <v-card-text>
-      <v-data-table
-        :headers="headers"
-        :items="actions"
-        item-value="timestamp"
-        :items-per-page="5"
-        class="elevation-1"
-      >
-        <template v-slot:item.timestamp="{ item }">
-          {{ new Date(item.timestamp).toLocaleTimeString() }}
-        </template>
-        <template v-slot:item.type="{ item }">
-          {{ item.type.toUpperCase() }}
-        </template>
-        <template v-slot:item.price="{ item }">
-          {{ item.price.toFixed(2) }} USD
-        </template>
-      </v-data-table>
+      <v-table class="scrollable-table"   fixed-header>
+        <thead>
+          <tr>
+            <th class="text-left">Timestamp</th>
+            <th class="text-left">Type of Action</th>
+            <th class="text-left">Price (USD)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in actions" :key="item.timestamp">
+            <td>{{ new Date(item.timestamp).toLocaleTimeString() }}</td>
+            <td>{{ item.type.toUpperCase() }}</td>
+            <td>{{ item.price.toFixed(2) }} USD</td>
+          </tr>
+        </tbody>
+      </v-table>
     </v-card-text>
   </v-card>
 </template>
@@ -26,13 +25,6 @@
 <script setup>
 import { ref } from 'vue';
 
-const headers = [
-  { text: 'Timestamp', value: 'timestamp' },
-  { text: 'Type of Action', value: 'type' },
-  { text: 'Price', value: 'price' }
-];
-
-// Store for actions (initial empty)
 const actions = ref([]);
 
 // Function to generate random actions (bid or ask)
@@ -57,3 +49,10 @@ setInterval(() => {
 }, 1000);
 
 </script>
+
+<style scoped>
+.scrollable-table {
+  max-height: 300px; /* Set a fixed height */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+</style>

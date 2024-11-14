@@ -61,15 +61,17 @@
     </v-app-bar>
 
     <v-main>
-      <splitpanes class="default-theme" horizontal :push-other-panes="false" style="height: 100%">
-  <pane>
-    <HistoryChart></HistoryChart>
+      <splitpanes class="default-theme" horizontal :push-other-panes="false" style="height: calc(100vh - 100px)">
+  <pane class="p-3">
+    <div clas="my-3" style="margin-top:50px">
+      <HistoryChart></HistoryChart>
+    </div>
   </pane>
   <pane>
     <splitpanes :push-other-panes="false">
        
-      <pane>
-        <span>3</span>
+      <pane style="max-height: 100%;">
+        <BidAskTable></BidAskTable>
       </pane>
       <pane>
         <span>4</span>
