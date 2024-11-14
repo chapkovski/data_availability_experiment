@@ -26,15 +26,16 @@ const original_options = {
     enabled: false,
   },
   rangeSelector: {
-    selected: 1,
-    enabled: false,
-    inputStyle: {
-      color: '#E0E0E3',
-      backgroundColor: '#505053',
-    },
-    labelStyle: {
-      color: '#E0E0E3',
-    },
+    enabled: true,
+    buttons: [
+      {
+        type: 'second',
+        count: 60,
+        text: '1m'
+      },
+    ],
+    selected: 0, // Index of the button to select by default (0 is the first button, "1m" in this case)
+    inputEnabled: false // Disables the date range input fields
   },
   tooltip: {
     backgroundColor: '#333333',
@@ -43,16 +44,7 @@ const original_options = {
     },
     pointFormat: 'Open: {point.open}<br>High: {point.high}<br>Low: {point.low}<br>Close: {point.close}',
   },
-  xAxis: {
-    type: 'datetime',
-    ordinal: false,
-    gridLineColor: '#505053',
-    labels: {
-      style: {
-        color: '#E0E0E3',
-      },
-    },
-  },
+  
   yAxis: {
     gridLineColor: '#505053',
     labels: {
@@ -67,7 +59,7 @@ const original_options = {
     },
   },
   title: {
-    text: 'Transaction Price Chart (Candlestick)',
+    text: 'Transaction Price Chart',
     style: {
       color: '#E0E0E3',
     },
@@ -104,26 +96,39 @@ const original_options = {
       upColor: '#4caf50', // Color for rising candlesticks
       lineColor: '#333333',
       upLineColor: '#333333',
+      dataGrouping: {
+      enabled: true,
+      units: [
+        ['minute', [1, 5, 15, 30]], // Group by 1, 5, 15, or 30 minutes
+    
+      ]
+    },
     },
   },
 };
 
 const chartOptions = reactive(original_options);
 
-// watch(
-//   history,
-//   (newHistory) => {
-//     if (newHistory && newHistory.length) {
-//       chartOptions.series[0].data = newHistory.map((item) => ({
-//         x: new Date(item.timestamp).getTime(),
-//         y: item.price,
-//       }));
-//     }
-//   },
-//   { deep: true }
-// );
+watch(
+  history,
+  (newHistory) => {
+    const chartSeries = priceGraph.value?.chart.series[0];
+    if (chartSeries && newHistory.length) {
+      const latestPoint = newHistory[newHistory.length - 1];
+      chartSeries.addPoint([
+        new Date(latestPoint.timestamp).getTime(),
+        latestPoint.open,
+        latestPoint.high,
+        latestPoint.low,
+        latestPoint.close,
+      ], true, false); // Update chart with new point without shifting
+    }
+  },
+  { deep: true }
+);
 
 onMounted(async () => {
+  
   console.debug("Price graph mounted");
   console.debug(history.value);
   await nextTick();
@@ -144,6 +149,7 @@ export default {
 </script>
 
 <template>
+  <v-btn @click="traderStore.addCurrentDataPoint()" v-if="false">AddNewPoint</v-btn>
   <div style="width: 100%">
     <highcharts
       ref="priceGraph"

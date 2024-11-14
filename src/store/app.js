@@ -64,6 +64,7 @@ export const useTraderStore = defineStore("trader", {
       // Initialize a periodic interval to add new actions
       setInterval(() => {
         this.generateRandomAction();
+        this.addCurrentDataPoint()
       }, this.data_latency * 1000);
     },
 
@@ -76,7 +77,7 @@ export const useTraderStore = defineStore("trader", {
       const isUpwardTrend = Math.random() > 0.5; // Randomly choose upward or downward trend
     
       // Generate data for the last 100 intervals (around 10 minutes)
-      for (let i = -50; i <= 50; i++) {
+      for (let i = -50; i <= 0; i++) {
         const timestamp = new Date(now.getTime() + i * 6 * 1000); // 6-second intervals
     
         // Adjust base price slightly to create a trend
@@ -102,7 +103,38 @@ export const useTraderStore = defineStore("trader", {
     
       console.log("Generated candlestick history with taller candles:", this.history);
     },
-
+    addCurrentDataPoint() {
+      const now = Date.now(); // Current timestamp in milliseconds
+    
+      // Determine the open price based on the last close, or start at 100
+      const open = this.history.length
+        ? this.history[this.history.length - 1].close // Use last close as new open
+        : 100;
+    
+      // Generate high, low, close values
+      const high = open + Math.random() * 8; // High slightly above open
+      const low = open - Math.random() * 8;  // Low slightly below open
+      const close = Math.random() > 0.5 ? high - Math.random() * 4 : low + Math.random() * 4; // Close within high-low range
+    
+      // Create a data point in Highcharts format
+      const dataPoint = {
+        timestamp: new Date(now).toISOString(),  // Current time in ISO format
+        open: parseFloat(open.toFixed(2)),
+        high: parseFloat(Math.max(high, open + 1).toFixed(2)), // Ensure high is above open
+        low: parseFloat(Math.min(low, open - 1).toFixed(2)),   // Ensure low is below open
+        close: parseFloat(close.toFixed(2)),
+      };
+    
+      // Add the new data point to the history
+      this.history.push(dataPoint);
+    
+      // Optional: Limit the history length for performance
+      if (this.history.length > 100) {
+        this.history.shift();
+      }
+    
+      console.log("Added new data point:", dataPoint);
+    },
     async initializeTradingSystem(formData) {
       // Destructure the formData
       const {
@@ -139,7 +171,7 @@ export const useTraderStore = defineStore("trader", {
       });
 
       // Generate history after initialization
-      this.generateHistory();
+      
     },
 
     async initializeWebSocket() {

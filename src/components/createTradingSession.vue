@@ -104,6 +104,7 @@ const initializeTrader = async () => {
 onMounted(() => {
   serverActive.value = true;
   console.debug(traderStore.initializeTradingSystem)
+  traderStore.generateHistory()
 });
 </script>
 
