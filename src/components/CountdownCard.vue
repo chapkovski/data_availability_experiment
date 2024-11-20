@@ -26,6 +26,7 @@ const props = defineProps({
   title: String,
   progressBarColor: String,
   totalTime: Number,
+  remainingTime: Number, 
   progressType: {
     type: String,
     default: 'circular', // Default to circular

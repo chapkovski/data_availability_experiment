@@ -11,7 +11,9 @@ export const useTraderStore = defineStore("trader", {
   state: () => ({
     actions: [],
     isTimerPaused: false,
+    dayRemainingTime: null,
     timerCounter: 0,
+    day_duration: null,
     dayOver: false,
     midPoint: 0,
     spread: 0,
@@ -30,7 +32,7 @@ export const useTraderStore = defineStore("trader", {
     // data from the session initialization
     treatment: null,
     tick_frequency: null,
-    day_duration: null,
+    
     market_signal_strength: null,
     data_latency: null,
     tradingSessionUUID: null,
