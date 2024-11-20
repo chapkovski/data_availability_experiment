@@ -1,7 +1,9 @@
 <template>
   <v-app>
     <v-app-bar app fixed class="timerbar  ">
-      <CountdownCard title="Till the end of the day" :total-time="day_duration * 60" progress-bar-color="primary"
+      <CountdownCard title="Till the end of the day" 
+       :total-time="dayRemainingTime / 1000"
+      progress-bar-color="primary"
         progress-type="linear" @time-updated="handleTimeUpdated" />
 
     </v-app-bar>
@@ -121,11 +123,12 @@ import { watch, ref, onMounted, computed } from "vue";
 const { gameParams, shares, cash, initial_shares, dayOver, isTimerPaused, dayRemainingTime, day_duration, timerCounter } =
   storeToRefs(useTraderStore());
 
-
+const localRemainingTime = ref(dayRemainingTime.value);
 const dialogVisible = ref(false);
 const closeDialog = () => {
   dialogVisible.value = false; // Close dialog
   isTimerPaused.value = false; // Resume the timer
+  dayRemainingTime.value = localRemainingTime.value; // Update Pinia store
 };
 
 const handleTimerRestarted = () => {
@@ -140,7 +143,7 @@ const handleTimerRestarted = () => {
 
 
 const handleTimeUpdated = (remainingTime) => {
-  dayRemainingTime.value = remainingTime; // Directly update the Pinia store
+  localRemainingTime.value = remainingTime; // Track locally
 };
 
 const router = useRouter();
