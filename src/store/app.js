@@ -10,6 +10,8 @@ const wsROOT = "ws://localhost:8000/trader";
 export const useTraderStore = defineStore("trader", {
   state: () => ({
     actions: [],
+    isTimerPaused: false,
+    timerCounter: 0,
     dayOver: false,
     midPoint: 0,
     spread: 0,
@@ -34,6 +36,7 @@ export const useTraderStore = defineStore("trader", {
     tradingSessionUUID: null,
     traderUUID: null,
   }),
+ 
   getters: {
 
   },

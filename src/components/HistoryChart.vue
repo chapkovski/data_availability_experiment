@@ -140,7 +140,10 @@ onMounted(async () => {
   console.debug(history.value);
   await nextTick();
     // priceGraph.value.chart.setSize(1000, 300);
+    if (priceGraph.value?.chart) {
+      // priceGraph.value.chart.setSize('100%', '100%');
     priceGraph.value.chart.reflow();
+  }
 });
 
 StockCharts(HighCharts);
@@ -157,12 +160,13 @@ export default {
 
 <template>
   <v-btn @click="traderStore.addCurrentDataPoint()" v-if="false">AddNewPoint</v-btn>
-  <div style="width: 100%">
+  <div style="width: 100%;height: 100%;">
     <highcharts
       ref="priceGraph"
       :constructor-type="'stockChart'"
       :options="chartOptions"
-      style="height: 300px"
+      style="height:90%"
+      height="90%"
     >
     </highcharts>
   </div>

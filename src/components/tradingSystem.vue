@@ -9,11 +9,22 @@
       />
       
     </v-app-bar>
+    <v-dialog v-model="dialogVisible" persistent>
+      <v-card>
+        <v-card-title class="text-h5">Action Required</v-card-title>
+        <v-card-text>Please respond to proceed.</v-card-text>
+        <v-card-actions>
+          <v-btn color="primary" @click="closeDialog">Continue</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-app-bar app fixed  class="my-3">
       
       <v-toolbar  v-if="true">
-       <CountdownCard title="Till next decision" :total-time="25" progress-bar-color="red"> </CountdownCard>
-       <CountdownCard title="Till next info update" :total-time="data_latency" progress-bar-color="blue"> </CountdownCard>
+       <CountdownCard title="Till next decision" :total-time="5" progress-bar-color="red"
+        @timer-restarted="handleTimerRestarted"  :is-paused="isTimerPaused.value"
+       > </CountdownCard>
+       
       
         <v-spacer></v-spacer>
 
@@ -94,7 +105,7 @@
 const props = defineProps({
   traderUuid: String,
 });
-import commandTool from "@/components/commandToolBar.vue";
+
 
 // import BidAskChart from "@/components/BidAskChart.vue";
 
@@ -104,42 +115,48 @@ import 'splitpanes/dist/splitpanes.css'
 import HistoryChart from "@/components/HistoryChart.vue";
 import BidAskTable from "./BidAskTable.vue";
 import sellingBlock from "./sellingBlock.vue";
-import messageBlock from "./messageBlock.vue";
-import staticInfoBlock from "./staticInfoBlock.vue";
 import CountdownCard from "./CountdownCard.vue";
 import { useRouter } from "vue-router";
-import { useFormatNumber } from "@/composables/utils";
-const updTime = (time) => {
-  remainingTime.value = time.totalMilliseconds;
-};
-const restartTimer = () => {
-  remainingTime.value = totalTime;
-  // how i can restart the timer
+import { storeToRefs } from "pinia";
+import { useTraderStore } from "@/store/app";
+import { watch, ref, onMounted, computed } from "vue";
 
+
+const dialogVisible = ref(false);
+const closeDialog = () => {
+  dialogVisible.value = false; // Close dialog
+  isTimerPaused.value = false; // Resume the timer
 };
-const { formatNumber } = useFormatNumber();
+const { gameParams, shares, cash, initial_shares, dayOver, isTimerPaused, day_duration , timerCounter} =
+  storeToRefs(useTraderStore());
+
+ 
+ 
+
+const handleTimerRestarted = () => {
+  console.debug("TIMER RESTARTED");
+  timerCounter.value ++;
+  // store.commit('incrementCounter'); // Increment the counter in Vuex store
+
+  if (timerCounter.value >= 3) {
+    console.debug("Counter reached 3");
+    dialogVisible.value = true; // Show dialog when counter reaches 10
+    isTimerPaused.value = true; // Pause the timer
+  }
+};
+
+
+
+
 const router = useRouter();
 const goalMessage = {
   type: "success",  // Could be 'success', 'error', 'warning', etc.
   text: "Your goal has been achieved successfully!"  // The message to be displayed
 };
-import { storeToRefs } from "pinia";
-import { useTraderStore } from "@/store/app";
-import { watch, ref, onMounted, computed } from "vue";
 
-const { gameParams, shares, cash, initial_shares, dayOver, data_latency, day_duration } =
-  storeToRefs(useTraderStore());
 
-const totalTime = 15000;  // 15 seconds in milliseconds
-const remainingTime = ref(totalTime);
 
-// Compute progress percentage for the progress bar
-const progressValue = computed(() => (remainingTime.value / totalTime) * 100);
-// const remainingTime = computed(() => {
-//   const currentTime = new Date().getTime();
-//   const endTime = new Date(gameParams.value.end_time).getTime();
-//   return endTime - currentTime;
-// });
+
 
 
 
