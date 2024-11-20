@@ -1,13 +1,9 @@
 <template>
   <v-app>
-    <v-app-bar app fixed class="timerbar  "   >
-      <CountdownCard
-        title="Till the end of the day"
-        :total-time="day_duration*60"
-        progress-bar-color="primary"
-        progress-type="linear"
-      />
-      
+    <v-app-bar app fixed class="timerbar  ">
+      <CountdownCard title="Till the end of the day" :total-time="day_duration * 60" progress-bar-color="primary"
+        progress-type="linear" @time-updated="handleTimeUpdated" />
+
     </v-app-bar>
     <v-dialog v-model="dialogVisible" persistent>
       <v-card>
@@ -18,23 +14,22 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-app-bar app fixed  class="my-3">
-      
-      <v-toolbar  v-if="true">
-       <CountdownCard title="Till next decision" :total-time="5" progress-bar-color="red"
-        @timer-restarted="handleTimerRestarted"  :is-paused="isTimerPaused.value"
-       > </CountdownCard>
-       
-      
+    <v-app-bar app fixed class="my-3">
+
+      <v-toolbar v-if="true">
+        <CountdownCard title="Till next decision" :total-time="5" progress-bar-color="red"
+          @timer-restarted="handleTimerRestarted"> </CountdownCard>
+
+
         <v-spacer></v-spacer>
 
-        
+
         <v-card class="mx-2" outlined>
           <v-card-text class="font-weight-bold">
             Share of insiders
-             
-              <span  >50%</span>
-            
+
+            <span>50%</span>
+
           </v-card-text>
         </v-card>
 
@@ -47,7 +42,7 @@
             <span>
               <span>{{ initial_shares }}</span>
               <Transition enter-active-class="fade-in-highlight" :key="shares">
-               
+
               </Transition>
             </span>
 
@@ -66,33 +61,33 @@
 
         <!-- Include other market fundamentals and inventory status here -->
       </v-toolbar>
-    
+
     </v-app-bar>
 
     <v-main>
       <splitpanes class="default-theme" horizontal :push-other-panes="false" style="height: calc(100vh - 100px)">
-  <pane class="p-3">
-    <div clas="my-3" style="margin-top:50px">
-      <HistoryChart></HistoryChart>
-    </div>
-  </pane>
-  <pane>
-    <splitpanes :push-other-panes="false">
-       
-      <pane style="max-height: 100%;">
-        <BidAskTable></BidAskTable>
-      </pane>
-      <pane>
-        <sellingBlock />
-      </pane>
-    </splitpanes>
-  </pane>
+        <pane class="p-3">
+          <div clas="my-3" style="margin-top:50px">
+            <HistoryChart></HistoryChart>
+          </div>
+        </pane>
+        <pane>
+          <splitpanes :push-other-panes="false">
 
-</splitpanes>
+            <pane style="max-height: 100%;">
+              <BidAskTable></BidAskTable>
+            </pane>
+            <pane>
+              <sellingBlock />
+            </pane>
+          </splitpanes>
+        </pane>
+
+      </splitpanes>
     </v-main>
     <!-- bottom fixed bar -->
 
-    
+
     <v-footer app v-if="false">
       <v-alert v-if="goalMessage" :class="goalMessage.type" :color="goalMessage.type">
         <b>{{ goalMessage.text }}</b>
@@ -122,22 +117,20 @@ import { useTraderStore } from "@/store/app";
 import { watch, ref, onMounted, computed } from "vue";
 
 
+
+const { gameParams, shares, cash, initial_shares, dayOver, isTimerPaused, dayRemainingTime, day_duration, timerCounter } =
+  storeToRefs(useTraderStore());
+
+
 const dialogVisible = ref(false);
 const closeDialog = () => {
   dialogVisible.value = false; // Close dialog
   isTimerPaused.value = false; // Resume the timer
 };
-const { gameParams, shares, cash, initial_shares, dayOver, isTimerPaused, day_duration , timerCounter} =
-  storeToRefs(useTraderStore());
-
- 
- 
 
 const handleTimerRestarted = () => {
   console.debug("TIMER RESTARTED");
-  timerCounter.value ++;
-  // store.commit('incrementCounter'); // Increment the counter in Vuex store
-
+  timerCounter.value++;
   if (timerCounter.value >= 3) {
     console.debug("Counter reached 3");
     dialogVisible.value = true; // Show dialog when counter reaches 10
@@ -146,7 +139,9 @@ const handleTimerRestarted = () => {
 };
 
 
-
+const handleTimeUpdated = (remainingTime) => {
+  dayRemainingTime.value = remainingTime; // Directly update the Pinia store
+};
 
 const router = useRouter();
 const goalMessage = {
@@ -191,36 +186,38 @@ header.timerbar .v-toolbar__content {
   display: flex !important;
   flex-direction: column !important;
 }
- .splitpanes--horizontal>.splitpanes__splitter {
-    height: 12px!important;;
-    
+
+.splitpanes--horizontal>.splitpanes__splitter {
+  height: 12px !important;
+  ;
+
 }
 
-.splitpanes--horizontal>.splitpanes__splitter::after,.splitpanes--horizontal>.splitpanes__splitter::before {
-    background-color: rgb(33,33,33)!important;
-    height: 2px!important;
-    
+.splitpanes--horizontal>.splitpanes__splitter::after,
+.splitpanes--horizontal>.splitpanes__splitter::before {
+  background-color: rgb(33, 33, 33) !important;
+  height: 2px !important;
+
 }
 
-.splitpanes--vertical>.splitpanes__splitter::after,.splitpanes--vertical>.splitpanes__splitter::before {
-  background-color: rgb(33,33,33)!important;
-    width: 2px!important;
-    border-radius: 0.5px!important;
-    /* margin:0px!important; */
-    padding:0px!important;
-    left: 40%!important;
+.splitpanes--vertical>.splitpanes__splitter::after,
+.splitpanes--vertical>.splitpanes__splitter::before {
+  background-color: rgb(33, 33, 33) !important;
+  width: 2px !important;
+  border-radius: 0.5px !important;
+  /* margin:0px!important; */
+  padding: 0px !important;
+  left: 40% !important;
 
-    
+
 }
 
-.splitpanes__splitter::after,.splitpanes__splitter::before {
- 
- 
-    
-}
+.splitpanes__splitter::after,
+.splitpanes__splitter::before {}
 
 .splitpanes--vertical>.splitpanes__splitter {
-    width: 12px!important;;
+  width: 12px !important;
+  ;
 }
 </style>
 
@@ -229,6 +226,7 @@ header.timerbar .v-toolbar__content {
   display: flex !important;
   flex-direction: column !important;
 }
+
 .equal-height-columns>.v-col {
   display: flex;
   flex: 1;
@@ -270,13 +268,11 @@ header.timerbar .v-toolbar__content {
   animation: fadeInHighlight 1s ease;
 }
 
-.splitpanes__panes{
-    background: rgb(33, 33, 33) !important;
-}
-.splitpanes.default-theme .splitpanes__pane{
-  background: rgb(33, 33, 33) !important;  
+.splitpanes__panes {
+  background: rgb(33, 33, 33) !important;
 }
 
-
-
+.splitpanes.default-theme .splitpanes__pane {
+  background: rgb(33, 33, 33) !important;
+}
 </style>

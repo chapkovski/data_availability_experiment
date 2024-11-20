@@ -159,6 +159,7 @@ export const useTraderStore = defineStore("trader", {
       this.treatment = treatment;
       this.tick_frequency = tick_frequency;
       this.day_duration = day_duration;
+      this.dayRemainingTime = day_duration;
       this.market_signal_strength = market_signal_strength;
       this.data_latency = data_latency;
       this.tradingSessionUUID = tradingSessionUUID;
