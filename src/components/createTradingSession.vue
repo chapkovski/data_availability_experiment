@@ -28,7 +28,6 @@
     </v-container>
   </v-app>
 </template>
-
 <script setup>
 import { onMounted, ref, computed } from "vue";
 import { useTraderStore } from "@/store/app";
@@ -37,7 +36,7 @@ import { useRouter } from "vue-router";
 
 const traderStore = useTraderStore();
 const router = useRouter();
-const serverActive = ref(true);  // Assuming server is always available now
+const serverActive = ref(true); // Assuming server is always available now
 const connectionServerMessage = computed(() => {
   return serverActive.value
     ? "Launch demo session"
@@ -45,66 +44,71 @@ const connectionServerMessage = computed(() => {
 });
 const formState = ref({});
 
-// Hardcoded form fields
+// Updated form fields to include num_of_ticks_in_day instead of day_duration
 const formFields = ref([
   {
     name: "tick_frequency",
-    title: "Tick Frequency Update",
+    title: "Tick Frequency (seconds)",
     type: "number",
     hint: "Enter tick frequency",
     default: 5,
   },
   {
-    name: "day_duration",
-    title: "Overall Day Duration (minutes)",
+    name: "num_of_ticks_in_day",
+    title: "Number of Ticks in a Day",
     type: "number",
-    hint: "Enter duration in minutes",
-    default: 3,
+    hint: "Enter the number of ticks in a day",
+    default: 10,
+  },
+  {
+    name: "midday_quiz_tick",
+    title: "Midday Quiz Tick",
+    type: "number",
+    hint: "Enter the tick number for the quiz dialog",
+    default: 5, // Default to halfway through the ticks
   },
   {
     name: "market_signal_strength",
     title: "Market Signal Strength",
-    type: "select",  // Changed to dropdown
-    options: ["High", "Low"],  // Options for the dropdown
+    type: "select", // Changed to dropdown
+    options: ["High", "Low"], // Options for the dropdown
     default: "High",
   },
-  {
-    name: "data_latency",
-    title: "Data Latency (seconds)",
-    type: "number",
-    hint: "Enter data latency in seconds",
-    default: 3,
-  },
+  
 ]);
+
 // Initialize formState with default values
 formFields.value.forEach((field) => {
   formState.value[field.name] = field.default;
 });
 
-const { tradingSessionData } = storeToRefs(useTraderStore());
+
 
 const initializeTrader = async () => {
-  // Add the random UUID to the formState
+  // Add the random UUIDs to the formState
   formState.value.tradingSessionUUID = crypto.randomUUID();
   formState.value.traderUUID = crypto.randomUUID();
 
+  // Calculate day_duration dynamically before passing to the store
+  formState.value.day_duration =
+    formState.value.tick_frequency * formState.value.num_of_ticks_in_day;
+
   await traderStore.initializeTradingSystem(formState.value);
 
-  // redirect to the trading system page with the generated UUID
+  // Redirect to the trading system page with the generated UUID
   router.push({
     name: "TradingSystem",
     params: {
       tradingSessionUUID: formState.value.tradingSessionUUID,
-      traderUUID: formState.value.traderUUID
-    }
-
+      traderUUID: formState.value.traderUUID,
+    },
   });
 };
 
 onMounted(() => {
   serverActive.value = true;
-  console.debug(traderStore.initializeTradingSystem)
-  traderStore.generateHistory()
+  console.debug(traderStore.initializeTradingSystem);
+  traderStore.generateHistory();
 });
 </script>
 

@@ -2,7 +2,7 @@
   <v-app>
     <v-app-bar app fixed class="timerbar  ">
       <CountdownCard title="Till the end of the day" :total-time="dayRemainingTime / 1000"
-        :overall-time="day_duration * 60" progress-bar-color="primary" progress-type="linear"
+        :overall-time="day_duration" progress-bar-color="primary" progress-type="linear"
         @time-updated="handleTimeUpdated" />
 
     </v-app-bar>
@@ -119,7 +119,8 @@ import { watch, ref, onMounted, computed } from "vue";
 
 
 
-const { gameParams, shares, cash, initial_shares, dayOver, isTimerPaused, dayRemainingTime, day_duration, timerCounter } =
+const { gameParams, shares, cash, initial_shares, dayOver, isTimerPaused, dayRemainingTime, day_duration,
+  midday_quiz_tick, timerCounter } =
   storeToRefs(useTraderStore());
 
 const localRemainingTime = ref(dayRemainingTime.value);
@@ -133,11 +134,12 @@ const closeDialog = () => {
 const handleTimerRestarted = () => {
   console.debug("TIMER RESTARTED");
   timerCounter.value++;
-  if (timerCounter.value >= 3) {
-    console.debug("Counter reached 3");
-    dialogVisible.value = true; // Show dialog when counter reaches 10
+  
+  if (parseInt(timerCounter.value) === parseInt(midday_quiz_tick.value)) {
+    dialogVisible.value = true; // Show dialog
     isTimerPaused.value = true; // Pause the timer
   }
+  
 };
 
 

@@ -13,7 +13,9 @@ export const useTraderStore = defineStore("trader", {
     isTimerPaused: false,
     dayRemainingTime: null,
     timerCounter: 0,
-    day_duration: null,
+    day_duration: null, // Derived from tick_frequency * num_of_ticks_in_day
+    num_of_ticks_in_day: null,
+    midday_quiz_tick: null,
     dayOver: false,
     midPoint: 0,
     spread: 0,
@@ -32,9 +34,7 @@ export const useTraderStore = defineStore("trader", {
     // data from the session initialization
     treatment: null,
     tick_frequency: null,
-    
     market_signal_strength: null,
-    data_latency: null,
     tradingSessionUUID: null,
     traderUUID: null,
   }),
@@ -145,39 +145,44 @@ export const useTraderStore = defineStore("trader", {
       const {
         treatment,
         tick_frequency,
-        day_duration,
+        num_of_ticks_in_day, 
+        midday_quiz_tick,
         market_signal_strength,
-        data_latency,
         tradingSessionUUID,
-        traderUUID
+        traderUUID,
       } = formData;
-
+    
       // Assign formData to gameParams
       this.gameParams = { ...formData };
-
+    
       // Assign individual values to top-level state properties
       this.treatment = treatment;
       this.tick_frequency = tick_frequency;
-      this.day_duration = day_duration;
-      this.dayRemainingTime = day_duration * 60 * 1000; // Convert to milliseconds
+      this.num_of_ticks_in_day = num_of_ticks_in_day;
+      this.midday_quiz_tick = midday_quiz_tick;
+      
+      this.day_duration = tick_frequency * num_of_ticks_in_day; // Total duration in seconds
+    
+      // Calculate dayRemainingTime in milliseconds
+      this.dayRemainingTime = this.day_duration * 1000;
+    
       this.market_signal_strength = market_signal_strength;
-      this.data_latency = data_latency;
       this.tradingSessionUUID = tradingSessionUUID;
       this.traderUUID = traderUUID;
-
+    
       // Log to verify initialization
-      console.log("Trading system initialized with the following parameters:", {
+      console.debug("Trading system initialized with the following parameters:", {
         treatment: this.treatment,
         tick_frequency: this.tick_frequency,
+        num_of_ticks_in_day: this.num_of_ticks_in_day,
         day_duration: this.day_duration,
+        midday_quiz_tick: parseInt(this.midday_quiz_tick),
         market_signal_strength: this.market_signal_strength,
-        data_latency: this.data_latency,
         tradingSessionUUID: this.tradingSessionUUID,
         traderUUID: this.traderUUID,
       });
-
+    
       // Generate history after initialization
-      
     },
 
     async initializeWebSocket() {
