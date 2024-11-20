@@ -26,7 +26,7 @@ const props = defineProps({
   title: String,
   progressBarColor: String,
   totalTime: Number,
-
+  overallTime: Number,
   progressType: {
     type: String,
     default: 'circular', // Default to circular
@@ -43,8 +43,14 @@ const { isTimerPaused } = storeToRefs(store);
 const resetKey = ref(0);
 const emit = defineEmits(['timer-restarted','time-updated']);
 const totTimeInMilliseconds = computed(() => (props.totalTime) * 1000);
+// Use overallTime if provided; otherwise, fallback to totTimeInMilliseconds
+const baseTimeInMilliseconds = computed(() =>
+  props.overallTime ? props.overallTime * 1000 : totTimeInMilliseconds.value
+);
+
 const remainingTime = ref(totTimeInMilliseconds.value);
-const progressValue = computed(() => (remainingTime.value / totTimeInMilliseconds.value) * 100);
+const progressValue = computed(() => (remainingTime.value / baseTimeInMilliseconds.value) * 100);
+
 // Methods
 const updTime = (time) => {
   remainingTime.value = time.totalMilliseconds; // Update remaining time

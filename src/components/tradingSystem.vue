@@ -1,10 +1,9 @@
 <template>
   <v-app>
     <v-app-bar app fixed class="timerbar  ">
-      <CountdownCard title="Till the end of the day" 
-       :total-time="dayRemainingTime / 1000"
-      progress-bar-color="primary"
-        progress-type="linear" @time-updated="handleTimeUpdated" />
+      <CountdownCard title="Till the end of the day" :total-time="dayRemainingTime / 1000"
+        :overall-time="day_duration * 60" progress-bar-color="primary" progress-type="linear"
+        @time-updated="handleTimeUpdated" />
 
     </v-app-bar>
     <v-dialog v-model="dialogVisible" persistent>
