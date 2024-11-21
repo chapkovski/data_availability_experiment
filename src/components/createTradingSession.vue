@@ -62,7 +62,7 @@ const formFields = ref([
   },
   {
     name: "midday_quiz_tick",
-    title: "Midday Quiz Tick",
+    title: "Midday Quiz Tick Number",
     type: "number",
     hint: "Enter the tick number for the quiz dialog",
     default: 5, // Default to halfway through the ticks

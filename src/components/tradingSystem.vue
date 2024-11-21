@@ -10,7 +10,7 @@
     <v-app-bar app fixed class="my-3">
 
       <v-toolbar v-if="true">
-        <CountdownCard title="Till next decision" :total-time="5" progress-bar-color="red"
+        <CountdownCard title="Till next decision" :total-time="tick_frequency" progress-bar-color="red"
           @timer-restarted="handleTimerRestarted"> </CountdownCard>
 
 
@@ -114,7 +114,7 @@ import { watch, ref, onMounted, computed } from "vue";
 
 
 const { gameParams, shares, cash, initial_shares, dayOver, isTimerPaused, dayRemainingTime, day_duration,
-  midday_quiz_tick, timerCounter } =
+  midday_quiz_tick, timerCounter, tick_frequency } =
   storeToRefs(useTraderStore());
 
 const localRemainingTime = ref(dayRemainingTime.value);
