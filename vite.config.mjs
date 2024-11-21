@@ -9,11 +9,11 @@ import Layouts from 'vite-plugin-vue-layouts'
 // Utilities
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
-
+import dsv from '@rollup/plugin-dsv';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-     
+    dsv(),
     Layouts(),
     Vue({
       template: { transformAssetUrls }
