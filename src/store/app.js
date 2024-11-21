@@ -1,9 +1,9 @@
 // store.js
 import { defineStore } from "pinia";
-import axios from "axios";
-import { useWebSocket } from "@vueuse/core";
-import { spread } from "lodash";
 
+import { useWebSocket } from "@vueuse/core";
+import _ from 'lodash';
+import priceData from '@/assets/data/price.csv';
 const wsROOT = "ws://localhost:8000/trader";
 
 
