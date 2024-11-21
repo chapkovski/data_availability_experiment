@@ -10,6 +10,7 @@ const wsROOT = "ws://localhost:8000/trader";
 export const useTraderStore = defineStore("trader", {
   state: () => ({
     actions: [],
+    priceData: _.filter(priceData, { round: "1" }),
     isTimerPaused: false,
     dayRemainingTime: null,
     timerCounter: 0,
