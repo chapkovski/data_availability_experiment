@@ -105,11 +105,46 @@ const initializeTrader = async () => {
   });
 };
 
-onMounted(() => {
+onMounted(async () => {
   serverActive.value = true;
   console.debug(traderStore.initializeTradingSystem);
   traderStore.generateHistory();
+  await fetchCsvData()
+  console.debug(tableData.value);
 });
+
+import Papa from "papaparse";
+
+const tableHeaders = ref([]); // DataTable headers
+const tableData = ref([]); // Parsed CSV data
+
+const fetchCsvData = async () => {
+  try {
+    // Fetch the CSV file
+    const response = await fetch('/assets/data/sample.csv'); // Update with your file path
+    const csv = await response.text();
+
+    // Parse the CSV file
+    Papa.parse(csv, {
+      header: true, // Use the first row as headers
+      skipEmptyLines: true, // Ignore empty lines
+      complete: (result) => {
+        if (result.data && result.data.length > 0) {
+          // Set table headers based on CSV keys
+          tableHeaders.value = Object.keys(result.data[0]).map((key) => ({
+            text: key,
+            value: key,
+          }));
+
+          // Set table data
+          tableData.value = result.data;
+        }
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching or parsing CSV:", error);
+  }
+};
 </script>
 
 <style scoped>

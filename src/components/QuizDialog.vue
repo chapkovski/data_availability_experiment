@@ -76,7 +76,7 @@ defineExpose({ openDialog, closeDialog });
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn :disabled="!isFormValid" color="primary" @click="closeDialog">Submit</v-btn>
+        <v-btn size="x-large" :disabled="!isFormValid" variant="outlined" color="primary" @click="closeDialog">Submit</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
