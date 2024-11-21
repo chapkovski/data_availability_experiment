@@ -85,7 +85,7 @@ export const useTraderStore = defineStore("trader", {
     },
     generateRandomAction() {
       const randomPrice = parseFloat((Math.random() * 100 + 100).toFixed(2));
-      const size = Math.floor(Math.random() * 100) + 1;
+      const size = 1;
       const condition = Math.random() > 0.5 ? 'At ask' : 'At bid';
 
       const newAction = {
