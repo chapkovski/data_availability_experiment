@@ -2,7 +2,8 @@
   <v-app>
     <v-app-bar app fixed class="timerbar  ">
       <CountdownCard title="Till the end of the day" :total-time="dayRemainingTime / 1000" :overall-time="day_duration"
-        progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated" />
+        progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated" 
+        @timer-restarted="finalizingDay"/>
       <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
     </v-app-bar>
 

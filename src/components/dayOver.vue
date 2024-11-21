@@ -8,39 +8,47 @@
               <v-card-title>Day Overview</v-card-title>
               <v-card-text>
                 <v-list>
+                  <!-- Initial Cash -->
                   <v-list-item>
                     <v-list-item-content>
                       <v-list-item-title>Initial cash</v-list-item-title>
-                      <div>{{ traderInfo?.initial_cash }}</div>
+                      <div>{{ initialCash }}</div>
                     </v-list-item-content>
                   </v-list-item>
+
+                  <!-- Final Cash -->
                   <v-list-item>
                     <v-list-item-content>
                       <v-list-item-title>Final cash</v-list-item-title>
-                      <div>{{ traderInfo?.cash }}</div>
+                      <div>{{ cash }}</div>
                     </v-list-item-content>
                   </v-list-item>
+
+                  <!-- Change in Cash -->
                   <v-list-item>
                     <v-list-item-content>
                       <v-list-item-title>Change in cash:</v-list-item-title>
-                      <div>{{ traderInfo?.delta_cash }}</div>
+                      <div>{{ cash - initial_cash }}</div>
                     </v-list-item-content>
                   </v-list-item>
+
+                  <!-- Initial Shares -->
                   <v-list-item>
                     <v-list-item-content>
                       <v-list-item-title>Initial shares</v-list-item-title>
-                      <div>{{ traderInfo?.initial_shares }}</div>
+                      <div>{{ initial_shares }}</div>
                     </v-list-item-content>
                   </v-list-item>
+
+                  <!-- Final Shares -->
                   <v-list-item>
                     <v-list-item-content>
                       <v-list-item-title
                         >Final amount of shares</v-list-item-title
                       >
-                      <div>{{ traderInfo?.shares }}</div>
+                      <div>{{ shares }}</div>
                     </v-list-item-content>
                   </v-list-item>
-                
                 </v-list>
               </v-card-text>
             </v-card>
@@ -52,27 +60,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import axios from "axios";
+import { storeToRefs } from "pinia";
+import { useTraderStore } from "@/store/app";
 
-const props = defineProps({
-  traderUUID: String,
-});
-
-// Reactive state to store trader information
-const traderInfo = ref(null);
-
-const httpUrl = import.meta.env.VITE_HTTP_URL; // Access the environment variable
-
-async function fetchTraderInfo() {
-  try {
-    const response = await axios.get(`${httpUrl}trader_info/${props.traderUuid}`);
-    traderInfo.value = response.data.data; // Adjust based on your API response
-  } catch (error) {
-    console.error('Failed to fetch trader info:', error);
-    // Handle the error appropriately
-  }
-}
-// Fetch trader information when component mounts
-onMounted(fetchTraderInfo);
+// Access the trader store and destructure necessary values
+const tradingStore = useTraderStore();
+const { initial_cash, cash, initial_shares, shares } = storeToRefs(tradingStore);
 </script>
