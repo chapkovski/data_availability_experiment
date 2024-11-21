@@ -1,7 +1,7 @@
 <template>
   <v-card height="100%" elevation="3">
     <v-card-title class="cardtitle">Decision Block</v-card-title>
-    <v-card-subtitle>Click on buttons to buy or sell immediately</v-card-subtitle>
+    
     <v-card-text>
       <v-container>
         <v-row>
@@ -19,7 +19,7 @@
             
               width="100%"
             >
-              Buy @ BEST BID
+              Buy @ {{ bestBuyingPrice }}
             </v-btn>
           </v-col>
 
@@ -32,7 +32,7 @@
              
               width="100%"
             >
-              Sell @ BEST ASK
+              Sell @ {{ bestSellingPrice }}
             </v-btn>
           </v-col>
         </v-row>
@@ -48,7 +48,7 @@ import { storeToRefs } from "pinia";
 
 const tradingStore = useTraderStore();
 const { sendMessage } = tradingStore;
-const { currentPrice } = storeToRefs(tradingStore);
+const { currentPrice,bestBuyingPrice, bestSellingPrice } = storeToRefs(tradingStore);
 
 // Compute the availability of ask and bid data
 // const hasAskData = computed(() => askData.value.length > 0);

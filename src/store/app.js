@@ -17,14 +17,11 @@ export const useTraderStore = defineStore("trader", {
     priceData: _.filter(originalPriceData, { round: "1" }),
     priceHistory: [],
     currentPrice: 0,
+    spread: 1,
     day_duration: null, // Derived from tick_frequency * num_of_ticks_in_day
     num_of_ticks_in_day: null,
     midday_quiz_tick: null,
     dayOver: false,
-    midPoint: 0,
-    spread: 1,
-    transaction_price: 0,
-
     gameParams: {},
     messages: [],
     status: null,
@@ -32,9 +29,7 @@ export const useTraderStore = defineStore("trader", {
     shares: 0,
     cash: 0,
     initial_shares: 0,
-    current_price: 0,
-    showSnackbar: false,
-    snackbarText: "",
+
     // data from the session initialization
     treatment: null,
     tick_frequency: null,
@@ -42,12 +37,19 @@ export const useTraderStore = defineStore("trader", {
     tradingSessionUUID: null,
     traderUUID: null,
   }),
- 
-  getters: {
 
+  getters: {
+    bestBuyingPrice: (state) => {
+      // Calculate the best buying price
+      return parseFloat(state.currentPrice) - state.spread / 2;
+    },
+    bestSellingPrice: (state) => {
+      // Calculate the best selling price
+      return parseFloat(state.currentPrice) + state.spread / 2;
+    },
   },
   actions: {
-    makeTick(){
+    makeTick() {
       this.timerCounter += 1;
       this.currentPrice = this.priceData[this.timerCounter].price;
       this.updatePriceHistory();
@@ -61,7 +63,7 @@ export const useTraderStore = defineStore("trader", {
         this.priceHistory.push({ x: now, y: currentPrice });
 
         // Increment the timer counter
-  
+
       } else {
         console.warn("No more data points to add from priceData.");
       }
@@ -73,7 +75,7 @@ export const useTraderStore = defineStore("trader", {
       const randomPrice = parseFloat((Math.random() * 100 + 100).toFixed(2));
       const size = Math.floor(Math.random() * 100) + 1;
       const condition = Math.random() > 0.5 ? 'At ask' : 'At bid';
-      
+
       const newAction = {
         random_id: Math.random().toString(36).substr(2, 9),
         timestamp: Date.now(),
@@ -92,43 +94,43 @@ export const useTraderStore = defineStore("trader", {
       // Initialize a periodic interval to add new actions
       setInterval(() => {
         this.generateRandomAction();
-        
+
       }, 1 * 1000);
     },
 
     // Function to generate the history array for the last 5 minutes and the next 5 minutes
-   
-    
+
+
     async initializeTradingSystem(formData) {
       // Destructure the formData
       const {
         treatment,
         tick_frequency,
-        num_of_ticks_in_day, 
+        num_of_ticks_in_day,
         midday_quiz_tick,
         market_signal_strength,
         tradingSessionUUID,
         traderUUID,
       } = formData;
-    
+
       // Assign formData to gameParams
       this.gameParams = { ...formData };
-    
+
       // Assign individual values to top-level state properties
       this.treatment = treatment;
       this.tick_frequency = tick_frequency;
       this.num_of_ticks_in_day = num_of_ticks_in_day;
       this.midday_quiz_tick = midday_quiz_tick;
-      
+
       this.day_duration = tick_frequency * num_of_ticks_in_day; // Total duration in seconds
-    
+
       // Calculate dayRemainingTime in milliseconds
       this.dayRemainingTime = this.day_duration * 1000;
-    
+
       this.market_signal_strength = market_signal_strength;
       this.tradingSessionUUID = tradingSessionUUID;
       this.traderUUID = traderUUID;
-    
+
       // Log to verify initialization
       console.debug("Trading system initialized with the following parameters:", {
         treatment: this.treatment,
@@ -140,7 +142,7 @@ export const useTraderStore = defineStore("trader", {
         tradingSessionUUID: this.tradingSessionUUID,
         traderUUID: this.traderUUID,
       });
-    
+
       // Generate history after initialization
     },
 
