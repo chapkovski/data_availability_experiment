@@ -4,17 +4,9 @@
       <CountdownCard title="Till the end of the day" :total-time="dayRemainingTime / 1000"
         :overall-time="day_duration" progress-bar-color="primary" progress-type="linear"
         @time-updated="handleTimeUpdated" />
-
+        <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
     </v-app-bar>
-    <v-dialog v-model="dialogVisible" persistent>
-      <v-card>
-        <v-card-title class="text-h5">Action Required</v-card-title>
-        <v-card-text>Please respond to proceed.</v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" @click="closeDialog">Continue</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    
     <v-app-bar app fixed class="my-3">
 
       <v-toolbar v-if="true">
@@ -107,7 +99,9 @@ const props = defineProps({
 
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
+import QuizDialog from "./QuizDialog.vue";
 
+const quizDialog = ref(null);
 import HistoryChart from "@/components/HistoryChart.vue";
 import BidAskTable from "./BidAskTable.vue";
 import sellingBlock from "./sellingBlock.vue";
@@ -124,9 +118,10 @@ const { gameParams, shares, cash, initial_shares, dayOver, isTimerPaused, dayRem
   storeToRefs(useTraderStore());
 
 const localRemainingTime = ref(dayRemainingTime.value);
-const dialogVisible = ref(false);
-const closeDialog = () => {
-  dialogVisible.value = false; // Close dialog
+const handleDialogClosed = (response) => {
+  console.debug("Quiz responses received:", response);
+
+  // Reset dialog state
   isTimerPaused.value = false; // Resume the timer
   dayRemainingTime.value = localRemainingTime.value; // Update Pinia store
 };
@@ -134,13 +129,16 @@ const closeDialog = () => {
 const handleTimerRestarted = () => {
   console.debug("TIMER RESTARTED");
   timerCounter.value++;
-  
+
+  // Check if the current timer count matches the quiz tick
   if (parseInt(timerCounter.value) === parseInt(midday_quiz_tick.value)) {
-    dialogVisible.value = true; // Show dialog
+    console.debug("Midday quiz triggered");
+
+    quizDialog.value.openDialog(); // Open the quiz dialog
     isTimerPaused.value = true; // Pause the timer
   }
-  
 };
+
 
 
 const handleTimeUpdated = (remainingTime) => {
