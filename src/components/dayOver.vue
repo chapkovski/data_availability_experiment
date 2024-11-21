@@ -12,7 +12,7 @@
                   <v-list-item>
                     <v-list-item-content>
                       <v-list-item-title>Initial cash</v-list-item-title>
-                      <div>{{ initialCash }}</div>
+                      <div>{{ initial_cash }}</div>
                     </v-list-item-content>
                   </v-list-item>
 

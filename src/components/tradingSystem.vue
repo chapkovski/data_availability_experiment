@@ -30,11 +30,11 @@
 
         <!-- Shares -->
         <v-card class="mx-2" outlined>
-          <v-card-text>
+          <v-card-text  class="font-weight-bold">
             Shares:
 
             <span>
-              <span>{{ shares }}</span>
+              <span >{{ shares }}</span>
               <Transition enter-active-class="fade-in-highlight" :key="shares">
 
               </Transition>
@@ -45,7 +45,7 @@
 
         <!-- Cash -->
         <v-card class="mx-2" outlined>
-          <v-card-text>
+          <v-card-text  class="font-weight-bold">
             Cash:
             <Transition enter-active-class="fade-in-highlight">
               <span :key="cash">{{ cash }}</span>
