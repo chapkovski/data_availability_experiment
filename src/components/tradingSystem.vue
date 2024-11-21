@@ -33,7 +33,7 @@
             Shares:
 
             <span>
-              <span>{{ initial_shares }}</span>
+              <span>{{ shares }}</span>
               <Transition enter-active-class="fade-in-highlight" :key="shares">
 
               </Transition>

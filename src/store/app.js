@@ -29,7 +29,7 @@ export const useTraderStore = defineStore("trader", {
     shares: 0,
     cash: 0,
     initial_shares: 0,
-
+    initial_cash: 0,
     // data from the session initialization
     treatment: null,
     tick_frequency: null,
@@ -39,6 +39,18 @@ export const useTraderStore = defineStore("trader", {
   }),
 
   getters: {
+    isBuyPossible(state) {
+      // Buy is possible if:
+      // 1. Shares are 0
+      // 2. Cash is greater than or equal to the current price
+      return parseInt(state.shares) === 0 && parseFloat(state.cash) >= parseFloat(state.currentPrice);
+    },
+    isSellPossible(state) {
+      // Sell is possible if:
+      // 1. Shares are greater than 0
+      // 2. If selling, buying should be blocked
+      return parseInt(state.shares) > 0;
+    },
     bestBuyingPrice: (state) => {
       // Calculate the best buying price
       return parseFloat(state.currentPrice) - state.spread / 2;
@@ -51,7 +63,7 @@ export const useTraderStore = defineStore("trader", {
   actions: {
     makeTick() {
       this.timerCounter += 1;
-      this.currentPrice = this.priceData[this.timerCounter].price;
+      this.currentPrice = parseFloat(this.priceData[this.timerCounter].price);
       this.updatePriceHistory();
     },
     updatePriceHistory() {
@@ -111,11 +123,19 @@ export const useTraderStore = defineStore("trader", {
         market_signal_strength,
         tradingSessionUUID,
         traderUUID,
+        initial_cash,
+        initial_shares,
+        spread
       } = formData;
 
       // Assign formData to gameParams
-      this.gameParams = { ...formData };
 
+      this.gameParams = { ...formData };
+      this.spread = spread;
+      this.initial_cash = initial_cash;
+      this.initial_shares = initial_shares;
+      this.shares = initial_shares;
+      this.cash = initial_cash;
       // Assign individual values to top-level state properties
       this.treatment = treatment;
       this.tick_frequency = tick_frequency;
@@ -141,6 +161,9 @@ export const useTraderStore = defineStore("trader", {
         market_signal_strength: this.market_signal_strength,
         tradingSessionUUID: this.tradingSessionUUID,
         traderUUID: this.traderUUID,
+        initial_cash: this.initial_cash,
+        initial_shares: this.initial_shares,
+        spread: this.spread
       });
 
       // Generate history after initialization

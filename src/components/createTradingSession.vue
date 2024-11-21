@@ -74,6 +74,21 @@ const formFields = ref([
     options: ["High", "Low"], // Options for the dropdown
     default: "High",
   },
+  {
+    name: "initial_cash",
+    title: "Initial Cash",
+    type: "number",
+    hint: "Enter starting cash for the trader",
+    default: 100, // Default value
+  },
+  {
+    name: "initial_shares",
+    title: "Initial Shares",
+    type: "number",
+    hint: "Enter starting shares for the trader",
+    default: 0, // Default value
+  },
+  {name:"spread", title:"Spread", type:"number", hint:"Enter the spread", default:1},
   
 ]);
 
