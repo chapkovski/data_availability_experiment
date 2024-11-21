@@ -5,6 +5,11 @@
     <v-card-text>
       <v-container>
         <v-row>
+          <v-alert outlined>
+            <h2>Current price: {{ currentPrice }}</h2>
+          </v-alert>
+        </v-row>
+        <v-row>
           <!-- Buy Button -->
           <v-col cols="12" sm="6" class="d-flex justify-center">
             <v-btn
@@ -43,7 +48,7 @@ import { storeToRefs } from "pinia";
 
 const tradingStore = useTraderStore();
 const { sendMessage } = tradingStore;
-const { bidData, askData } = storeToRefs(tradingStore);
+const { currentPrice } = storeToRefs(tradingStore);
 
 // Compute the availability of ask and bid data
 // const hasAskData = computed(() => askData.value.length > 0);

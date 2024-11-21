@@ -1,12 +1,11 @@
 <template>
   <v-app>
     <v-app-bar app fixed class="timerbar  ">
-      <CountdownCard title="Till the end of the day" :total-time="dayRemainingTime / 1000"
-        :overall-time="day_duration" progress-bar-color="primary" progress-type="linear"
-        @time-updated="handleTimeUpdated" />
-        <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
+      <CountdownCard title="Till the end of the day" :total-time="dayRemainingTime / 1000" :overall-time="day_duration"
+        progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated" />
+      <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
     </v-app-bar>
-    
+
     <v-app-bar app fixed class="my-3">
 
       <v-toolbar v-if="true">
@@ -110,12 +109,16 @@ import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 import { watch, ref, onMounted, computed } from "vue";
-
-
 const store = useTraderStore();
 const { gameParams, shares, cash, initial_shares, dayOver, isTimerPaused, dayRemainingTime, day_duration,
-  midday_quiz_tick, timerCounter, tick_frequency } =
-  storeToRefs(useTraderStore());
+  midday_quiz_tick, timerCounter, tick_frequency } = storeToRefs(useTraderStore());
+
+
+onMounted(() => {
+  console.log("Trading system mounted");
+  store.makeTick();
+});
+
 
 const localRemainingTime = ref(dayRemainingTime.value);
 const handleDialogClosed = (response) => {
@@ -128,8 +131,7 @@ const handleDialogClosed = (response) => {
 
 const handleTimerRestarted = () => {
   console.debug("TIMER RESTARTED");
-  timerCounter.value++;
-  store.updatePriceHistory();
+  store.makeTick();
 
   // Check if the current timer count matches the quiz tick
   if (parseInt(timerCounter.value) === parseInt(midday_quiz_tick.value)) {
