@@ -10,6 +10,7 @@
 
       <v-toolbar v-if="true">
         <CountdownCard title="Till next decision" :total-time="tick_frequency" progress-bar-color="red"
+        :interval="100"
           @timer-restarted="handleTimerRestarted"> </CountdownCard>
 
 

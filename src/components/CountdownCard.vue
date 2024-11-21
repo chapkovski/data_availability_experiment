@@ -11,7 +11,7 @@
 
       <!-- Updated remainingTime to remainingTime.value -->
       <vue-countdown @progress="updTime" @end="restartTimer" :time="totTimeInMilliseconds" :key="resetKey"
-        v-if="!isTimerPaused" v-slot="{ days, hours, minutes, seconds }">
+        v-if="!isTimerPaused" v-slot="{ days, hours, minutes, seconds }" :interval="interval" >
 
 
         <div>{{ title }}: <b>{{ Math.round(remainingTime / 1000) }} seconds</b></div>
@@ -30,6 +30,10 @@ const props = defineProps({
   progressType: {
     type: String,
     default: 'circular', // Default to circular
+  },
+  interval: {
+    type: Number,
+    default: 1000, // Default to 1 second
   },
 
 });
