@@ -1,16 +1,15 @@
 // store.js
 import { defineStore } from "pinia";
-
+import axios from "axios";
 import { useWebSocket } from "@vueuse/core";
+import { spread } from "lodash";
 import _ from 'lodash';
-import priceData from '@/assets/data/price.csv';
 const wsROOT = "ws://localhost:8000/trader";
 
 
 export const useTraderStore = defineStore("trader", {
   state: () => ({
     actions: [],
-    priceData: _.filter(priceData, { round: "1" }),
     isTimerPaused: false,
     dayRemainingTime: null,
     timerCounter: 0,
