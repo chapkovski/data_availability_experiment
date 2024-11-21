@@ -14,7 +14,9 @@ import { registerPlugins } from "./plugins"; // Assuming you have a plugins file
 
 // Initialize Highcharts modules
 Stock(Highcharts);
+import HighchartsNoData from 'highcharts/modules/no-data-to-display';
 
+HighchartsNoData(Highcharts);
 // Create Vue app
 const app = createApp(App);
 
