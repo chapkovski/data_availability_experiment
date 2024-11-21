@@ -112,7 +112,7 @@ import { useTraderStore } from "@/store/app";
 import { watch, ref, onMounted, computed } from "vue";
 
 
-
+const store = useTraderStore();
 const { gameParams, shares, cash, initial_shares, dayOver, isTimerPaused, dayRemainingTime, day_duration,
   midday_quiz_tick, timerCounter, tick_frequency } =
   storeToRefs(useTraderStore());
@@ -129,6 +129,7 @@ const handleDialogClosed = (response) => {
 const handleTimerRestarted = () => {
   console.debug("TIMER RESTARTED");
   timerCounter.value++;
+  store.updatePriceHistory();
 
   // Check if the current timer count matches the quiz tick
   if (parseInt(timerCounter.value) === parseInt(midday_quiz_tick.value)) {

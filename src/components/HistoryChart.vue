@@ -1,24 +1,36 @@
+<template>
+  <div class="chart-container">
+    <highcharts
+      ref="chart"
+      :constructorType="'stockChart'"
+      :options="chartOptions"
+    ></highcharts>
+  </div>
+</template>
+
 <script setup>
-import { ref, reactive, onMounted, watch, nextTick } from "vue";
-import { useTraderStore } from "@/store/app";
+import { reactive, watch, ref, onMounted, nextTick } from "vue";
 import { storeToRefs } from "pinia";
-import { Chart } from "highcharts-vue";
-import HighCharts from "highcharts";
-import StockCharts from "highcharts/modules/stock";
-import HighchartsNoData from "highcharts/modules/no-data-to-display";
+import { useTraderStore } from "@/store/app";
 
-const traderStore = useTraderStore();
-const { history } = storeToRefs(traderStore);
-const priceGraph = ref(null);
+// Access the trader store and reactive priceHistory
+const { priceHistory } = storeToRefs(useTraderStore());
 
-const original_options = {
+// Reference to the chart component
+const chartRef = ref(null);
+
+// Define reactive chart options
+const chartOptions = reactive({
   chart: {
-    backgroundColor: '#2b2b2b',
-    style: {
-      fontFamily: 'sans-serif',
-      color: '#E0E0E3'
-    },
+    height: '300px', // Allow dynamic height
   },
+  
+  // xAxis: {
+  //   type: "datetime",
+  //   labels: {
+  //     style: { color: "#E0E0E3" },
+  //   },
+  // },
   navigator: {
     enabled: false,
   },
@@ -30,146 +42,47 @@ const original_options = {
     buttons: [
       {
         type: 'second',
-        count: 60,
+        count: 5,
         text: '1m'
       },
     ],
-    selected: 0, // Index of the button to select by default (0 is the first button, "1m" in this case)
+    // selected: 0, // Index of the button to select by default (0 is the first button, "1m" in this case)
     inputEnabled: false // Disables the date range input fields
-  },
-  tooltip: {
-    backgroundColor: '#333333',
-    style: {
-      color: '#F0F0F0',
-    },
-    pointFormat: 'Open: {point.open}<br>High: {point.high}<br>Low: {point.low}<br>Close: {point.close}',
-  },
-  xAxis: {
-    type: 'datetime',
-    ordinal: false,
-    gridLineColor: '#505053',
-    labels: { 
-      style: { color: '#FFFFFF' } // Set label color to white for visibility
-    },
-  },
-  yAxis: {
-    gridLineColor: '#505053',
-    labels: {
-      style: {
-        color: '#E0E0E3',
-      },
-    },
-    title: {
-      style: {
-        color: '#E0E0E3',
-      },
-    },
-  },
-  title: {
-    text: 'Transaction Price Chart',
-    style: {
-      color: '#E0E0E3',
-    },
-  },
-  time: {
-    useUTC: false,
   },
   series: [
     {
-      name: 'Price',
-      type: 'candlestick',
-      data: history.value.map(item => [
-        new Date(item.timestamp).getTime(), // X value (timestamp in milliseconds)
-        item.open, // Open price
-        item.high, // High price
-        item.low,  // Low price
-        item.close // Close price
-      ]),
+      name: "Price",
+      data: priceHistory.value,
+      marker: {
+        enabled: true, // Ensure markers are visible
+        radius: 6, // Make dots larger
+        fillColor: "#FF0000", // Optional: Customize dot color
+      },
     },
-  ],
-  lang: {
-    noData: 'No data to display',
-  },
-  noData: {
-    style: {
-      fontWeight: 'bold',
-      fontSize: '15px',
-      color: '#E0E0E3',
-    },
-  },
-  plotOptions: {
-    candlestick: {
-      color: '#d32f2f', // Color for falling candlesticks
-      upColor: '#4caf50', // Color for rising candlesticks
-      lineColor: '#333333',
-      upLineColor: '#333333',
-      dataGrouping: {
-      enabled: true,
-      units: [
-        ['minute', [1, 5, 15, 30]], // Group by 1, 5, 15, or 30 minutes
     
-      ]
-    },
-    },
-  },
-};
+  ],
+});
 
-const chartOptions = reactive(original_options);
-
-watch(
-  history,
-  (newHistory) => {
-    const chartSeries = priceGraph.value?.chart.series[0];
-    if (chartSeries && newHistory.length) {
-      const latestPoint = newHistory[newHistory.length - 1];
-      chartSeries.addPoint([
-        new Date(latestPoint.timestamp).getTime(),
-        latestPoint.open,
-        latestPoint.high,
-        latestPoint.low,
-        latestPoint.close,
-      ], true, false); // Update chart with new point without shifting
-    }
-  },
-  { deep: true }
-);
-
-onMounted(async () => {
-  
-  console.debug("Price graph mounted");
-  console.debug(history.value);
-  await nextTick();
-    // priceGraph.value.chart.setSize(1000, 300);
-    if (priceGraph.value?.chart) {
-      // priceGraph.value.chart.setSize('100%', '100%');
-    priceGraph.value.chart.reflow();
+// Watch priceHistory for updates
+watch(priceHistory, (newHistory) => {
+  if (chartOptions.series[0]) {
+    chartOptions.series[0].data = newHistory;
   }
 });
 
-StockCharts(HighCharts);
-HighchartsNoData(HighCharts);
+// Ensure the chart resizes to fit its container
+onMounted(async () => {
+  await nextTick(); // Ensure the DOM is updated before accessing the chart
+  if (chartRef.value?.chart) {
+    priceGraph.value.chart.setSize('200px', '200px');
+    chartRef.value.chart.reflow(); // Adjust chart size to match its container
+  }
+});
 </script>
 
-<script>
-export default {
-  components: {
-    highcharts: Chart,
-  },
-};
-</script>
-
-<template>
-  <v-btn @click="traderStore.addCurrentDataPoint()" v-if="false">AddNewPoint</v-btn>
-  <div style="width: 100%;height: 100%;">
-    <highcharts
-      ref="priceGraph"
-      :constructor-type="'stockChart'"
-      :options="chartOptions"
-      style="height:90%"
-      height="90%"
-    >
-    </highcharts>
-  </div>
-</template>
-
-<style scoped></style>
+<style scoped>
+.chart-container {
+  height: calc(50hv - 100px); /* Full height of the parent container */
+  width: 100%; /* Full width of the parent container */
+}
+</style>

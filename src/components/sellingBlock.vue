@@ -10,8 +10,8 @@
             <v-btn
               large
               color="green"
-              :disabled="isBuyButtonDisabled"
-              @click="sendOrder(1, bestAsk)"
+              
+            
               width="100%"
             >
               Buy @ BEST BID
@@ -23,8 +23,8 @@
             <v-btn
               large
               color="red"
-              :disabled="isSellButtonDisabled"
-              @click="sendOrder(-1, bestBid)"
+             
+             
               width="100%"
             >
               Sell @ BEST ASK

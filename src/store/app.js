@@ -5,7 +5,7 @@ import { useWebSocket } from "@vueuse/core";
 import { spread } from "lodash";
 import _ from 'lodash';
 const wsROOT = "ws://localhost:8000/trader";
-
+import originalPriceData from '@/assets/data/price.csv';
 
 export const useTraderStore = defineStore("trader", {
   state: () => ({
@@ -13,6 +13,9 @@ export const useTraderStore = defineStore("trader", {
     isTimerPaused: false,
     dayRemainingTime: null,
     timerCounter: 0,
+    roundNumber: 1,
+    priceData: _.filter(originalPriceData, { round: "1" }),
+    priceHistory: [],
     day_duration: null, // Derived from tick_frequency * num_of_ticks_in_day
     num_of_ticks_in_day: null,
     midday_quiz_tick: null,
@@ -43,6 +46,20 @@ export const useTraderStore = defineStore("trader", {
 
   },
   actions: {
+    updatePriceHistory() {
+      if (this.timerCounter < this.priceData.length) {
+        const now = Date.now();
+        const currentPrice = parseFloat(this.priceData[this.timerCounter].price);
+
+        // Add a new point to priceHistory
+        this.priceHistory.push({ x: now, y: currentPrice });
+
+        // Increment the timer counter
+  
+      } else {
+        console.warn("No more data points to add from priceData.");
+      }
+    },
     generateRandomPrice() {
       return Math.random() * (200 - 100) + 100;
     },
@@ -70,44 +87,11 @@ export const useTraderStore = defineStore("trader", {
       setInterval(() => {
         this.generateRandomAction();
         this.addCurrentDataPoint()
-      }, this.data_latency * 1000);
+      }, 1 * 1000);
     },
 
     // Function to generate the history array for the last 5 minutes and the next 5 minutes
-    generateHistory() {
-      const now = new Date();
-      const history = [];
-    
-      let basePrice = this.generateRandomPrice(); // Starting point for the trend
-      const isUpwardTrend = Math.random() > 0.5; // Randomly choose upward or downward trend
-    
-      // Generate data for the last 100 intervals (around 10 minutes)
-      for (let i = -50; i <= 0; i++) {
-        const timestamp = new Date(now.getTime() + i * 6 * 1000); // 6-second intervals
-    
-        // Adjust base price slightly to create a trend
-        basePrice += isUpwardTrend ? Math.random() * 0.5 : -Math.random() * 0.5; // Gradual increase or decrease
-    
-        // Generate open, high, low, and close with larger variation
-        const open = basePrice + (Math.random() - 0.5) * 5; // Moderate random variation around base price
-        const high = open + Math.random() * 8; // Higher variation for the high price
-        const low = open - Math.random() * 8;  // Lower variation for the low price
-        const close = open + (Math.random() - 0.5) * 6; // Close with moderate variation around open
-    
-        history.push({
-          timestamp: timestamp.toISOString(),  // Convert to ISO string
-          open: parseFloat(open.toFixed(2)),
-          high: parseFloat(Math.max(high, open + 1).toFixed(2)), // Ensure high is above open
-          low: parseFloat(Math.min(low, open - 1).toFixed(2)),   // Ensure low is below open
-          close: parseFloat(close.toFixed(2)),
-        });
-      }
-    
-      // Set the generated history array to the store's state
-      this.history = history;
-    
-      console.log("Generated candlestick history with taller candles:", this.history);
-    },
+   
     addCurrentDataPoint() {
       const now = Date.now(); // Current timestamp in milliseconds
     

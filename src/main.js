@@ -1,26 +1,31 @@
-/**
- * main.js
- *
- * Bootstraps Vuetify and other plugins then mounts the App`
- */
-import { Splitpanes, Pane } from "splitpanes";
-import "splitpanes/dist/splitpanes.css";
-// Plugins
-import { registerPlugins } from '@/plugins'
-import 'animate.css';
-// Components
-import App from './App.vue'
-import VueCountdown from '@chenfengyuan/vue-countdown';
 // Composables
-import { createApp } from 'vue'
+import { createApp } from "vue";
+import App from "./App.vue"; // Your main app component
 
+// Highcharts and modules
+import Highcharts from "highcharts";
+import Stock from "highcharts/modules/stock";
+import HighchartsVue from "highcharts-vue";
 
+// Import other components
+import { Splitpanes, Pane } from "splitpanes";
+import VueCountdown from "@chenfengyuan/vue-countdown"; // Example for VueCountdown
+import { registerPlugins } from "./plugins"; // Assuming you have a plugins file
+
+// Initialize Highcharts modules
+Stock(Highcharts);
+
+// Create Vue app
 const app = createApp(App);
 
+// Register HighchartsVue plugin
+app.use(HighchartsVue);
 
+// Register other components
 app.component("Splitpanes", Splitpanes);
 app.component("Pane", Pane);
 app.component(VueCountdown.name, VueCountdown);
-registerPlugins(app)
 
-app.mount('#app')
+// Register plugins and mount app
+registerPlugins(app);
+app.mount("#app");
