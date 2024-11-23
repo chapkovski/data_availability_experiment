@@ -128,6 +128,7 @@ const handleDialogClosed = (response) => {
 
   // Reset dialog state
   isTimerPaused.value = false; // Resume the timer
+  store.generateRandomNumbers();
   dayRemainingTime.value = localRemainingTime.value; // Update Pinia store
 };
 
@@ -141,6 +142,9 @@ const handleTimerRestarted = () => {
 
     quizDialog.value.openDialog(); // Open the quiz dialog
     isTimerPaused.value = true; // Pause the timer
+  }
+  if (!isTimerPaused.value) {
+    store.generateRandomNumbers()
   }
 };
 

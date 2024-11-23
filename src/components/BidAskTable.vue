@@ -61,7 +61,7 @@ const {  data_latency, market_signal_strength ,actions} = storeToRefs(useTraderS
 // Function to generate random actions with new fields: price, size, and condition
  
 onMounted(() => {
-  store.startGeneratingActions();
+ 
 });
 </script>
 

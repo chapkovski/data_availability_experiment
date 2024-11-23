@@ -6,6 +6,15 @@ import { spread } from "lodash";
 import _ from 'lodash';
 const wsROOT = "ws://localhost:8000/trader";
 import originalPriceData from '@/assets/data/price.csv';
+function scheduleRelativeTasks(duration, relativeTimes, callback) {
+  relativeTimes.forEach((relativeTime) => {
+    const delay = duration * relativeTime; // Calculate the delay in milliseconds
+    setTimeout(() => {
+      callback(relativeTime); // Call the callback with the relative time as an argument
+    }, delay * 1000); // Convert to milliseconds
+  });
+}
+
 
 export const useTraderStore = defineStore("trader", {
   state: () => ({
@@ -13,6 +22,8 @@ export const useTraderStore = defineStore("trader", {
     isTimerPaused: false,
     dayRemainingTime: null,
     timerCounter: 0,
+    tickHappenedAt: null, // New property to store timestamp of the last tick
+    tick_frequency: null,
     roundNumber: 1,
     priceData: _.filter(originalPriceData, { round: "1" }),
     priceHistory: [],
@@ -32,7 +43,7 @@ export const useTraderStore = defineStore("trader", {
     initial_cash: 0,
     // data from the session initialization
     treatment: null,
-    tick_frequency: null,
+    
     market_signal_strength: null,
     tradingSessionUUID: null,
     traderUUID: null,
@@ -61,8 +72,10 @@ export const useTraderStore = defineStore("trader", {
     },
   },
   actions: {
+    
     makeTick() {
       this.timerCounter += 1;
+      this.tickHappenedAt = Date.now(); // Store the timestamp of this tick
       this.currentPrice = parseFloat(this.priceData[this.timerCounter].price);
       this.updatePriceHistory();
     },
@@ -80,8 +93,13 @@ export const useTraderStore = defineStore("trader", {
         console.warn("No more data points to add from priceData.");
       }
     },
-    generateRandomPrice() {
-      return Math.random() * (200 - 100) + 100;
+    generateRandomNumbers() {
+      // Generate between 4 to 6 random numbers from 0 to 1
+      const randomCount = Math.floor(Math.random() * 3) + 4; // Random number between 4 and 6
+      const randomNumbers = Array.from({ length: randomCount }, () => Math.random());
+
+      // Schedule tasks with the generated array
+      scheduleRelativeTasks(this.tick_frequency, randomNumbers, this.generateRandomAction);
     },
     generateRandomAction() {
       const randomPrice = parseFloat((Math.random() * 100 + 100).toFixed(2));
@@ -102,13 +120,7 @@ export const useTraderStore = defineStore("trader", {
         this.actions.pop(); // Limit to 10 entries if desired
       }
     },
-    startGeneratingActions() {
-      // Initialize a periodic interval to add new actions
-      setInterval(() => {
-        this.generateRandomAction();
-
-      }, 1 * 1000);
-    },
+  
 
     // Function to generate the history array for the last 5 minutes and the next 5 minutes
 
