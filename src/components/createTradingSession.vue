@@ -33,9 +33,9 @@ import { onMounted, ref, computed } from "vue";
 import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
-
 const traderStore = useTraderStore();
 const router = useRouter();
+
 const serverActive = ref(true); // Assuming server is always available now
 const connectionServerMessage = computed(() => {
   return serverActive.value
