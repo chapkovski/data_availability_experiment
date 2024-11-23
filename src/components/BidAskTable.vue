@@ -32,8 +32,8 @@
               v-for="item in orders"
               :key="item.random_id"
               :class="{
-                'at-ask': item.condition === 'At ask',
-                'at-bid': item.condition === 'At bid'
+                'at-ask': item.condition === 'at ask',
+                'at-bid': item.condition === 'at bid'
               }"
             >
               <td>{{ new Date(item.timestamp).toLocaleTimeString() }}</td>

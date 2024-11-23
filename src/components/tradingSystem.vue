@@ -119,6 +119,7 @@ const { gameParams, shares, cash, initial_shares, dayOver, isTimerPaused, dayRem
 onMounted(() => {
   console.log("Trading system mounted");
   store.makeTick();
+  store.processOrdersForCurrentTick()
 });
 
 

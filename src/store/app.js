@@ -124,7 +124,7 @@ export const useTraderStore = defineStore("trader", {
       const newOrder = {
         random_id: Math.random().toString(36).substr(2, 9), // Unique identifier
         timestamp: Date.now(), // Current timestamp
-        price: parseFloat(order.relativeTime), // Use the `Order` field as the price
+        price: parseFloat(order.Price), // Use the `Order` field as the price
         size: parseInt(order.Quantity), // Use the `Quantity` field
         condition: order.Type, // Use the `Type` field (e.g., "At ask" or "At bid")
       };
