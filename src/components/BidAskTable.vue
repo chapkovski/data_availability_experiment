@@ -20,16 +20,16 @@
         </thead>
 
         
-          <!-- Show "No data yet" message if actions is empty -->
+          
            
-          <!-- Display rows if actions has data -->
+          <!-- Display rows if orders has data -->
           <transition-group   name="highlight" tag="tbody">
-            <tr v-if="!actions.length" >
+            <tr v-if="!orders.length" >
               <td colspan="4" class="no-data-message" >No data yet</td>
             </tr>
             
             <tr
-              v-for="item in actions"
+              v-for="item in orders"
               :key="item.random_id"
               :class="{
                 'at-ask': item.condition === 'At ask',
@@ -56,13 +56,9 @@ import { ref, onMounted, computed } from 'vue';
 import { useTraderStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
 const store = useTraderStore();
-const {  data_latency, market_signal_strength ,actions} = storeToRefs(useTraderStore());
+const {   market_signal_strength ,orders} = storeToRefs(useTraderStore());
 
-// Function to generate random actions with new fields: price, size, and condition
  
-onMounted(() => {
- 
-});
 </script>
 
 <style scoped>

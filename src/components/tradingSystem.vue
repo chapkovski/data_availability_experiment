@@ -128,7 +128,7 @@ const handleDialogClosed = (response) => {
 
   // Reset dialog state
   isTimerPaused.value = false; // Resume the timer
-  store.generateRandomNumbers();
+  store.processOrdersForCurrentTick();
   dayRemainingTime.value = localRemainingTime.value; // Update Pinia store
 };
 
@@ -144,7 +144,7 @@ const handleTimerRestarted = () => {
     isTimerPaused.value = true; // Pause the timer
   }
   if (!isTimerPaused.value) {
-    store.generateRandomNumbers()
+    store.processOrdersForCurrentTick()
   }
 };
 

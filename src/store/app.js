@@ -6,19 +6,21 @@ import { spread } from "lodash";
 import _ from 'lodash';
 const wsROOT = "ws://localhost:8000/trader";
 import originalPriceData from '@/assets/data/price.csv';
-function scheduleRelativeTasks(duration, relativeTimes, callback) {
-  relativeTimes.forEach((relativeTime) => {
-    const delay = duration * relativeTime; // Calculate the delay in milliseconds
+import ordersData from "@/assets/data/orders.csv"
+
+function scheduleRelativeTasks(duration, orders, callback) {
+  orders.forEach((order) => {
+    const delay = duration * parseFloat(order.relativeTime); // Calculate the delay based on the Order property
     setTimeout(() => {
-      callback(relativeTime); // Call the callback with the relative time as an argument
-    }, delay * 1000); // Convert to milliseconds
+      callback(order); // Call the callback with the bid as an argument
+    }, delay * 1000); // Convert delay to milliseconds
   });
 }
 
 
 export const useTraderStore = defineStore("trader", {
   state: () => ({
-    actions: [],
+    orders: [],
     isTimerPaused: false,
     dayRemainingTime: null,
     timerCounter: 0,
@@ -43,7 +45,7 @@ export const useTraderStore = defineStore("trader", {
     initial_cash: 0,
     // data from the session initialization
     treatment: null,
-    
+
     market_signal_strength: null,
     tradingSessionUUID: null,
     traderUUID: null,
@@ -72,10 +74,11 @@ export const useTraderStore = defineStore("trader", {
     },
   },
   actions: {
-    
+
     makeTick() {
       this.timerCounter += 1;
       this.tickHappenedAt = Date.now(); // Store the timestamp of this tick
+      this.orders=[];
       this.currentPrice = parseFloat(this.priceData[this.timerCounter].price);
       this.updatePriceHistory();
     },
@@ -93,34 +96,45 @@ export const useTraderStore = defineStore("trader", {
         console.warn("No more data points to add from priceData.");
       }
     },
-    generateRandomNumbers() {
-      // Generate between 4 to 6 random numbers from 0 to 1
-      const randomCount = Math.floor(Math.random() * 3) + 4; // Random number between 4 and 6
-      const randomNumbers = Array.from({ length: randomCount }, () => Math.random());
 
-      // Schedule tasks with the generated array
-      scheduleRelativeTasks(this.tick_frequency, randomNumbers, this.generateRandomAction);
-    },
-    generateRandomAction() {
-      const randomPrice = parseFloat((Math.random() * 100 + 100).toFixed(2));
-      const size = 1;
-      const condition = Math.random() > 0.5 ? 'At ask' : 'At bid';
+    processOrdersForCurrentTick() {
+      const currentRound = this.roundNumber;
+      const currentTick = this.timerCounter;
 
-      const newAction = {
-        random_id: Math.random().toString(36).substr(2, 9),
-        timestamp: Date.now(),
-        price: randomPrice,
-        size: size,
-        condition: condition,
-      };
+      // Filter relevant bids using Lodash
+      const relevantOrders = _.filter(ordersData, {
+        Round: currentRound.toString(),
+        Tick: currentTick.toString(),
+      });
 
-      // Add the new action to the top of the actions array
-      this.actions.unshift(newAction);
-      if (this.actions.length > 10) {
-        this.actions.pop(); // Limit to 10 entries if desired
+      if (_.isEmpty(relevantOrders)) {
+        console.debug("No relevant orders found for this round and tick.");
+        return;
       }
+
+      console.debug("Relevant orders:", relevantOrders);
+
+      // Schedule the actions for each order with the Order property determining the delay
+      scheduleRelativeTasks(this.tick_frequency, relevantOrders, (order) => {
+        console.debug(`Executing order:`, order);
+        this.addOrderToQueue(order); // Add bid to queue or handle it in your store
+      });
     },
-  
+    addOrderToQueue(order) {
+      const newOrder = {
+        random_id: Math.random().toString(36).substr(2, 9), // Unique identifier
+        timestamp: Date.now(), // Current timestamp
+        price: parseFloat(order.relativeTime), // Use the `Order` field as the price
+        size: parseInt(order.Quantity), // Use the `Quantity` field
+        condition: order.Type, // Use the `Type` field (e.g., "At ask" or "At bid")
+      };
+    
+      // Add the new action to the top of the orders array
+      this.orders.unshift(newOrder);
+      
+      
+    },
+
 
     // Function to generate the history array for the last 5 minutes and the next 5 minutes
 
