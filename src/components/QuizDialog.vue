@@ -1,19 +1,31 @@
 <script setup>
 import { ref, computed, defineEmits, defineExpose } from "vue";
+import Likert from "./Likert.vue"; // Import the Likert component
 
 const dialogVisible = ref(false); // State for dialog visibility
-const stockProbability = ref(null); // Default to 50% likelihood
+const stockProbability = ref(null); // Stock probability mapped to Likert scale
 const confidenceRating = ref(null); // Default to midpoint of the Likert scale
 const emit = defineEmits(["dialog-closed"]); // Emit an event to notify parent
+
 // Computed property to check if the form is valid
 const isFormValid = computed(() => stockProbability.value !== null && confidenceRating.value !== null);
-const confidenceOptions = [
-  { value: 1, label: "Absolutely Not Sure" },
-  { value: 2, label: "Somewhat Not Sure" },
-  { value: 3, label: "Neutral" },
-  { value: 4, label: "Somewhat Sure" },
-  { value: 5, label: "Absolutely Sure" },
+
+// Labels for Likert scales
+const probabilityLabels = [
+  "Not Likely at All",
+  "Unlikely",
+  "Neutral",
+  "Likely",
+  "Very Likely",
 ];
+const confidenceLabels = [
+  "Absolutely Not Sure",
+  "Somewhat Not Sure",
+  "Neutral",
+  "Somewhat Sure",
+  "Absolutely Sure",
+];
+
 // Method to open the dialog
 const openDialog = () => {
   dialogVisible.value = true;
@@ -35,8 +47,8 @@ const closeDialog = () => {
   // Close the dialog
   dialogVisible.value = false;
 
-   // Reset values for next use
-   stockProbability.value = null;
+  // Reset values for next use
+  stockProbability.value = null;
   confidenceRating.value = null;
 };
 
@@ -50,33 +62,31 @@ defineExpose({ openDialog, closeDialog });
       <v-card-title class="text-h5">Mid-day Quiz</v-card-title>
       <v-card-text>
         <div>
+          <!-- Stock Probability Likert Scale -->
           <p>How likely is the stock to go up next?</p>
-          <v-slider
+          <likert
+            :labels="probabilityLabels"
             v-model="stockProbability"
-            :max="100"
-            :min="0"
-            step="1"
-            ticks
-            tick-size="3"
-            class="my-4"
-            label="Likelihood (%)"
-            persistent-hint
-             :thumb-size="36"
-        thumb-label
-          ></v-slider>
+          ></likert>
+
+          <!-- Confidence Rating Likert Scale -->
           <p>How confident are you in this assessment?</p>
-          <v-radio-group v-model="confidenceRating" class="my-4">
-            <v-radio
-              v-for="option in confidenceOptions"
-              :key="option.value"
-              :value="option.value"
-              :label="option.label"
-            ></v-radio>
-          </v-radio-group>
+          <likert
+            :labels="confidenceLabels"
+            v-model="confidenceRating"
+          ></likert>
         </div>
       </v-card-text>
       <v-card-actions>
-        <v-btn size="x-large" :disabled="!isFormValid" variant="outlined" color="primary" @click="closeDialog">Submit</v-btn>
+        <v-btn
+          size="x-large"
+          :disabled="!isFormValid"
+          variant="outlined"
+          color="primary"
+          @click="closeDialog"
+        >
+          Submit
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

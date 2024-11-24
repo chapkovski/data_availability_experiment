@@ -78,13 +78,15 @@ const isSmallScreen = smAndDown;
 .v-locale--is-ltr.v-slider.v-input--horizontal .v-slider-track__tick--first .v-slider-track__tick-label, .v-locale--is-ltr .v-slider.v-input--horizontal .v-slider-track__tick--first .v-slider-track__tick-label {
     transform: translateX(-50%)!important;
 }
-/* .horizontal-scale {
-    display: flex;
+.horizontal-scale {
+    /* display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
-  } */
+    width: 100%; */
+    margin-left: 50px;
+    margin-right:50px;
+  }
 
 /* .vertical-scale {
     display: flex;
