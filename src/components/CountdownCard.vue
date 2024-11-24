@@ -1,24 +1,44 @@
 <template>
-  <v-card class="mx-2 p-1" :style="cardStyle">
+  <v-card :class="!smAndDown?'mx-2 p-1':''" :style="cardStyle">
     <v-card-text class="timertext">
+      <!-- Progress Bars -->
+      <v-progress-circular
+        v-if="progressType === 'circular'"
+        :model-value="progressValue"
+        :color="progressBarColor"
+        v-bind="props"
+      ></v-progress-circular>
 
-      <v-progress-circular v-if="progressType === 'circular'" :model-value="progressValue"
-        :color="progressBarColor"></v-progress-circular>
+      <v-progress-linear
+        v-else
+        :model-value="progressValue"
+        :value="progressValue"
+        :color="progressBarColor"
+        :height="!smAndDown?10:5"
+        rounded
+        striped
+        v-bind="props"
+      ></v-progress-linear>
 
-      <v-progress-linear v-else :model-value="progressValue" :value="progressValue" :color="progressBarColor"
-        height="10" rounded striped></v-progress-linear>
+      <!-- Title - Hidden on Small Screens -->
+  
 
-
-      <!-- Updated remainingTime to remainingTime.value -->
-      <vue-countdown @progress="updTime" @end="restartTimer" :time="totTimeInMilliseconds" :key="resetKey"
-        v-if="!isTimerPaused" v-slot="{ days, hours, minutes, seconds }" :interval="interval" >
-
-
-        <div>{{ title }}: <b>{{ Math.round(remainingTime / 1000) }} seconds</b></div>
+      <!-- Countdown -->
+      <vue-countdown
+        @progress="updTime"
+        @end="restartTimer"
+        :time="totTimeInMilliseconds"
+        :key="resetKey"
+        v-if="!isTimerPaused"
+        v-slot="{ days, hours, minutes, seconds }"
+        :interval="interval"
+      >
+        <div v-if="!smAndDown">{{ title }}: <b>{{ Math.round(remainingTime / 1000) }} seconds</b></div>
       </vue-countdown>
     </v-card-text>
   </v-card>
 </template>
+
 
 <script setup>
 import { ref, computed } from 'vue';
@@ -42,6 +62,14 @@ import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
 const store = useTraderStore();
 const { isTimerPaused } = storeToRefs(store);
+
+import { useDisplay } from "vuetify";
+const { smAndDown } = useDisplay();
+// Responsive detection
+const isSmallScreen = smAndDown;
+
+
+// Dynamically toggle tooltip visibility for small screens
 
 // A dynamic key to force the vue-countdown component to re-render when the timer restarts
 const resetKey = ref(0);
@@ -78,5 +106,10 @@ const cardStyle = computed(() => (props.progressType === 'linear' ? { width: '10
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+@media (max-width: 600px) {
+  .timertext {
+    padding:0.3rem!important;
+  }
 }
 </style>

@@ -1,13 +1,13 @@
 <template>
   <v-app>
-    <v-app-bar app fixed class="timerbar  ">
+    <v-app-bar app fixed class="timerbar" density="compact" :height="smAndDown?30:64">
       <CountdownCard title="Till the end of the day" :total-time="dayRemainingTime / 1000" :overall-time="day_duration"
         progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated" 
         @timer-restarted="finalizingDay"/>
       <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
     </v-app-bar>
 
-    <v-app-bar app fixed class="my-3">
+    <v-app-bar app fixed class="mb-3" density="comfortable" :height="smAndDown?40:64">
 
       <v-toolbar v-if="true">
         <CountdownCard title="Till next decision" :total-time="tick_frequency" progress-bar-color="red"
@@ -97,7 +97,8 @@ const props = defineProps({
 
 
 // import BidAskChart from "@/components/BidAskChart.vue";
-
+import { useDisplay } from "vuetify";
+const { smAndDown } = useDisplay();
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import QuizDialog from "./QuizDialog.vue";
@@ -194,6 +195,12 @@ watch(
 </script>
 
 <style>
+/* Narrow height for small screens */
+@media (max-width: 600px) {
+  .timerbar {
+    height: 28px; /* Adjusted height for small screens */
+  }
+}
 header.timerbar .v-toolbar__content {
   display: flex !important;
   flex-direction: column !important;
