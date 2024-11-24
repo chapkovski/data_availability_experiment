@@ -4,11 +4,13 @@ import Likert from "./Likert.vue"; // Import the Likert component
 
 const dialogVisible = ref(false); // State for dialog visibility
 const stockProbability = ref(null); // Stock probability mapped to Likert scale
-const confidenceRating = ref(null); // Default to midpoint of the Likert scale
+const confidenceRating = ref(null); // Confidence rating mapped to Likert scale
+const step = ref(1); // Tracks the current step (1 or 2)
 const emit = defineEmits(["dialog-closed"]); // Emit an event to notify parent
 
-// Computed property to check if the form is valid
-const isFormValid = computed(() => stockProbability.value !== null && confidenceRating.value !== null);
+// Computed properties to check validity of each step
+const isStep1Valid = computed(() => stockProbability.value !== null);
+const isStep2Valid = computed(() => confidenceRating.value !== null);
 
 // Labels for Likert scales
 const probabilityLabels = [
@@ -31,6 +33,13 @@ const openDialog = () => {
   dialogVisible.value = true;
 };
 
+// Method to handle "Next" button
+const nextStep = () => {
+  if (step.value === 1 && isStep1Valid.value) {
+    step.value = 2;
+  }
+};
+
 // Method to close the dialog and notify parent
 const closeDialog = () => {
   // Prepare the response to emit
@@ -50,6 +59,7 @@ const closeDialog = () => {
   // Reset values for next use
   stockProbability.value = null;
   confidenceRating.value = null;
+  step.value = 1; // Reset to the first step
 };
 
 // Expose methods to the parent
@@ -61,14 +71,15 @@ defineExpose({ openDialog, closeDialog });
     <v-card>
       <v-card-title class="text-h5">Mid-day Quiz</v-card-title>
       <v-card-text>
-        <div>
+        <div v-if="step === 1">
           <!-- Stock Probability Likert Scale -->
           <p>How likely is the stock to go up next?</p>
           <likert
             :labels="probabilityLabels"
             v-model="stockProbability"
           ></likert>
-
+        </div>
+        <div v-else-if="step === 2">
           <!-- Confidence Rating Likert Scale -->
           <p>How confident are you in this assessment?</p>
           <likert
@@ -79,8 +90,19 @@ defineExpose({ openDialog, closeDialog });
       </v-card-text>
       <v-card-actions>
         <v-btn
+          v-if="step === 1"
           size="x-large"
-          :disabled="!isFormValid"
+          :disabled="!isStep1Valid"
+          variant="outlined"
+          color="primary"
+          @click="nextStep"
+        >
+          Next
+        </v-btn>
+        <v-btn
+          v-if="step === 2"
+          size="x-large"
+          :disabled="!isStep2Valid"
           variant="outlined"
           color="primary"
           @click="closeDialog"
