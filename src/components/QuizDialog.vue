@@ -67,7 +67,7 @@ defineExpose({ openDialog, closeDialog });
 </script>
 
 <template>
-  <v-dialog v-model="dialogVisible" persistent max-width="700px">
+  <v-dialog v-model="dialogVisible" persistent max-width="850px">
     <v-card>
       <v-card-title class="text-h5">Mid-day Quiz</v-card-title>
       <v-card-text>
