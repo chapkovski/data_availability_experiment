@@ -58,7 +58,7 @@ const formFields = ref([
     title: "Number of Ticks in a Day",
     type: "number",
     hint: "Enter the number of ticks in a day",
-    default: 10,
+    default: 1000,
   },
   {
     name: "midday_quiz_tick",

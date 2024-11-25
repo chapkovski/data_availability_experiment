@@ -37,7 +37,7 @@
               }"
             >
               <td>{{ new Date(item.timestamp).toLocaleTimeString() }}</td>
-              <td>{{ item.price.toFixed(2) }} USD</td>
+              <td>{{ item.Price.toFixed(2) }} USD</td>
               <td>{{ item.size }}</td>
               <td>{{ item.condition }}</td>
             </tr>

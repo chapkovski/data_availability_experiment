@@ -1,5 +1,5 @@
 <template>
-  <v-card :class="!smAndDown?'mx-2 p-1':''" :style="cardStyle">
+  <v-card :style="cardStyle">
     <v-card-text class="timertext">
       <!-- Progress Bars -->
       <v-progress-circular
@@ -109,7 +109,7 @@ const cardStyle = computed(() => (props.progressType === 'linear' ? { width: '10
 }
 @media (max-width: 600px) {
   .timertext {
-    padding:0.3rem!important;
+    /* padding:0.3rem!important; */
   }
 }
 </style>

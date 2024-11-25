@@ -1,17 +1,17 @@
 <template>
   <v-app>
-    <v-app-bar app fixed class="timerbar" density="compact" :height="smAndDown?30:64">
+    <v-app-bar app fixed class="timerbar" :density="smAndDown ? compact : comfortable">
       <CountdownCard title="Till the end of the day" :total-time="dayRemainingTime / 1000" :overall-time="day_duration"
-        progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated" 
-        @timer-restarted="finalizingDay"/>
+        progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated"
+        @timer-restarted="finalizingDay" />
       <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
     </v-app-bar>
 
-    <v-app-bar app fixed class="mb-3" density="comfortable" :height="smAndDown?40:64">
+    <v-app-bar app fixed class="" :density="smAndDown ? compact : comfortable"
+    :style="topStyle">
 
       <v-toolbar v-if="true">
-        <CountdownCard title="Till next decision" :total-time="tick_frequency" progress-bar-color="red"
-        :interval="100"
+        <CountdownCard title="Till next decision" :total-time="tick_frequency" progress-bar-color="red" :interval="100"
           @timer-restarted="handleTimerRestarted"> </CountdownCard>
 
 
@@ -30,11 +30,11 @@
 
         <!-- Shares -->
         <v-card class="mx-2" outlined>
-          <v-card-text  class="font-weight-bold">
+          <v-card-text class="font-weight-bold">
             Shares:
 
             <span>
-              <span >{{ shares }}</span>
+              <span>{{ shares }}</span>
               <Transition enter-active-class="fade-in-highlight" :key="shares">
 
               </Transition>
@@ -45,7 +45,7 @@
 
         <!-- Cash -->
         <v-card class="mx-2" outlined>
-          <v-card-text  class="font-weight-bold">
+          <v-card-text class="font-weight-bold">
             Cash:
             <Transition enter-active-class="fade-in-highlight">
               <span :key="cash">{{ cash }}</span>
@@ -98,7 +98,35 @@ const props = defineProps({
 
 // import BidAskChart from "@/components/BidAskChart.vue";
 import { useDisplay } from "vuetify";
-const { smAndDown } = useDisplay();
+const { smAndDown, name } = useDisplay();
+const height = computed(() => {
+  // name is reactive and
+  // must use .value
+  switch (name.value) {
+    case 'xs': return 220
+    case 'sm': return 400
+    case 'md': return 500
+    case 'lg': return 600
+    case 'xl': return 800
+    case 'xxl': return 1200
+  }
+
+  return undefined
+})
+const topStyle = computed(() => {
+  switch (name.value) {
+    case "xs":
+      return { top: "30px" }; // Apply top: 30px for "sm"
+    case "sm":
+      return { top: "45px" }; // Apply top: 30px for "sm"  
+    case "md":
+      return { top: "55px" }; // Apply top: 30px for "sm"
+    case "xl":
+      return { top: "55px" }; // Apply top: 50px for "xl"
+    default:
+      return {}; // Default empty style
+  }
+});
 import { Splitpanes, Pane } from 'splitpanes'
 import 'splitpanes/dist/splitpanes.css'
 import QuizDialog from "./QuizDialog.vue";
@@ -198,9 +226,11 @@ watch(
 /* Narrow height for small screens */
 @media (max-width: 600px) {
   .timerbar {
-    height: 28px; /* Adjusted height for small screens */
+    height: 28px;
+    /* Adjusted height for small screens */
   }
 }
+
 header.timerbar .v-toolbar__content {
   display: flex !important;
   flex-direction: column !important;
