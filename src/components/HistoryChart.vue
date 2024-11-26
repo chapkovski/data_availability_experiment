@@ -1,12 +1,12 @@
 <template>
-  <div class="chart-container" v-resize="onResize" ref="chartWrapper" :style="{height:'100%'}">
-    
+  <div class="chart-container" v-resize="onResize" ref="chartWrapper" :style="{ height: '100%' }">
+
     <highcharts v-if='true' ref="priceGraph" :constructorType="'stockChart'" :options="chartOptions"></highcharts>
   </div>
 </template>
 
 <script setup>
-import { reactive, watch, ref, onMounted, nextTick,computed } from "vue";
+import { reactive, watch, ref, onMounted, nextTick, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 
@@ -26,7 +26,7 @@ import { useDisplay } from "vuetify";
 const { smAndDown } = useDisplay();
 console.debug('smAndDown', smAndDown.value)
 // make computed: show chart title if not smAndDown
-const chartTitle = computed(() => (smAndDown.value ? null: "Price History"));
+const chartTitle = ref("Price History")
 
 
 const chartOptions = reactive({
@@ -141,25 +141,30 @@ onMounted(async () => {
 });
 
 const onResize = () => {
-      console.debug('chartWrapper.value.offsetHeight', chartWrapper.value.offsetHeight)
-      if (chartWrapper.value && priceGraph.value) {
-        chartHeight.value = chartWrapper.value.offsetHeight ;
+  console.debug('chartWrapper.value.offsetHeight', chartWrapper.value.offsetHeight)
+  if (chartWrapper.value.offsetHeight<250){
+    chartTitle.value = null;
+    priceGraph.value.chart.title.update({ text: chartTitle.value });
+  }
+  if (chartWrapper.value && priceGraph.value) {
+    chartHeight.value = chartWrapper.value.offsetHeight;
 
-        // Wait for DOM updates before resizing chart
-        requestAnimationFrame(() => {
-          console.debug('crrentheight', chartHeight.value)
-          priceGraph.value.chart.setSize(null, chartHeight.value);
-          priceGraph.value.chart.reflow();
-        });
-      }
-    };
+    // Wait for DOM updates before resizing chart
+    requestAnimationFrame(() => {
+      console.debug('crrentheight', chartHeight.value)
+      priceGraph.value.chart.setSize(null, chartHeight.value);
+      priceGraph.value.chart.reflow();
+    });
+  }
+};
 
 
 </script>
 
 <style>
 .chart-container {
-  height: 100%!important; /*calc(50vh - 100px); /* Adjust height dynamically
+  height: 100% !important;
+  /*calc(50vh - 100px); /* Adjust height dynamically
   /*width: 100%; /* Full width of the parent container */
 }
 </style>
