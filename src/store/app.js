@@ -7,7 +7,7 @@ import _ from 'lodash';
 const wsROOT = "ws://localhost:8000/trader";
 import originalPriceData from '@/assets/data/price.csv';
 import ordersData from "@/assets/data/orders.csv"
-
+console.debug(ordersData);
 function scheduleRelativeTasks(duration, orders, callback) {
   orders.forEach((order) => {
     const delay = duration * parseFloat(order.relativeTime); // Calculate the delay based on the Order property
@@ -124,7 +124,7 @@ export const useTraderStore = defineStore("trader", {
       const newOrder = {
         random_id: Math.random().toString(36).substr(2, 9), // Unique identifier
         timestamp: Date.now(), // Current timestamp
-        price: parseFloat(order.Price), // Use the `Order` field as the price
+        price: order.Price, // Use the `Order` field as the price
         size: parseInt(order.Quantity), // Use the `Quantity` field
         condition: order.Type, // Use the `Type` field (e.g., "At ask" or "At bid")
       };

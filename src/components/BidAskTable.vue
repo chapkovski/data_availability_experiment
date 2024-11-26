@@ -9,7 +9,7 @@
         You do not have level 2 privileges for TSX
       </div>
       
-      <v-table v-else class="scrollable-table" fixed-header style='width:100%'>
+      <v-table v-else class="scrollable-table" fixed-header style='width:100%' density="compact">
         <thead>
           <tr>
             <th class="text-left">Timestamp</th>
@@ -37,7 +37,7 @@
               }"
             >
               <td>{{ new Date(item.timestamp).toLocaleTimeString() }}</td>
-              <td>{{ item.Price.toFixed(2) }} USD</td>
+              <td>{{ item.price }} USD</td>
               <td>{{ item.size }}</td>
               <td>{{ item.condition }}</td>
             </tr>
