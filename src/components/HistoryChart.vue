@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { reactive, watch, ref, onMounted, nextTick } from "vue";
+import { reactive, watch, ref, onMounted, nextTick,computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 
@@ -22,6 +22,13 @@ const priceGraph = ref(null);
 const chartHeight = ref(0);
 const chartWrapper = ref(null);
 // Define reactive chart options
+import { useDisplay } from "vuetify";
+const { smAndDown } = useDisplay();
+console.debug('smAndDown', smAndDown.value)
+// make computed: show chart title if not smAndDown
+const chartTitle = computed(() => (smAndDown.value ? null: "Price History"));
+
+
 const chartOptions = reactive({
   chart: {
     // height: '300px', // Allow dynamic height
@@ -31,7 +38,7 @@ const chartOptions = reactive({
     },
   },
   title: {
-    text: "Price Chart",
+    text: chartTitle.value,
     style: {
       color: "#FFFFFF", // Title color in light text
     },

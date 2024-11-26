@@ -65,8 +65,7 @@ const { isTimerPaused } = storeToRefs(store);
 
 import { useDisplay } from "vuetify";
 const { smAndDown } = useDisplay();
-// Responsive detection
-const isSmallScreen = smAndDown;
+ 
 
 
 // Dynamically toggle tooltip visibility for small screens
