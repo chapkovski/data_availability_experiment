@@ -1,6 +1,6 @@
 <template>
-  <div class="chart-container">
-    <highcharts ref="chart" :constructorType="'stockChart'" :options="chartOptions"></highcharts>
+  <div class="chart-container" :style="{ height: `${chartHeight}px` }" v-resize="onResize" ref="chartWrapper" >
+    <highcharts ref="priceGraph" :constructorType="'stockChart'" :options="chartOptions"></highcharts>
   </div>
 </template>
 
@@ -17,11 +17,13 @@ const initialMax = initialMin + 2 * 60 * 1000; // 2 minutes from now
 
 // Reference to the chart component
 const chartRef = ref(null);
-
+const priceGraph = ref(null);
+const chartHeight = ref(0);
+const chartWrapper = ref(null);
 // Define reactive chart options
 const chartOptions = reactive({
   chart: {
-    height: '300px', // Allow dynamic height
+    // height: '300px', // Allow dynamic height
     backgroundColor: '#2b2b2b', // Dark background color
     style: {
       fontFamily: 'sans-serif',
@@ -114,24 +116,41 @@ watch(priceHistory, (newHistory) => {
     chartOptions.series[0].data = newHistory;
 
     // Reset x-axis range to initial values
-    if (chartRef.value?.chart) {
-      chartRef.value.chart.xAxis[0].setExtremes(initialMin, initialMax);
-    }
+    // if (chartRef.value?.chart) {
+    //   chartRef.value.chart.xAxis[0].setExtremes(initialMin, initialMax);
+    // }
   }
 });
 
 // Ensure the chart resizes to fit its container
 onMounted(async () => {
   await nextTick(); // Ensure the DOM is updated before accessing the chart
-  if (chartRef.value?.chart) {
-    chartRef.value.chart.reflow(); // Adjust chart size to match its container
-  }
+  onResize();
+  // this.chartHeight = this.$refs.chartWrapper.clientHeight - 50;
+  // if (chartRef.value?.chart) {
+  //   chartRef.value.chart.reflow(); // Adjust chart size to match its container
+  // }
 });
+
+const onResize = () => {
+      if (chartWrapper.value && priceGraph.value) {
+        chartHeight.value = chartWrapper.value.clientHeight - 50;
+
+        // Wait for DOM updates before resizing chart
+        requestAnimationFrame(() => {
+          console.debug('crrentheight', chartHeight.value)
+          priceGraph.value.chart.setSize(null, 300);
+          priceGraph.value.chart.reflow();
+        });
+      }
+    };
+
+
 </script>
 
-<style scoped>
+<style>
 .chart-container {
-  height: calc(50vh - 100px); /* Adjust height dynamically */
+  height: 100%!important; /*calc(50vh - 100px); /* Adjust height dynamically */
   width: 100%; /* Full width of the parent container */
 }
 </style>
