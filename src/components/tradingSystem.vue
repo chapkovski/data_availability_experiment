@@ -19,7 +19,7 @@
 
         <v-card class="mx-2" outlined>
           <v-card-text class="font-weight-bold">
-            Share of insiders
+            Insiders:
 
             <span>50%</span>
 
