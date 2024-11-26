@@ -1,13 +1,10 @@
 <template>
   <v-card height="100%" elevation="3">
-    <v-card-title class="cardtitle">Decision Block</v-card-title>
-
+  
     <v-card-text>
       <v-container>
         <v-row>
-          <v-alert outlined>
-            <h2>Current price: {{ currentPrice }}</h2>
-          </v-alert>
+           
         </v-row>
         <v-row>
           <!-- Buy Button -->

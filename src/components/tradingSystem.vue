@@ -73,7 +73,7 @@
           <v-col>
             <BidAskTable />
           </v-col>
-          <v-col>
+          <v-col class="selling-block-col">
             <sellingBlock />
           </v-col>
         </v-row>
@@ -82,10 +82,8 @@
     <!-- bottom fixed bar -->
 
 
-    <v-footer app v-if="false">
-      <v-alert v-if="goalMessage" :class="goalMessage.type" :color="goalMessage.type">
-        <b>{{ goalMessage.text }}</b>
-      </v-alert>
+    <v-footer app  >
+       
     </v-footer>
   </v-app>
 </template>
@@ -236,38 +234,7 @@ header.timerbar .v-toolbar__content {
   flex-direction: column !important;
 }
 
-.splitpanes--horizontal>.splitpanes__splitter {
-  height: 12px !important;
-  ;
 
-}
-
-.splitpanes--horizontal>.splitpanes__splitter::after,
-.splitpanes--horizontal>.splitpanes__splitter::before {
-  background-color: rgb(33, 33, 33) !important;
-  height: 2px !important;
-
-}
-
-.splitpanes--vertical>.splitpanes__splitter::after,
-.splitpanes--vertical>.splitpanes__splitter::before {
-  background-color: rgb(33, 33, 33) !important;
-  width: 2px !important;
-  border-radius: 0.5px !important;
-  /* margin:0px!important; */
-  padding: 0px !important;
-  left: 40% !important;
-
-
-}
-
-.splitpanes__splitter::after,
-.splitpanes__splitter::before {}
-
-.splitpanes--vertical>.splitpanes__splitter {
-  width: 12px !important;
-  ;
-}
 </style>
 
 <style scoped>
@@ -332,11 +299,22 @@ header.timerbar .v-toolbar__content {
   animation: fadeInHighlight 1s ease;
 }
 
-.splitpanes__panes {
-  background: rgb(33, 33, 33) !important;
+ 
+.selling-block-col {
+  position: static; /* Default behavior */
 }
 
-.splitpanes.default-theme .splitpanes__pane {
-  background: rgb(33, 33, 33) !important;
+@media (max-width: 600px) {
+  .selling-block-col {
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10; /* Ensure it appears above other elements */
+    
+    padding: 16px; /* Add padding for better spacing */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Optional: add shadow for better visibility */
+  }
 }
 </style>
