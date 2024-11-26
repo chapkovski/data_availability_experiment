@@ -142,7 +142,7 @@ onMounted(async () => {
 
 const onResize = () => {
   console.debug('chartWrapper.value.offsetHeight', chartWrapper.value.offsetHeight)
-  if (chartWrapper.value.offsetHeight<250){
+  if (chartWrapper.value.offsetHeight<250||chartWrapper.value.offsetWidth<600){
     chartTitle.value = null;
     priceGraph.value.chart.title.update({ text: chartTitle.value });
   }

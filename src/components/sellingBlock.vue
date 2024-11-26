@@ -8,14 +8,14 @@
         </v-row>
         <v-row>
           <!-- Buy Button -->
-          <v-col cols="12" sm="6" class="d-flex justify-center">
+          <v-col cols="6" sm="6" class="d-flex justify-center">
             <v-btn large color="green" :disabled="!isBuyPossible" width="100%" @click="handleBuy">
               Buy @ {{ bestBuyingPrice }}
             </v-btn>
           </v-col>
 
           <!-- Sell Button -->
-          <v-col cols="12" sm="6" class="d-flex justify-center">
+          <v-col cols="6" sm="6" class="d-flex justify-center">
             <v-btn large color="red" :disabled="!isSellPossible" width="100%"
             @click="handleSell"
             >
