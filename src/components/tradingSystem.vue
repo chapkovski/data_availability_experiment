@@ -7,8 +7,7 @@
       <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
     </v-app-bar>
 
-    <v-app-bar app fixed class="" :density="smAndDown ? compact : comfortable"
-    :style="topStyle">
+    <v-app-bar app fixed class="" :density="smAndDown ? compact : comfortable" :style="topStyle">
 
       <v-toolbar v-if="true">
         <CountdownCard title="Till next decision" :total-time="tick_frequency" progress-bar-color="red" :interval="100"
@@ -58,26 +57,27 @@
 
     </v-app-bar>
 
-    <v-main>
-      <splitpanes class="default-theme" horizontal :push-other-panes="false" style="height: calc(100vh - 100px)">
-        <pane class="p-3">
-          <div clas="my-3" style="margin-top:50px">
-            <HistoryChart></HistoryChart>
-          </div>
-        </pane>
-        <pane>
-          <splitpanes :push-other-panes="false">
+    <v-main class="main-container">
+      <v-container fluid class="pa-0" style="height: calc(100vh - 50px);">
+        <!-- First Row: History Chart -->
+        <v-row class="pa-3" style="height: 50%;">
+          <v-col :style="{ height: '100%' }">
+            <div class="mb-1" style="margin-top: 50px;" :style="{ height: '100%' }">
+              <HistoryChart />
+            </div>
+          </v-col>
+        </v-row>
 
-            <pane style="max-height: 100%;">
-              <BidAskTable></BidAskTable>
-            </pane>
-            <pane>
-              <sellingBlock />
-            </pane>
-          </splitpanes>
-        </pane>
-
-      </splitpanes>
+        <!-- Second Row: BidAskTable and SellingBlock -->
+        <v-row class="pa-3" style="height: 50%;">
+          <v-col>
+            <BidAskTable />
+          </v-col>
+          <v-col>
+            <sellingBlock />
+          </v-col>
+        </v-row>
+      </v-container>
     </v-main>
     <!-- bottom fixed bar -->
 
@@ -271,6 +271,21 @@ header.timerbar .v-toolbar__content {
 </style>
 
 <style scoped>
+.main-container {
+  margin-top: 0px;
+  padding-top: 70px;
+  /* Default for desktop */
+}
+
+@media (max-width: 600px) {
+
+  /* Adjust breakpoint as per Vuetify's default */
+  .main-container {
+    padding-top: 40px;
+    /* For mobile */
+  }
+}
+
 header.timerbar .v-toolbar__content {
   display: flex !important;
   flex-direction: column !important;

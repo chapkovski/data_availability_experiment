@@ -1,6 +1,7 @@
 <template>
-  <div class="chart-container" :style="{ height: `${chartHeight}px` }" v-resize="onResize" ref="chartWrapper" >
-    <highcharts ref="priceGraph" :constructorType="'stockChart'" :options="chartOptions"></highcharts>
+  <div class="chart-container" v-resize="onResize" ref="chartWrapper" :style="{height:'100%'}">
+    
+    <highcharts v-if='true' ref="priceGraph" :constructorType="'stockChart'" :options="chartOptions"></highcharts>
   </div>
 </template>
 
@@ -133,13 +134,14 @@ onMounted(async () => {
 });
 
 const onResize = () => {
+      console.debug('chartWrapper.value.offsetHeight', chartWrapper.value.offsetHeight)
       if (chartWrapper.value && priceGraph.value) {
-        chartHeight.value = chartWrapper.value.clientHeight - 50;
+        chartHeight.value = chartWrapper.value.offsetHeight ;
 
         // Wait for DOM updates before resizing chart
         requestAnimationFrame(() => {
           console.debug('crrentheight', chartHeight.value)
-          priceGraph.value.chart.setSize(null, 300);
+          priceGraph.value.chart.setSize(null, chartHeight.value);
           priceGraph.value.chart.reflow();
         });
       }
@@ -150,7 +152,7 @@ const onResize = () => {
 
 <style>
 .chart-container {
-  height: 100%!important; /*calc(50vh - 100px); /* Adjust height dynamically */
-  width: 100%; /* Full width of the parent container */
+  height: 100%!important; /*calc(50vh - 100px); /* Adjust height dynamically
+  /*width: 100%; /* Full width of the parent container */
 }
 </style>
