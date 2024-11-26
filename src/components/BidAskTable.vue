@@ -12,8 +12,8 @@
       <v-table v-else class="scrollable-table" fixed-header style='width:100%' density="compact">
         <thead>
           <tr>
-            <th class="text-left">Timestamp</th>
-            <th class="text-left">Price (USD)</th>
+            <th class="text-left">Time</th>
+            <th class="text-left">Price</th>
             <th class="text-left">Size</th>
             <th class="text-left">Condition</th>
           </tr>
