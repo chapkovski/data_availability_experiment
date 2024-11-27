@@ -47,6 +47,7 @@ const chartOptions = reactive({
     type: "datetime",
     min: initialMin,
     max: initialMax,
+    ordinal: false,
     gridLineColor: "#505053", // Darker grid lines
     labels: {
       style: {
@@ -77,7 +78,8 @@ const chartOptions = reactive({
     enabled: false,
   },
   rangeSelector: {
-    enabled: false,
+    enabled: true,
+    selected: 1,
     buttons: [
       {
         type: "second",
