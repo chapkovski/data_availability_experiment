@@ -51,25 +51,25 @@ const formFields = ref([
     title: "Tick Frequency (seconds)",
     type: "number",
     hint: "Enter tick frequency",
-    default: 5,
+    default: 8,
   },
   {
     name: "num_of_ticks_in_day",
     title: "Number of Ticks in a Day",
     type: "number",
     hint: "Enter the number of ticks in a day",
-    default: 1000,
+    default: 40,
   },
   {
     name: "midday_quiz_tick",
     title: "Midday Quiz Tick Number",
     type: "number",
     hint: "Enter the tick number for the quiz dialog",
-    default: 5, // Default to halfway through the ticks
+    default: 20, // Default to halfway through the ticks
   },
   {
     name: "market_signal_strength",
-    title: "Market Signal Strength",
+    title: "Share of insiders",
     type: "select", // Changed to dropdown
     options: ["High", "Low"], // Options for the dropdown
     default: "High",
@@ -79,16 +79,16 @@ const formFields = ref([
     title: "Initial Cash",
     type: "number",
     hint: "Enter starting cash for the trader",
-    default: 100, // Default value
+    default: 1000, // Default value
   },
   {
     name: "initial_shares",
     title: "Initial Shares",
     type: "number",
     hint: "Enter starting shares for the trader",
-    default: 0, // Default value
+    default: 1, // Default value
   },
-  {name:"spread", title:"Spread", type:"number", hint:"Enter the spread", default:1},
+  {name:"spread", title:"Spread", type:"number", hint:"Enter the spread", default:0.02},
   
 ]);
 
