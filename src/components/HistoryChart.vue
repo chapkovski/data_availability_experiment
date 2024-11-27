@@ -14,7 +14,7 @@ import { useTraderStore } from "@/store/app";
 const { priceHistory } = storeToRefs(useTraderStore());
 // Define initial min and max for x-axis
 const initialMin = Date.now();
-const initialMax = initialMin + 2 * 60 * 1000; // 2 minutes from now
+const initialMax = initialMin + 0.5 * 60 * 1000; // 2 minutes from now
 
 // Reference to the chart component
 const chartRef = ref(null);
@@ -30,6 +30,9 @@ const chartTitle = ref("Price History")
 
 
 const chartOptions = reactive({
+  time: {
+                useUTC: false
+            },
   chart: {
     // height: '300px', // Allow dynamic height
     backgroundColor: '#2b2b2b', // Dark background color
@@ -45,9 +48,9 @@ const chartOptions = reactive({
   },
   xAxis: {
     type: "datetime",
-    min: initialMin,
-    max: initialMax,
-    ordinal: false,
+    // min: initialMin,
+    // max: initialMax,
+    // ordinal: true,
     gridLineColor: "#505053", // Darker grid lines
     labels: {
       style: {
@@ -78,15 +81,21 @@ const chartOptions = reactive({
     enabled: false,
   },
   rangeSelector: {
-    enabled: true,
-    selected: 1,
-    buttons: [
-      {
-        type: "second",
-        count: 5,
-        text: "1m",
-      },
-    ],
+    enabled: false,
+    // selected: 0,
+    // buttons: [
+    //   {
+    //     type: "minute",
+    //     count: 1,
+    //     text: "1m",
+    //   },
+      
+    //   {
+    //     type: 'all',
+    //     text: 'All',
+    //     title: 'View all'
+    //   }
+    // ],
     inputEnabled: false, // Disables the date range input fields
   },
   series: [
@@ -122,15 +131,19 @@ const chartOptions = reactive({
 
 // Watch priceHistory for updates
 watch(priceHistory, (newHistory) => {
-  if (chartOptions.series[0]) {
+  // if (chartOptions.series[0]) {
+    console.debug("DO WE FUCKING REACH???")
     chartOptions.series[0].data = newHistory;
-
-    // Reset x-axis range to initial values
-    // if (chartRef.value?.chart) {
-    //   chartRef.value.chart.xAxis[0].setExtremes(initialMin, initialMax);
-    // }
-  }
-});
+  // console.debug('at least do we reach here at least??!')
+  //   // Reset x-axis range to initial values
+    if (priceGraph.value?.chart) {
+      console.debug("DO WE FUCKING REACH???")
+      // initialMin.value = Date.now();
+      // initialMax.value=  Date.now()+2*60*1000
+      // priceGraph.value.chart.xAxis[0].setExtremes(initialMin.value, initialMax.value);
+    }
+  // }
+},  { deep: true });
 
 // Ensure the chart resizes to fit its container
 onMounted(async () => {
@@ -143,8 +156,8 @@ onMounted(async () => {
 });
 
 const onResize = () => {
-  console.debug('chartWrapper.value.offsetHeight', chartWrapper.value.offsetHeight)
-  if (chartWrapper.value.offsetHeight<250||chartWrapper.value.offsetWidth<600){
+  
+  if (chartWrapper.value.offsetHeight < 250 || chartWrapper.value.offsetWidth < 600) {
     chartTitle.value = null;
     priceGraph.value.chart.title.update({ text: chartTitle.value });
   }
@@ -153,7 +166,7 @@ const onResize = () => {
 
     // Wait for DOM updates before resizing chart
     requestAnimationFrame(() => {
-      console.debug('crrentheight', chartHeight.value)
+      
       priceGraph.value.chart.setSize(null, chartHeight.value);
       priceGraph.value.chart.reflow();
     });
