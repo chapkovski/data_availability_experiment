@@ -1,19 +1,19 @@
 <template>
   <v-card height="100%" elevation="3">
   
-    <v-card-text class="custom-card-text">
+    <v-card-text class="pa-0 pa-xs-0 pa-sm-0 pa-md-3">
       <v-container>
       
         <v-row>
           <!-- Buy Button -->
-          <v-col cols="6" sm="6" class="d-flex justify-center">
+          <v-col cols="6" sm="6" class="d-flex justify-center pa-0 pa-xs-0  pa-sm-0 pa-md-3">
             <v-btn :color="isBuyPossible?`green`:`lightgray`" :disabled="!isBuyPossible" width="100%" @click="handleBuy">
               Buy @ {{ bestSellingPrice }}
             </v-btn>
           </v-col>
 
           <!-- Sell Button -->
-          <v-col cols="6" sm="6" class="d-flex justify-center">
+          <v-col cols="6" sm="6" class="d-flex justify-center pa-0 pa-xs-0 pa-sm-0 pa-md-3">
             <v-btn large :color="isSellPossible?`red`:`lightgray`" :disabled="!isSellPossible" width="100%"
             @click="handleSell"
             >
