@@ -1,19 +1,19 @@
 <template>
     <v-card
-      :class="`mx-sm-2   pa-${smallerScreen ? 0 : 1} ${cardColor}`"
+      :class="`ma-1 pa-0 ${cardColor}`"
       outlined
-      :height="smallerScreen ? 30 : 50"
+      
       rounded="lg"
     >
       <v-card-text
         class=""
         :style="{ padding: smallerScreen ? '4px' : '8px' }"
       >
-        <div :class="{ 'small-title': smallerScreen }" class="font-weight-bold">
+        <div :class="{ 'small-title': smallerScreen }" class="">
           {{ title }}
         </div>
         <Transition enter-active-class="fade-in-highlight">
-          <span :key="value">{{ displayValue }}</span>
+          <span :key="value" class="displayValue">{{ displayValue }}</span>
         </Transition>
       </v-card-text>
     </v-card>
@@ -81,5 +81,9 @@
   /* Optional: Customize card appearance */
   .v-card {
     border-radius: 12px; /* Rounded corners */
+  }
+  .displayValue{
+    font-weight: bolder;
+    font-size:16px
   }
   </style>

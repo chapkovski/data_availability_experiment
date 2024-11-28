@@ -7,7 +7,7 @@
       <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
     </v-app-bar>
 
-    <v-app-bar app fixed class="" :density="smAndDown ? compact : comfortable" :style="topStyle">
+    <v-app-bar app fixed class="pa-0"   :style="topStyle" :height="(height<400||width<700)?44:64">
 
       <v-toolbar v-if="true">
         <CountdownCard title="Time to next tick" :total-time="tick_frequency" progress-bar-color="red" :interval="100"
@@ -26,12 +26,14 @@
     :value="totalWealth"
     color="green"
   />
-  <!-- Current Price Card -->
+  <div class="mr-3">
   <status-card
     title="Current Price"
     :value="currentPrice"
     color="blue"
+    
   />
+</div>
         <!-- Include other market fundamentals and inventory status here -->
       </v-toolbar>
 
@@ -76,23 +78,10 @@ const props = defineProps({
 
 // import BidAskChart from "@/components/BidAskChart.vue";
 import { useDisplay } from "vuetify";
-const { smAndDown, name } = useDisplay();
-const height = computed(() => {
-  // name is reactive and
-  // must use .value
-  switch (name.value) {
-    case 'xs': return 220
-    case 'sm': return 400
-    case 'md': return 500
-    case 'lg': return 600
-    case 'xl': return 800
-    case 'xxl': return 1200
-  }
-
-  return undefined
-})
+const { smAndDown, name, height ,width} = useDisplay();
+ 
 const topStyle = computed(() => {
-  return smAndDown?{top:'50px'}:{top:'32px'}
+  return (height<400||width<900)?{top:'32px', height:null}:{top:'50px', height:'64px'}
 });
 import QuizDialog from "./QuizDialog.vue";
 
