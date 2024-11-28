@@ -313,7 +313,7 @@ header.timerbar .v-toolbar__content {
     width: 100%;
     z-index: 10; /* Ensure it appears above other elements */
     
-    padding: 16px; /* Add padding for better spacing */
+    /*padding: 16px; /* Add padding for better spacing */
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Optional: add shadow for better visibility */
   }
 }
