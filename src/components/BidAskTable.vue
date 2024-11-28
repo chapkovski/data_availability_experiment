@@ -121,4 +121,16 @@ const {   market_signal_strength ,orders} = storeToRefs(useTraderStore());
   font-weight: bold;
   color: gray;
 }
+
+/* Default font size for table headers */
+thead > tr > th {
+  font-size: 16px; /* Default size */
+}
+
+/* Decrease font size for headers on smaller screens */
+@media (max-width: 900px) {
+  thead > tr > th {
+    font-size: 12px !important; /* Smaller font size for mobile devices */
+  }
+}
 </style>
