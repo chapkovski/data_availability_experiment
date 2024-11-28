@@ -4,12 +4,7 @@
         <p  class="text-center mb-2" v-else>Please choose the answer</p>
         <v-slider show-ticks="always" min="0" max="4" step="1" tick-size="4" :ticks="tickLabels"
         v-model="model">
-            <template #thumb-label="{ modelValue }">
-        <!-- Custom thumb label rendering -->
-        <div class="custom-thumb-label">
-          {{ labels[modelValue] }}
-        </div>
-      </template>
+        
         </v-slider>
 
     </div>
@@ -50,12 +45,12 @@ const props = defineProps({
  
 const tickLabels = _.fromPairs(props.labels.map((label, index) => [index, label]));
 // Vuetify's display composable to detect screen size
-const { smAndDown } = useDisplay();
+const { smAndDown, height, width } = useDisplay();
 
  
 
 // Responsive detection
-const isSmallScreen = smAndDown;
+const isSmallScreen = computed(() => width.value<700);
 
 
 </script>

@@ -23,7 +23,7 @@
           
            
           <!-- Display rows if orders has data -->
-          <transition-group   name="highlight" tag="tbody">
+          <transition-group   name="" tag="tbody">
             <tr v-if="!orders.length" >
               <td colspan="4" class="no-data-message" >No data yet</td>
             </tr>

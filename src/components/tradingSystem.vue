@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app fixed class="timerbar" :density="smAndDown ? compact : comfortable">
-      <CountdownCard title="Till the end of the day" :total-time="dayRemainingTime / 1000" :overall-time="day_duration"
+      <CountdownCard title="Time to end of round" :total-time="dayRemainingTime / 1000" :overall-time="day_duration"
         progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated"
         @timer-restarted="finalizingDay" />
       <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
@@ -10,7 +10,7 @@
     <v-app-bar app fixed class="" :density="smAndDown ? compact : comfortable" :style="topStyle">
 
       <v-toolbar v-if="true">
-        <CountdownCard title="Till next decision" :total-time="tick_frequency" progress-bar-color="red" :interval="100"
+        <CountdownCard title="Time to next tick" :total-time="tick_frequency" progress-bar-color="red" :interval="100"
           @timer-restarted="handleTimerRestarted"> </CountdownCard>
 
 

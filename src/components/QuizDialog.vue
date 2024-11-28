@@ -113,3 +113,12 @@ defineExpose({ openDialog, closeDialog });
     </v-card>
   </v-dialog>
 </template>
+
+<style>
+@media (max-width: 900px) {
+  .v-slider-track__tick-label {
+    white-space: normal; /* Allow text to wrap */
+    text-align: center; /* Optional: center-align wrapped text */
+    word-wrap: break-word; /* Ensure long words break nicely */
+  }
+}</style>
