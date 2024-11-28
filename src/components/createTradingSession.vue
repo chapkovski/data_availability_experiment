@@ -122,7 +122,7 @@ const initializeTrader = async () => {
 
 onMounted(async () => {
   serverActive.value = true;
-  console.debug(traderStore.initializeTradingSystem);
+  // console.debug(traderStore.initializeTradingSystem);
   
  
  

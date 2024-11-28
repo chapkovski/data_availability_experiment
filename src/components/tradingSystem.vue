@@ -47,7 +47,7 @@
           <v-card-text class="font-weight-bold">
             Cash:
             <Transition enter-active-class="fade-in-highlight">
-              <span :key="cash">{{ cash }}</span>
+              <span :key="cash">{{ cash.toFixed(2) }}</span>
             </Transition>
           </v-card-text>
         </v-card>

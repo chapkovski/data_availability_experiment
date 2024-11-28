@@ -23,7 +23,7 @@ export const useTraderStore = defineStore("trader", {
     orders: [],
     isTimerPaused: false,
     dayRemainingTime: null,
-    timerCounter: 0,
+    timerCounter: -1,
     tickHappenedAt: null, // New property to store timestamp of the last tick
     tick_frequency: null,
     roundNumber: 1,
@@ -99,7 +99,7 @@ export const useTraderStore = defineStore("trader", {
 
     processOrdersForCurrentTick() {
       const currentRound = this.roundNumber;
-      const currentTick = this.timerCounter;
+      const currentTick = this.timerCounter+1;
 
       // Filter relevant bids using Lodash
       const relevantOrders = _.filter(ordersData, {
@@ -158,10 +158,10 @@ export const useTraderStore = defineStore("trader", {
 
       this.gameParams = { ...formData };
       this.spread = spread;
-      this.initial_cash = initial_cash;
-      this.initial_shares = initial_shares;
-      this.shares = initial_shares;
-      this.cash = initial_cash;
+      this.initial_cash = parseFloat(initial_cash);
+      this.initial_shares = parseInt(initial_shares);
+      this.shares = parseInt(initial_shares);
+      this.cash = parseFloat(initial_cash);
       // Assign individual values to top-level state properties
       this.treatment = treatment;
       this.tick_frequency = tick_frequency;
