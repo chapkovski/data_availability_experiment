@@ -12,10 +12,10 @@
       <v-table v-else class="scrollable-table" fixed-header style='width:100%' density="compact">
         <thead>
           <tr>
-            <th class="text-left">Time</th>
-            <th class="text-left">Price (USD)</th>
-            <th class="text-left">Size</th>
-            <th class="text-left">Condition</th>
+            <th class="text-left pa-0">Time</th>
+            <th class="text-left pa-0">Price (USD)</th>
+            <th class="text-left pa-0">Size</th>
+            <th class="text-left pa-0">Condition</th>
           </tr>
         </thead>
 
@@ -37,7 +37,7 @@
                 'at-bid': item.condition === 'at bid'
               }"
             >
-              <td>{{ new Date(item.timestamp).toLocaleTimeString() }}</td>
+              <td>{{ formatTime(new Date(item.timestamp)) }}</td>
               <td>{{ item.price }}</td>
               <td>{{ item.size }}</td>
               <td>{{ item.condition }}</td>
@@ -62,7 +62,15 @@ import { useTraderStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
 const store = useTraderStore();
 const {   market_signal_strength ,orders} = storeToRefs(useTraderStore());
-
+const formatTime = (timestamp) =>{
+      // Format the time in 24-hour format
+      return new Intl.DateTimeFormat('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false, // Use 24-hour format
+      }).format(new Date(timestamp));
+    }
  
 </script>
 
