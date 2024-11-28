@@ -14,10 +14,10 @@ import { createVuetify } from 'vuetify'
 // Import Vuetify themes if needed
 export default  createVuetify({
   theme: {
-    defaultTheme: 'dark',
+    // defaultTheme: 'white',
     themes: {
       dark: {
-        dark: true, // This sets the theme to dark mode
+        // dark: true, // This sets the theme to dark mode
         colors: {
           primary: '#1e88e5',
           secondary: '#ff4081',

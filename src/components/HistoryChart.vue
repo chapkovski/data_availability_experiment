@@ -35,7 +35,7 @@ const chartOptions = reactive({
             },
   chart: {
     // height: '300px', // Allow dynamic height
-    backgroundColor: '#2b2b2b', // Dark background color
+    // backgroundColor: '#2b2b2b', // Dark background color
     style: {
       fontFamily: 'sans-serif',
     },
@@ -43,7 +43,7 @@ const chartOptions = reactive({
   title: {
     text: chartTitle.value,
     style: {
-      color: "#FFFFFF", // Title color in light text
+      // color: "#FFFFFF", // Title color in light text
     },
   },
   xAxis: {
@@ -51,26 +51,26 @@ const chartOptions = reactive({
     // min: initialMin,
     // max: initialMax,
     // ordinal: true,
-    gridLineColor: "#505053", // Darker grid lines
+    // gridLineColor: "#505053", // Darker grid lines
     labels: {
       style: {
-        color: "#E0E0E3", // Light text for labels
+        // color: "#E0E0E3", // Light text for labels
       },
     },
-    lineColor: "#707073", // Axis line color
-    tickColor: "#707073", // Tick color
+    // lineColor: "#707073", // Axis line color
+    // tickColor: "#707073", // Tick color
   },
   yAxis: {
-    gridLineColor: "#505053", // Darker grid lines
+    // gridLineColor: "#505053", // Darker grid lines
     labels: {
       style: {
-        color: "#E0E0E3", // Light text for labels
+        // color: "#E0E0E3", // Light text for labels
       },
     },
     title: {
       text: "Price",
       style: {
-        color: "#E0E0E3", // Light text for axis title
+        // color: "#E0E0E3", // Light text for axis title
       },
     },
   },
@@ -105,26 +105,26 @@ const chartOptions = reactive({
       marker: {
         enabled: true,
         radius: 6, // Large dots
-        fillColor: "#FF5733", // Orange dots
+        // fillColor: "#FF5733", // Orange dots
       },
-      lineColor: "#FF5733", // Line connecting dots
+      // lineColor: "#FF5733", // Line connecting dots
     },
   ],
   legend: {
     itemStyle: {
-      color: "#E0E0E3", // Light text for legend
+      // color: "#E0E0E3", // Light text for legend
     },
     itemHoverStyle: {
-      color: "#FFFFFF", // Lighter text on hover
+      // color: "#FFFFFF", // Lighter text on hover
     },
     itemHiddenStyle: {
-      color: "#606063", // Muted text for hidden items
+      // color: "#606063", // Muted text for hidden items
     },
   },
   tooltip: {
-    backgroundColor: "#333333", // Dark tooltip background
+    // backgroundColor: "#333333", // Dark tooltip background
     style: {
-      color: "#F0F0F0", // Light text for tooltip
+      // color: "#F0F0F0", // Light text for tooltip
     },
   },
 });
@@ -132,12 +132,12 @@ const chartOptions = reactive({
 // Watch priceHistory for updates
 watch(priceHistory, (newHistory) => {
   // if (chartOptions.series[0]) {
-    console.debug("DO WE FUCKING REACH???")
+    
     chartOptions.series[0].data = newHistory;
   // console.debug('at least do we reach here at least??!')
   //   // Reset x-axis range to initial values
     if (priceGraph.value?.chart) {
-      console.debug("DO WE FUCKING REACH???")
+    
       // initialMin.value = Date.now();
       // initialMax.value=  Date.now()+2*60*1000
       // priceGraph.value.chart.xAxis[0].setExtremes(initialMin.value, initialMax.value);
