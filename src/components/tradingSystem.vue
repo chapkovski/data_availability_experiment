@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-app-bar app fixed class="timerbar" :density="smAndDown ? compact : comfortable">
+    <v-app-bar app fixed class="timerbar" :density="smAndDown ? compact : comfortable" height="smAndDown ? 30 : 64">
       <CountdownCard title="Time to end of round" :total-time="dayRemainingTime / 1000" :overall-time="day_duration"
         progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated"
         @timer-restarted="finalizingDay" />
@@ -15,43 +15,23 @@
 
 
         <v-spacer></v-spacer>
+        <status-card
+    title="Insiders"
+    :stringValue="`50%`"
+    color="red"
+  />
 
-
-        <v-card class="mx-2" outlined>
-          <v-card-text class="font-weight-bold">
-            Insiders:
-
-            <span>50%</span>
-
-          </v-card-text>
-        </v-card>
-
-
-        <!-- Shares -->
-        <v-card class="mx-2" outlined>
-          <v-card-text class="font-weight-bold">
-            Shares:
-
-            <span>
-              <span>{{ shares }}</span>
-              <Transition enter-active-class="fade-in-highlight" :key="shares">
-
-              </Transition>
-            </span>
-
-          </v-card-text>
-        </v-card>
-
-        <!-- Cash -->
-        <v-card class="mx-2" outlined>
-          <v-card-text class="font-weight-bold">
-            Cash:
-            <Transition enter-active-class="fade-in-highlight">
-              <span :key="cash">{{ cash.toFixed(2) }}</span>
-            </Transition>
-          </v-card-text>
-        </v-card>
-
+        <status-card
+    title="Total Wealth"
+    :value="totalWealth"
+    color="green"
+  />
+  <!-- Current Price Card -->
+  <status-card
+    title="Current Price"
+    :value="currentPrice"
+    color="blue"
+  />
         <!-- Include other market fundamentals and inventory status here -->
       </v-toolbar>
 
@@ -112,24 +92,12 @@ const height = computed(() => {
   return undefined
 })
 const topStyle = computed(() => {
-  switch (name.value) {
-    case "xs":
-      return { top: "30px" }; // Apply top: 30px for "sm"
-    case "sm":
-      return { top: "45px" }; // Apply top: 30px for "sm"  
-    case "md":
-      return { top: "55px" }; // Apply top: 30px for "sm"
-    case "xl":
-      return { top: "55px" }; // Apply top: 50px for "xl"
-    default:
-      return {}; // Default empty style
-  }
+  return smAndDown?{top:'50px'}:{top:'32px'}
 });
-import { Splitpanes, Pane } from 'splitpanes'
-import 'splitpanes/dist/splitpanes.css'
 import QuizDialog from "./QuizDialog.vue";
 
 const quizDialog = ref(null);
+import StatusCard from './StatusCard.vue';
 import HistoryChart from "@/components/HistoryChart.vue";
 import BidAskTable from "./BidAskTable.vue";
 import sellingBlock from "./sellingBlock.vue";
@@ -139,7 +107,7 @@ import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 import { watch, ref, onMounted, computed } from "vue";
 const store = useTraderStore();
-const { gameParams, shares, cash, initial_shares, dayOver, isTimerPaused, dayRemainingTime, day_duration,
+const { gameParams,totalWealth, currentPrice, dayOver, isTimerPaused, dayRemainingTime, day_duration,
   midday_quiz_tick, timerCounter, tick_frequency } = storeToRefs(useTraderStore());
 
 

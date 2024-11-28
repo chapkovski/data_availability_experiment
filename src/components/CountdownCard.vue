@@ -1,6 +1,6 @@
 <template>
   <v-card :style="cardStyle">
-    <v-card-text class="timertext">
+    <v-card-text class="ma-1 pa-1 d-flex flex-column justify-center align-center">
       <!-- Progress Bars -->
       <v-progress-circular
         v-if="progressType === 'circular'"
@@ -33,7 +33,7 @@
         v-slot="{ days, hours, minutes, seconds }"
         :interval="interval"
       >
-        <div v-if="!smAndDown">{{ title }}: <b>{{ Math.round(remainingTime / 1000) }} seconds</b></div>
+        <div class='text-center' v-if="!smAndDown">{{ title }}: <b>{{ Math.round(remainingTime / 1000) }} seconds</b></div>
       </vue-countdown>
     </v-card-text>
   </v-card>
@@ -108,7 +108,7 @@ const cardStyle = computed(() => (props.progressType === 'linear' ? { width: '10
 }
 @media (max-width: 600px) {
   .timertext {
-    /* padding:0.3rem!important; */
+    padding:0.3rem!important;
   }
 }
 </style>

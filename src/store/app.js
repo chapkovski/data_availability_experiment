@@ -52,6 +52,9 @@ export const useTraderStore = defineStore("trader", {
   }),
 
   getters: {
+    totalWealth(state) {
+      return (state.shares * state.currentPrice) + state.cash;
+    },
     isBuyPossible(state) {
       // Buy is possible if:
       // 1. Shares are 0
