@@ -1,11 +1,9 @@
 <template>
   <v-card height="100%" elevation="3">
   
-    <v-card-text>
+    <v-card-text class="custom-card-text">
       <v-container>
-        <v-row>
-           
-        </v-row>
+      
         <v-row>
           <!-- Buy Button -->
           <v-col cols="6" sm="6" class="d-flex justify-center">
@@ -69,6 +67,11 @@ function sendOrder(type, price) {
 </script>
 
 <style scoped>
+@media (max-width: 600px) {
+  .custom-card-text {
+    padding: 0 !important;
+  }
+}
 .cardtitle {
   font-size: 20px;
   font-weight: bold;
