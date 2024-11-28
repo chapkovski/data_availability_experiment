@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto">
-    <v-card-title>Time & Sales</v-card-title>
+    <v-card-title v-if="showTableTitle">Time & Sales</v-card-title>
     <v-card-text
       :class="{ 'full-height-center': market_signal_strength === 'Low'  }"
     >
@@ -51,8 +51,12 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 
+import { useDisplay } from "vuetify";
+const { smAndDown, height, width } = useDisplay();
 
- 
+const showTableTitle  = computed(() => {
+  return !smAndDown.value;
+});
 import { useTraderStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
 const store = useTraderStore();
