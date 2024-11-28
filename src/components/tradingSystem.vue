@@ -6,7 +6,7 @@
         @timer-restarted="finalizingDay" />
 
 
-      <v-toolbar class="d-flex flex-row mt-1" style="flex-direction:'row!important'" >
+      <v-toolbar class="d-flex flex-row mt-1" style="flex-direction:'row!important'"  :height="smAndDown?49:64">
         <div class="d-flex flex-row" style="width:100%">
         <CountdownCard title="Time to next tick" :total-time="tick_frequency" progress-bar-color="red" :interval="100"
           @timer-restarted="handleTimerRestarted"> </CountdownCard>
@@ -28,9 +28,9 @@
       <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
       <v-container fluid class="pa-0" style="height: calc(100vh - 50px);">
         <!-- First Row: History Chart -->
-        <v-row class="pa-3" style="height: calc(50vh - 50px);">
+        <v-row class="pa-31" style="height: calc(50vh - 50px);">
           <v-col :style="{ height: '100%' }">
-            <div class="mb-1" style="margin-top: 35px;" :style="{ height: '100%' }">
+            <div class="mb-1" style="margin-top: 10px;" :style="{ height: '100%' }">
               <HistoryChart />
             </div>
           </v-col>
