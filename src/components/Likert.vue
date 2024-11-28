@@ -50,7 +50,7 @@ const { smAndDown, height, width } = useDisplay();
  
 
 // Responsive detection
-const isSmallScreen = computed(() => width.value<700);
+const isSmallScreen = computed(() => width.value<667);
 
 
 </script>
