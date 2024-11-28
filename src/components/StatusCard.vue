@@ -2,7 +2,7 @@
     <v-card
       :class="`ma-1 pa-0 ${cardColor}`"
       outlined
-      
+      :height="smallerScreen ? 40 : 50"
       rounded="lg"
     >
       <v-card-text

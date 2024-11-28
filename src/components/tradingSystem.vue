@@ -1,57 +1,43 @@
 <template>
   <v-app>
-    <v-app-bar app fixed class="timerbar" :density="smAndDown ? compact : comfortable" height="smAndDown ? 30 : 64">
+    <v-app-bar app fixed class="timerbar  d-flex flex-column " :density="smAndDown ? compact : comfortable" height="smAndDown ? 30 : 64">
       <CountdownCard title="Time to end of round" :total-time="dayRemainingTime / 1000" :overall-time="day_duration"
         progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated"
         @timer-restarted="finalizingDay" />
-      <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
-    </v-app-bar>
 
-    <v-app-bar app fixed class="pa-0"   :style="topStyle" :height="(height<400||width<700)?44:64">
 
-      <v-toolbar v-if="true">
+      <v-toolbar class="d-flex flex-row mt-1" style="flex-direction:'row!important'" >
+        <div class="d-flex flex-row" style="width:100%">
         <CountdownCard title="Time to next tick" :total-time="tick_frequency" progress-bar-color="red" :interval="100"
           @timer-restarted="handleTimerRestarted"> </CountdownCard>
 
 
         <v-spacer></v-spacer>
-        <status-card
-    title="Insiders"
-    :stringValue="`50%`"
-    color="red"
-  />
+        <status-card title="Insiders" :stringValue="`50%`" color="red" />
 
-        <status-card
-    title="Total Wealth"
-    :value="totalWealth"
-    color="green"
-  />
-  <div class="mr-3">
-  <status-card
-    title="Current Price"
-    :value="currentPrice"
-    color="blue"
-    
-  />
-</div>
-        <!-- Include other market fundamentals and inventory status here -->
+        <status-card title="Total Wealth" :value="totalWealth" color="green" />
+        <div class="mr-3">
+          <status-card title="Current Price" :value="currentPrice" color="blue" />
+        </div>
+      </div>
       </v-toolbar>
 
     </v-app-bar>
 
     <v-main class="main-container">
+      <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
       <v-container fluid class="pa-0" style="height: calc(100vh - 50px);">
         <!-- First Row: History Chart -->
-        <v-row class="pa-3" style="height: calc(50vh - 50px);">
+        <v-row class="pa-3" style="height: calc(50vh - 500px0px);">
           <v-col :style="{ height: '100%' }">
-            <div class="mb-1" style="margin-top: 50px;" :style="{ height: '100%' }">
+            <div class="mb-1" style="margin-top: 35px;" :style="{ height: '100%' }">
               <HistoryChart />
             </div>
           </v-col>
         </v-row>
 
         <!-- Second Row: BidAskTable and SellingBlock -->
-        <v-row class="pa-3"  style="height: calc(50vh - 50px);">
+        <v-row class="pa-3 pt-1" style="height: calc(50vh - 50px);">
           <v-col>
             <BidAskTable />
           </v-col>
@@ -64,8 +50,8 @@
     <!-- bottom fixed bar -->
 
 
-    <v-footer app  >
-       
+    <v-footer app>
+
     </v-footer>
   </v-app>
 </template>
@@ -78,10 +64,10 @@ const props = defineProps({
 
 // import BidAskChart from "@/components/BidAskChart.vue";
 import { useDisplay } from "vuetify";
-const { smAndDown, name, height ,width} = useDisplay();
- 
+const { smAndDown, name, height, width } = useDisplay();
+
 const topStyle = computed(() => {
-  return (height<400||width<900)?{top:'32px', height:null}:{top:'50px', height:'64px'}
+  return (height < 400 || width < 900) ? { top: '32px', height: null } : { top: '50px', height: '64px' }
 });
 import QuizDialog from "./QuizDialog.vue";
 
@@ -96,7 +82,7 @@ import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 import { watch, ref, onMounted, computed } from "vue";
 const store = useTraderStore();
-const { gameParams,totalWealth, currentPrice, dayOver, isTimerPaused, dayRemainingTime, day_duration,
+const { gameParams, totalWealth, currentPrice, dayOver, isTimerPaused, dayRemainingTime, day_duration,
   midday_quiz_tick, timerCounter, tick_frequency } = storeToRefs(useTraderStore());
 
 
@@ -190,8 +176,6 @@ header.timerbar .v-toolbar__content {
   display: flex !important;
   flex-direction: column !important;
 }
-
-
 </style>
 
 <style scoped>
@@ -256,9 +240,10 @@ header.timerbar .v-toolbar__content {
   animation: fadeInHighlight 1s ease;
 }
 
- 
+
 .selling-block-col {
-  position: static; /* Default behavior */
+  position: static;
+  /* Default behavior */
 }
 
 @media (max-width: 600px) {
@@ -268,10 +253,12 @@ header.timerbar .v-toolbar__content {
     bottom: 0;
     left: 0;
     width: 100%;
-    z-index: 10; /* Ensure it appears above other elements */
-    
+    z-index: 10;
+    /* Ensure it appears above other elements */
+
     /*padding: 16px; /* Add padding for better spacing */
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Optional: add shadow for better visibility */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    /* Optional: add shadow for better visibility */
   }
 }
 </style>
