@@ -23,7 +23,7 @@ export const useTraderStore = defineStore("trader", {
     orders: [],
     isTimerPaused: false,
     dayRemainingTime: null,
-    timerCounter: -1,
+    timerCounter: 0,
     tickHappenedAt: null, // New property to store timestamp of the last tick
     tick_frequency: null,
     roundNumber: 1,
@@ -76,11 +76,12 @@ export const useTraderStore = defineStore("trader", {
   actions: {
 
     makeTick() {
-      this.timerCounter += 1;
+      
       this.tickHappenedAt = Date.now(); // Store the timestamp of this tick
       this.orders=[];
       this.currentPrice = parseFloat(this.priceData[this.timerCounter].price);
       this.updatePriceHistory();
+      this.timerCounter++;
     },
     updatePriceHistory() {
       if (this.timerCounter < this.priceData.length) {
@@ -99,7 +100,7 @@ export const useTraderStore = defineStore("trader", {
 
     processOrdersForCurrentTick() {
       const currentRound = this.roundNumber;
-      const currentTick = this.timerCounter+1;
+      const currentTick = this.timerCounter;
 
       // Filter relevant bids using Lodash
       const relevantOrders = _.filter(ordersData, {
