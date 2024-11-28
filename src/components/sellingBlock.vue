@@ -9,17 +9,17 @@
         <v-row>
           <!-- Buy Button -->
           <v-col cols="6" sm="6" class="d-flex justify-center">
-            <v-btn large color="green" :disabled="!isBuyPossible" width="100%" @click="handleBuy">
-              Buy @ {{ bestBuyingPrice }}
+            <v-btn :color="isBuyPossible?`green`:`lightgray`" :disabled="!isBuyPossible" width="100%" @click="handleBuy">
+              Buy @ {{ bestSellingPrice }}
             </v-btn>
           </v-col>
 
           <!-- Sell Button -->
           <v-col cols="6" sm="6" class="d-flex justify-center">
-            <v-btn large color="red" :disabled="!isSellPossible" width="100%"
+            <v-btn large :color="isSellPossible?`red`:`lightgray`" :disabled="!isSellPossible" width="100%"
             @click="handleSell"
             >
-              Sell @ {{ bestSellingPrice }}
+              Sell @ {{ bestBuyingPrice }}
             </v-btn>
           </v-col>
         </v-row>
@@ -49,7 +49,7 @@ const {
 function handleBuy() {
   if (isBuyPossible.value) {
     shares.value += 1; // Increase shares
-    cash.value -= bestBuyingPrice.value; // Deduct current price from cash
+    cash.value -= bestSellingPrice.value; // Deduct current price from cash
   }
 }
 
@@ -57,7 +57,7 @@ function handleBuy() {
 function handleSell() {
   if (isSellPossible.value) {
     shares.value -= 1; // Decrease shares
-    cash.value += bestSellingPrice.value; // Add current price to cash
+    cash.value += bestBuyingPrice.value // Add current price to cash
   }
 }
 

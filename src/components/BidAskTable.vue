@@ -13,7 +13,7 @@
         <thead>
           <tr>
             <th class="text-left">Time</th>
-            <th class="text-left">Price</th>
+            <th class="text-left">Price (USD)</th>
             <th class="text-left">Size</th>
             <th class="text-left">Condition</th>
           </tr>
@@ -37,7 +37,7 @@
               }"
             >
               <td>{{ new Date(item.timestamp).toLocaleTimeString() }}</td>
-              <td>{{ item.price }} USD</td>
+              <td>{{ item.price }}</td>
               <td>{{ item.size }}</td>
               <td>{{ item.condition }}</td>
             </tr>
