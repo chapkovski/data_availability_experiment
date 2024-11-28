@@ -29,6 +29,7 @@
             </tr>
             
             <tr
+           class="custom-row"
               v-for="item in orders"
               :key="item.random_id"
               :class="{
@@ -66,6 +67,14 @@ const {   market_signal_strength ,orders} = storeToRefs(useTraderStore());
 </script>
 
 <style scoped>
+.custom-row {
+  height: 3px !important; /* Ensures explicit height for rows */
+}
+
+.custom-row td {
+  padding: 0 !important; /* Removes padding to minimize height */
+  line-height: 1 !important; /* Controls text spacing to reduce height */
+}
 .scrollable-table {
   max-height: 300px; /* Set a fixed height */
   overflow-y: auto; /* Enable vertical scrolling */
