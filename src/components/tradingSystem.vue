@@ -28,7 +28,7 @@
       <QuizDialog ref="quizDialog" @dialog-closed="handleDialogClosed" />
       <v-container fluid class="pa-0" style="height: calc(100vh - 50px);">
         <!-- First Row: History Chart -->
-        <v-row class="pa-3" style="height: calc(50vh - 500px0px);">
+        <v-row class="pa-3" style="height: calc(50vh - 50px);">
           <v-col :style="{ height: '100%' }">
             <div class="mb-1" style="margin-top: 35px;" :style="{ height: '100%' }">
               <HistoryChart />
