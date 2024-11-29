@@ -30,9 +30,10 @@ const chartTitle = ref("Price History")
 
 
 const chartOptions = reactive({
+
   time: {
-                useUTC: false
-            },
+    useUTC: false
+  },
   chart: {
     // height: '300px', // Allow dynamic height
     // backgroundColor: '#2b2b2b', // Dark background color
@@ -89,7 +90,7 @@ const chartOptions = reactive({
     //     count: 1,
     //     text: "1m",
     //   },
-      
+
     //   {
     //     type: 'all',
     //     text: 'All',
@@ -100,6 +101,31 @@ const chartOptions = reactive({
   },
   series: [
     {
+      dataLabels: {
+        useHTML: true,
+        format: `
+  <span style="
+      width: 40px; 
+      height: 20px; 
+      background-color: orange!important; 
+      border: 1px solid blue; 
+      border-radius: 5px; 
+      text-align: center; 
+      line-height: 20px; 
+      font-size: 12px; 
+      color: black; 
+      margin-left: -20px;">
+    {point.y}
+  </span>
+`,
+        enabled: true,
+        formatter() {
+          let points = this.series.points;
+          if (this.x === points[points.length - 1].x) {
+            return this.y
+          }
+        }
+      },
       name: "Price",
       data: priceHistory.value,
       marker: {
@@ -132,18 +158,19 @@ const chartOptions = reactive({
 // Watch priceHistory for updates
 watch(priceHistory, (newHistory) => {
   // if (chartOptions.series[0]) {
-    
-    chartOptions.series[0].data = newHistory;
+
+  chartOptions.series[0].data = newHistory;
+  // chartOptions.series[0].points[0].label = "Your Label Text";
   // console.debug('at least do we reach here at least??!')
   //   // Reset x-axis range to initial values
-    if (priceGraph.value?.chart) {
-    
-      // initialMin.value = Date.now();
-      // initialMax.value=  Date.now()+2*60*1000
-      // priceGraph.value.chart.xAxis[0].setExtremes(initialMin.value, initialMax.value);
-    }
+  if (priceGraph.value?.chart) {
+
+    // initialMin.value = Date.now();
+    // initialMax.value=  Date.now()+2*60*1000
+    // priceGraph.value.chart.xAxis[0].setExtremes(initialMin.value, initialMax.value);
+  }
   // }
-},  { deep: true });
+}, { deep: true });
 
 // Ensure the chart resizes to fit its container
 onMounted(async () => {
@@ -156,7 +183,7 @@ onMounted(async () => {
 });
 
 const onResize = () => {
-  
+
   if (chartWrapper.value.offsetHeight < 250 || chartWrapper.value.offsetWidth < 600) {
     chartTitle.value = null;
     priceGraph.value.chart.title.update({ text: chartTitle.value });
@@ -166,7 +193,7 @@ const onResize = () => {
 
     // Wait for DOM updates before resizing chart
     requestAnimationFrame(() => {
-      
+
       priceGraph.value.chart.setSize(null, chartHeight.value);
       priceGraph.value.chart.reflow();
     });
