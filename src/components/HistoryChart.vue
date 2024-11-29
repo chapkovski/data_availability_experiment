@@ -13,8 +13,6 @@ import { useTraderStore } from "@/store/app";
 // Access the trader store and reactive priceHistory
 const { priceHistory } = storeToRefs(useTraderStore());
 // Define initial min and max for x-axis
-const initialMin = Date.now();
-const initialMax = initialMin + 0.5 * 60 * 1000; // 2 minutes from now
 
 // Reference to the chart component
 const chartRef = ref(null);
@@ -27,6 +25,10 @@ const { smAndDown } = useDisplay();
 console.debug('smAndDown', smAndDown.value)
 // make computed: show chart title if not smAndDown
 const chartTitle = ref("Price History")
+const x = 1; // For the last 60 minutes
+
+const pointStart = Date.now() - x * 60 * 1000; // x minutes ago
+const pointInterval = 10 * 1000; // One minute intervals
 
 
 const chartOptions = reactive({
@@ -82,25 +84,28 @@ const chartOptions = reactive({
     enabled: false,
   },
   rangeSelector: {
-    enabled: false,
-    // selected: 0,
-    // buttons: [
-    //   {
-    //     type: "minute",
-    //     count: 1,
-    //     text: "1m",
-    //   },
-
-    //   {
-    //     type: 'all',
-    //     text: 'All',
-    //     title: 'View all'
-    //   }
-    // ],
-    inputEnabled: false, // Disables the date range input fields
+    inputEnabled: false,
+    allButtonsEnabled: true,
+    buttons: [
+      {
+        type: "millisecond",
+        count: 5,
+        text: "5sec",
+        title: "View 5 sec",
+      },
+      {
+        type: "all",
+        count: 1,
+        text: "all",
+        title: "View all",
+      },
+    ],
+    enabled: true,
+    selected: 0,
   },
   series: [
-    {
+    {      pointStart: pointStart,
+      pointInterval: pointInterval,
       dataLabels: {
         useHTML: true,
         format: `

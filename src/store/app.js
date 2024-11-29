@@ -16,8 +16,12 @@ function scheduleRelativeTasks(duration, orders, callback) {
     }, delay * 1000); // Convert delay to milliseconds
   });
 }
+const x = 5; // For the last 60 minutes
 
-
+const data = [];
+for (let i = 0; i < x; i++) {
+  data.push(null); // Random price between 50 and 100
+}
 export const useTraderStore = defineStore("trader", {
   state: () => ({
     orders: [],
@@ -28,7 +32,7 @@ export const useTraderStore = defineStore("trader", {
     tick_frequency: null,
     roundNumber: 1,
     priceData: _.filter(originalPriceData, { round: "1" }),
-    priceHistory: [],
+    priceHistory: data,
     currentPrice: 0,
     spread: 1,
     day_duration: null, // Derived from tick_frequency * num_of_ticks_in_day
