@@ -114,6 +114,7 @@ const chartOptions = reactive({
       line-height: 20px; 
       font-size: 12px; 
       color: black; 
+      z-index:100000;
       margin-left: -20px;">
     {point.y}
   </span>
