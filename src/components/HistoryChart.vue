@@ -104,7 +104,7 @@ const chartOptions = reactive({
       dataLabels: {
         useHTML: true,
         format: `
-  <span style="
+  <span class='myspan' style="
       width: 40px; 
       height: 20px; 
       background-color: orange!important; 
@@ -112,9 +112,10 @@ const chartOptions = reactive({
       border-radius: 5px; 
       text-align: center; 
       line-height: 20px; 
-      font-size: 12px; 
+      font-size: 12px!important; 
+      font-weight: bold;
       color: black; 
-      z-index:100000;
+      z-index:100000!important; ;
       margin-left: -20px;">
     {point.y}
   </span>
@@ -209,5 +210,11 @@ const onResize = () => {
   height: 100% !important;
   /*calc(50vh - 100px); /* Adjust height dynamically
   /*width: 100%; /* Full width of the parent container */
+}
+.myspan{
+  background-color: white!important;
+  font-size: 16px!important;
+  z-index: 100000!important;
+  padding:0.5px!important;
 }
 </style>
