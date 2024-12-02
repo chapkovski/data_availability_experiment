@@ -70,7 +70,7 @@
 }
   /* Small title styling for small screens */
   .small-title {
-    font-size: 0.75rem; /* Smaller font for mobile screens */
+    font-size: 0.5rem; /* Smaller font for mobile screens */
   }
   
   /* Default title styling for larger screens */
@@ -84,6 +84,6 @@
   }
   .displayValue{
     font-weight: bolder;
-    font-size:16px
+    font-size: 1rem;
   }
   </style>
