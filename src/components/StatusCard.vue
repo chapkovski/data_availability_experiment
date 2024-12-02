@@ -7,7 +7,7 @@
     >
       <v-card-text
         class=""
-        :style="{ padding: smallerScreen ? '4px' : '8px' }"
+        :style="{ padding: smallerScreen ? '2px' : '8px' }"
       >
         <div :class="{ 'small-title': smallerScreen }" class="">
           {{ title }}
@@ -70,7 +70,7 @@
 }
   /* Small title styling for small screens */
   .small-title {
-    font-size: 12px !important; /* Smaller font for mobile screens */
+    font-size: 0.75rem; /* Smaller font for mobile screens */
   }
   
   /* Default title styling for larger screens */
