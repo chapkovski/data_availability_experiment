@@ -70,7 +70,7 @@
 }
   /* Small title styling for small screens */
   .small-title {
-    font-size: 0.75rem; /* Smaller font for mobile screens */
+    font-size: 0.55rem; /* Smaller font for mobile screens */
   }
   
   /* Default title styling for larger screens */
