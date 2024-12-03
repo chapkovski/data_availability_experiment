@@ -52,7 +52,7 @@
 
 
     <v-footer app>
-      <v-system-bar elevation="3" color="orange" class="d-flex justify-center align-center  border border-thin">
+      <v-system-bar v-if="false" elevation="3" color="orange" class="d-flex justify-center align-center  border border-thin">
       <div class="">JOPA</div>
     </v-system-bar>
     </v-footer>
