@@ -21,20 +21,35 @@
             </v-btn>
           </v-col>
         </v-row>
+        <v-row v-if="!smAndDown">
+          <v-col>
+            <div class="d-flex flex-row justify-space-around">
+            <status-card title="Insiders:" :stringValue="`50%`" color="red" />
+
+            <status-card title="Total Wealth:" :value="totalWealth" color="green" />
+            <div class="mr-3">
+              <status-card title="Current Price" :value="currentPrice" color="blue" />
+            </div>
+          </div>
+          </v-col>
+        </v-row>
       </v-container>
     </v-card-text>
   </v-card>
 </template>
 
 <script setup>
+import { useDisplay } from "vuetify";
+const { smAndDown, name, height, width } = useDisplay();
 import { computed } from "vue";
 import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
-
+import StatusCard from './StatusCard.vue';
 const tradingStore = useTraderStore();
 const { sendMessage } = tradingStore;
 const {
   currentPrice,
+  totalWealth,
   bestBuyingPrice,
   bestSellingPrice,
   isBuyPossible,

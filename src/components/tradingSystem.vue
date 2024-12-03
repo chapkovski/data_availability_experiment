@@ -1,26 +1,29 @@
 <template>
   <v-app>
-  
-    <v-app-bar app fixed class="timerbar  d-flex flex-column " :density="smAndDown ? compact : comfortable" height="smAndDown ? 30 : 64">
+
+    <v-app-bar app fixed class="timerbar  d-flex flex-column " :density="smAndDown ? compact : comfortable"
+      height="smAndDown ? 30 : 64">
       <CountdownCard title="Time to end of round" :total-time="dayRemainingTime / 1000" :overall-time="day_duration"
         progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated"
         @timer-restarted="finalizingDay" />
 
 
-      <v-toolbar class="d-flex flex-row mt-1" style="flex-direction:'row!important'"  :height="smAndDown?49:64">
+      <v-toolbar class="d-flex flex-row mt-1" style="flex-direction:'row!important'" :height="smAndDown ? 49 : 64">
         <div class="d-flex flex-row" style="width:100%">
-        <CountdownCard title="Time to next tick" :total-time="tick_frequency" progress-bar-color="red" :interval="100"
-          @timer-restarted="handleTimerRestarted"> </CountdownCard>
+          <CountdownCard title="Time to next tick" :total-time="tick_frequency" progress-bar-color="red" :interval="100"
+            @timer-restarted="handleTimerRestarted"> </CountdownCard>
           <status-card title="Round:" :stringValue="1" color="orange" />
 
-        <v-spacer></v-spacer>
-        <status-card title="Insiders:" :stringValue="`50%`" color="red" />
+          <v-spacer></v-spacer>
+          <div class="d-flex flex-row " v-if="smAndDown">
+            <status-card title="Insiders:" :stringValue="`50%`" color="red" />
 
-        <status-card title="Total Wealth:" :value="totalWealth" color="green" />
-        <div class="mr-3">
-          <status-card title="Current Price" :value="currentPrice" color="blue" />
+            <status-card title="Total Wealth:" :value="totalWealth" color="green" />
+            <div class="mr-3">
+              <status-card title="Current Price" :value="currentPrice" color="blue" />
+            </div>
+          </div>
         </div>
-      </div>
       </v-toolbar>
 
     </v-app-bar>
@@ -52,9 +55,10 @@
 
 
     <v-footer app>
-      <v-system-bar v-if="false" elevation="3" color="orange" class="d-flex justify-center align-center  border border-thin">
-      <div class="">JOPA</div>
-    </v-system-bar>
+      <v-system-bar v-if="false" elevation="3" color="orange"
+        class="d-flex justify-center align-center  border border-thin">
+        <div class="">JOPA</div>
+      </v-system-bar>
     </v-footer>
   </v-app>
 </template>
