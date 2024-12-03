@@ -24,7 +24,7 @@
         <v-row v-if="!smAndDown">
           <v-col>
             <div class="d-flex flex-row justify-space-around">
-            <status-card title="Insiders:" :stringValue="`50%`" color="red" />
+            <status-card title="Share of insiders:" small-title="Insiders:"   :stringValue="`50%`" color="red" />
 
             <status-card title="Total Wealth:" :value="totalWealth" color="green" />
             <div class="mr-3">

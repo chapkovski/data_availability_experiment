@@ -4,7 +4,7 @@
     <v-card-text class="d-flex flex-column align-center justify-center"
       :style="{ padding: smallerScreen ? '2px' : '8px' }">
       <div :class="{ 'small-title': smallerScreen }" class="">
-        {{ title }}
+        {{ smallerScreen ? mobileTitle : title }}
       </div>
       <Transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
         <span :key="displayValue" class="displayValue">{{ displayValue }}</span>
@@ -21,6 +21,10 @@ const props = defineProps({
   title: {
     type: String,
     required: true,
+  },
+  smallTitle: {
+    type: String,
+    default: null, // Optional: Use `null` as default
   },
   value: {
     type: Number,
@@ -57,7 +61,9 @@ watch(
   },
 );
 
-
+const mobileTitle = computed(() => {
+  return props.smallTitle || props.title; // Use `smallTitle` if provided, otherwise fallback to `title`
+});
 
 // Dynamic classes for animations
 const enterClass = computed(() => {

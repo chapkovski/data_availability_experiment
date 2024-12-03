@@ -12,11 +12,11 @@
         <div class="d-flex flex-row" style="width:100%">
           <CountdownCard title="Time to next tick" :total-time="tick_frequency" progress-bar-color="red" :interval="100"
             @timer-restarted="handleTimerRestarted"> </CountdownCard>
-          <status-card title="Round:" :stringValue="1" color="orange" />
+          <status-card title="Round number:" small-title="Round:" :stringValue="1" color="orange" />
 
           <v-spacer></v-spacer>
           <div class="d-flex flex-row " v-if="smAndDown">
-            <status-card title="Insiders:" :stringValue="`50%`" color="red" />
+            <status-card title="Share of insiders:" small-title="Insiders:"   :stringValue="`50%`" color="red" />
 
             <status-card title="Total Wealth:" :value="totalWealth" color="green" />
             <div class="mr-3">
