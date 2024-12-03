@@ -6,10 +6,7 @@
       <div :class="{ 'small-title': smallerScreen }" class="">
         {{ title }}
       </div>
-      <Transition 
-       enter-active-class="animate__animated animate__backInDown"
-  leave-active-class="animate__animated animate__backOutDown"  
-      >
+      <Transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
         <span :key="displayValue" class="displayValue">{{ displayValue }}</span>
       </Transition>
     </v-card-text>
@@ -17,7 +14,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useDisplay } from 'vuetify';
 
 const props = defineProps({
@@ -48,7 +45,32 @@ const { smAndDown, height, width } = useDisplay();
 
 // Determine if the screen is small (height < 600 or width < 400)
 const smallerScreen = computed(() => smAndDown.value || height.value < 600 || width.value < 400);
+// State
+const previousValue = ref(props.value);
+const direction = ref('UP'); // 'UP' or 'DOWN'
 
+watch(
+  () => props.value,
+  (newValue, oldValue) => {
+    direction.value = newValue > oldValue ? 'UP' : 'DOWN';
+    previousValue.value = newValue;
+  },
+);
+
+
+
+// Dynamic classes for animations
+const enterClass = computed(() => {
+  return direction.value === 'UP'
+    ? 'animate__animated animate__backInUp'
+    : 'animate__animated animate__backInDown';
+});
+
+const leaveClass = computed(() => {
+  return direction.value === 'UP'
+    ? 'animate__animated animate__backOutUp'
+    : 'animate__animated animate__backOutDown';
+});
 // Compute display value
 const displayValue = computed(() => {
   if (props.value !== null) {
