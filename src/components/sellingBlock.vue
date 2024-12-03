@@ -1,39 +1,31 @@
 <template>
   <v-card height="100%" elevation="3">
-  
+    <v-card-title v-if="!smAndDown">Order Entry</v-card-title>
     <v-card-text class="pa-0 pa-xs-0 pa-sm-0 pa-md-3">
-      <v-container>
-      
-        <v-row>
-          <!-- Buy Button -->
-          <v-col cols="6" sm="6" class="d-flex justify-center pa-0 pa-xs-0  pa-sm-0 pa-md-3">
-            <v-btn :color="isBuyPossible?`green`:`lightgray`" :disabled="!isBuyPossible" width="100%" @click="handleBuy">
-              Buy @ {{ bestSellingPrice }}
-            </v-btn>
-          </v-col>
+      <v-sheet border rounded elevation="3">
+        <v-container>
 
-          <!-- Sell Button -->
-          <v-col cols="6" sm="6" class="d-flex justify-center pa-0 pa-xs-0 pa-sm-0 pa-md-3">
-            <v-btn large :color="isSellPossible?`red`:`lightgray`" :disabled="!isSellPossible" width="100%"
-            @click="handleSell"
-            >
-              Sell @ {{ bestBuyingPrice }}
-            </v-btn>
-          </v-col>
-        </v-row>
-        <v-row v-if="!smAndDown">
-          <v-col>
-            <div class="d-flex flex-row justify-space-around">
-            <status-card title="Share of insiders:" small-title="Insiders:"   :stringValue="`50%`" color="red" />
+          <v-row class="d-flex flex-row">
+            <!-- Buy Button -->
+            <v-col cols="6" sm="6" class="d-flex justify-center pa-0 pa-xs-1   pa-sm-0 pa-md-3">
+              <v-btn :color="isBuyPossible ? `green` : `lightgray`" :disabled="!isBuyPossible" width="100%"
+                @click="handleBuy" class="mx-3">
+                Buy @ {{ bestSellingPrice }}
+              </v-btn>
+            </v-col>
 
-            <status-card title="Total Wealth:" :value="totalWealth" color="green" />
-            <div class="mr-3">
-              <status-card title="Current Price" :value="currentPrice" color="blue" />
-            </div>
-          </div>
-          </v-col>
-        </v-row>
-      </v-container>
+            <!-- Sell Button -->
+            <v-col cols="6" sm="6" class="d-flex justify-center pa-0 pa-xs-1   pa-sm-0 pa-md-3">
+              <v-btn large :color="isSellPossible ? `red` : `lightgray`" :disabled="!isSellPossible" width="100%"
+               class="mx-3"
+                @click="handleSell">
+                Sell @ {{ bestBuyingPrice }}
+              </v-btn>
+            </v-col>
+          </v-row>
+
+        </v-container>
+      </v-sheet>
     </v-card-text>
   </v-card>
 </template>
@@ -87,6 +79,7 @@ function sendOrder(type, price) {
     padding: 0 !important;
   }
 }
+
 .cardtitle {
   font-size: 20px;
   font-weight: bold;

@@ -15,7 +15,7 @@
           <status-card title="Round number:" small-title="Round:" :stringValue="1" color="orange" />
 
           <v-spacer></v-spacer>
-          <div class="d-flex flex-row " v-if="smAndDown">
+          <div class="d-flex flex-row ">
             <status-card title="Share of insiders:" small-title="Insiders:"   :stringValue="`50%`" color="red" />
 
             <status-card title="Total Wealth:" :value="totalWealth" color="green" />
