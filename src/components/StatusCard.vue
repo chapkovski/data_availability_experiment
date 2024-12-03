@@ -6,8 +6,11 @@
       <div :class="{ 'small-title': smallerScreen }" class="">
         {{ title }}
       </div>
-      <Transition enter-active-class="fade-in-highlight">
-        <span :key="value" class="displayValue">{{ displayValue }}</span>
+      <Transition 
+       enter-active-class="animate__animated animate__backInDown"
+  leave-active-class="animate__animated animate__backOutDown"  
+      >
+        <span :key="displayValue" class="displayValue">{{ displayValue }}</span>
       </Transition>
     </v-card-text>
   </v-card>

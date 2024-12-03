@@ -6,7 +6,7 @@ import App from "./App.vue"; // Your main app component
 import Highcharts from "highcharts";
 import Stock from "highcharts/modules/stock";
 import HighchartsVue from "highcharts-vue";
-
+import 'animate.css';
 // Import other components
 import { Splitpanes, Pane } from "splitpanes";
 import VueCountdown from "@chenfengyuan/vue-countdown"; // Example for VueCountdown

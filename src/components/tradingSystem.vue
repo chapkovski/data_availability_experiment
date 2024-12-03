@@ -1,5 +1,6 @@
 <template>
   <v-app>
+  
     <v-app-bar app fixed class="timerbar  d-flex flex-column " :density="smAndDown ? compact : comfortable" height="smAndDown ? 30 : 64">
       <CountdownCard title="Time to end of round" :total-time="dayRemainingTime / 1000" :overall-time="day_duration"
         progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated"
@@ -51,7 +52,9 @@
 
 
     <v-footer app>
-
+      <v-system-bar elevation="3" color="orange" class="d-flex justify-center align-center  border border-thin">
+      <div class="">JOPA</div>
+    </v-system-bar>
     </v-footer>
   </v-app>
 </template>
