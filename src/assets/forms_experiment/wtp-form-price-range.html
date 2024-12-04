@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .info-box {
+            background-color: #f8f9fa;
+            border-left: 4px solid #2c3e50;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .price-list {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .price-list th, .price-list td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .price-list th {
+            background-color: #f5f5f5;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .certainty-scale {
+            width: 100%;
+            margin: 20px 0;
+        }
+        .important {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <!-- Cheap Talk Script -->
+    <div class="info-box">
+        <h3>Important Information</h3>
+        <p>Research has shown that people often state they would pay more in surveys than they actually would in real situations. This is because it's easy to be generous when you're not actually spending your money. Before you answer the following questions, please imagine that you are actually paying real money from your own pocket.</p>
+    </div>
+
+    <!-- Consequentiality Script -->
+    <div class="info-box">
+        <p>Your answers to these questions will help inform the pricing of market data services. While this particular choice won't directly affect your payment today, similar decisions about market data access and pricing are regularly made based on research like this.</p>
+    </div>
+
+    <h2>Willingness to Pay for Market Data</h2>
+
+    <p>Below is a list of different prices for access to market data. For each price, please indicate whether you would purchase access to the data or not. Remember:</p>
+    <ul>
+        <li>The data shows all buying and selling activity from other traders</li>
+        <li>Some traders have information about the true state of the market</li>
+        <li>The data can help you predict price movements</li>
+    </ul>
+
+    <table class="price-list">
+        <tr>
+            <th>Price (in CA$)</th>
+            <th>Would you purchase the data?</th>
+        </tr>
+        <tr>
+            <td>$10</td>
+            <td class="radio-group">
+                <label><input type="radio" name="price_10" value="yes"> Yes</label>
+                <label><input type="radio" name="price_10" value="no"> No</label>
+            </td>
+        </tr>
+        <tr>
+            <td>$25</td>
+            <td class="radio-group">
+                <label><input type="radio" name="price_25" value="yes"> Yes</label>
+                <label><input type="radio" name="price_25" value="no"> No</label>
+            </td>
+        </tr>
+        <tr>
+            <td>$50</td>
+            <td class="radio-group">
+                <label><input type="radio" name="price_50" value="yes"> Yes</label>
+                <label><input type="radio" name="price_50" value="no"> No</label>
+            </td>
+        </tr>
+        <tr>
+            <td>$75</td>
+            <td class="radio-group">
+                <label><input type="radio" name="price_75" value="yes"> Yes</label>
+                <label><input type="radio" name="price_75" value="no"> No</label>
+            </td>
+        </tr>
+        <tr>
+            <td>$100</td>
+            <td class="radio-group">
+                <label><input type="radio" name="price_100" value="yes"> Yes</label>
+                <label><input type="radio" name="price_100" value="no"> No</label>
+            </td>
+        </tr>
+        <tr>
+            <td>$150</td>
+            <td class="radio-group">
+                <label><input type="radio" name="price_150" value="yes"> Yes</label>
+                <label><input type="radio" name="price_150" value="no"> No</label>
+            </td>
+        </tr>
+        <tr>
+            <td>$200</td>
+            <td class="radio-group">
+                <label><input type="radio" name="price_200" value="yes"> Yes</label>
+                <label><input type="radio" name="price_200" value="no"> No</label>
+            </td>
+        </tr>
+        <tr>
+            <td>$250</td>
+            <td class="radio-group">
+                <label><input type="radio" name="price_250" value="yes"> Yes</label>
+                <label><input type="radio" name="price_250" value="no"> No</label>
+            </td>
+        </tr>
+        <tr>
+            <td>$300</td>
+            <td class="radio-group">
+                <label><input type="radio" name="price_300" value="yes"> Yes</label>
+                <label><input type="radio" name="price_300" value="no"> No</label>
+            </td>
+        </tr>
+        <tr>
+            <td>$400</td>
+            <td class="radio-group">
+                <label><input type="radio" name="price_400" value="yes"> Yes</label>
+                <label><input type="radio" name="price_400" value="no"> No</label>
+            </td>
+        </tr>
+        <tr>
+            <td>$500</td>
+            <td class="radio-group">
+                <label><input type="radio" name="price_500" value="yes"> Yes</label>
+                <label><input type="radio" name="price_500" value="no"> No</label>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Certainty Calibration -->
+    <div class="info-box">
+        <h3>How certain are you about your choices?</h3>
+        <p>On a scale from 0 to 10, how certain are you that you would actually pay these amounts in a real situation?</p>
+        <input type="range" min="0" max="10" value="5" class="certainty-scale" id="certainty">
+        <div style="display: flex; justify-content: space-between;">
+            <span>Very Uncertain (0)</span>
+            <span>Very Certain (10)</span>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p class="important">Please review your choices carefully. Remember that while these choices are hypothetical, they should reflect what you would actually be willing to pay for market data access.</p>
+    </div>
+
+    <button style="padding: 10px 20px; margin-top: 20px; background-color: #2c3e50; color: white; border: none; cursor: pointer;">
+        Submit Choices
+    </button>
+</body>
+</html>
