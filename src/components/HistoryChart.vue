@@ -44,7 +44,7 @@ const chartOptions = reactive({
     },
   },
   title: {
-    text: null,
+    text: chartTitle.value,
     style: {
       // color: "#FFFFFF", // Title color in light text
     },
