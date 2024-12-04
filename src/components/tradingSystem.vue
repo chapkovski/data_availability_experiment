@@ -1,8 +1,12 @@
 <template>
   <v-app>
-
+    <v-system-bar v-if="true" elevation="3" color="orange"
+        class="d-flex justify-center align-center  border border-thin">
+        <div class="">Training round</div>
+      </v-system-bar>
     <v-app-bar app fixed class="timerbar  d-flex flex-column " :density="smAndDown ? compact : comfortable"
-      height="smAndDown ? 30 : 64">
+      height="smAndDown ? 30 : 64" top="100">
+     
       <CountdownCard title="Time to end of round" :total-time="dayRemainingTime / 1000" :overall-time="day_duration"
         progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated"
         @timer-restarted="finalizingDay" />
@@ -54,7 +58,7 @@
     <!-- bottom fixed bar -->
 
 
-    <v-footer app>
+    <v-footer v-if='false' app>
       <v-system-bar v-if="false" elevation="3" color="orange"
         class="d-flex justify-center align-center  border border-thin">
         <div class="">JOPA</div>

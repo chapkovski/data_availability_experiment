@@ -2,6 +2,7 @@
   <v-card class="mx-auto">
     <v-card-title v-if="showTableTitle">Time & Sales</v-card-title>
     <v-card-text
+    class="pt-0 mt-0"
       :class="{ 'full-height-center': market_signal_strength === 'Low'  }"
     >
       <!-- Conditional rendering based on market_signal_strength -->
