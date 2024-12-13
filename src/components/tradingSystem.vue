@@ -93,6 +93,7 @@ import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
 import { watch, ref, onMounted, computed } from "vue";
 const store = useTraderStore();
+store.initializeTradingSystem();
 const { gameParams, totalWealth, currentPrice, dayOver, isTimerPaused, dayRemainingTime, day_duration,
   midday_quiz_tick, timerCounter, tick_frequency } = storeToRefs(useTraderStore());
 
@@ -151,7 +152,7 @@ const goalMessage = {
 const finalizingDay = () => {
   //let's just refresh page
   // location.reload();
-  router.push({ name: "DayOver", params: { traderUUID: props.traderUUID } });
+  
 };
 watch(
   gameParams,

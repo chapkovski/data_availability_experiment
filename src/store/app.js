@@ -24,35 +24,38 @@ for (let i = 0; i < x; i++) {
 }
 export const useTraderStore = defineStore("trader", {
   state: () => ({
+    // Hardcoded trading session parameters
+    tick_frequency: 8,
+    num_of_ticks_in_day: 40,
+    day_duration: 8*40,  
+    dayRemainingTime: 8*40*1000,
+    midday_quiz_tick: 20,
+    market_signal_strength: "High",
+    initial_cash: 1000,
+    initial_shares: 1,
+    spread: 0.02,
+    tradingSessionUUID: "hardcoded-session-uuid",
+    traderUUID: "hardcoded-trader-uuid",
+
+    // Game-related state
+    priceData: _.filter(originalPriceData, { round: "1" }),
     orders: [],
-    isTimerPaused: false,
-    dayRemainingTime: null,
+    priceHistory: Array(5).fill(null),
+    currentPrice: 0,
+
+
+    dayOver: false,
+
+    roundNumber: 1,
     timerCounter: 0,
     tickHappenedAt: null, // New property to store timestamp of the last tick
-    tick_frequency: null,
-    roundNumber: 1,
-    priceData: _.filter(originalPriceData, { round: "1" }),
-    priceHistory: data,
-    currentPrice: 0,
-    spread: 1,
-    day_duration: null, // Derived from tick_frequency * num_of_ticks_in_day
-    num_of_ticks_in_day: null,
-    midday_quiz_tick: null,
-    dayOver: false,
-    gameParams: {},
+    isTimerPaused: false,
     messages: [],
     status: null,
     history: [],
     shares: 0,
     cash: 0,
-    initial_shares: 0,
-    initial_cash: 0,
-    // data from the session initialization
-    treatment: null,
-
-    market_signal_strength: null,
-    tradingSessionUUID: null,
-    traderUUID: null,
+    gameParams: {},
   }),
 
   getters: {
@@ -148,59 +151,23 @@ export const useTraderStore = defineStore("trader", {
 
 
     async initializeTradingSystem(formData) {
-      // Destructure the formData
-      const {
-        treatment,
-        tick_frequency,
-        num_of_ticks_in_day,
-        midday_quiz_tick,
-        market_signal_strength,
-        tradingSessionUUID,
-        traderUUID,
-        initial_cash,
-        initial_shares,
-        spread
-      } = formData;
-
-      // Assign formData to gameParams
-
-      this.gameParams = { ...formData };
-      this.spread = spread;
-      this.initial_cash = parseFloat(initial_cash);
-      this.initial_shares = parseInt(initial_shares);
-      this.shares = parseInt(initial_shares);
-      this.cash = parseFloat(initial_cash);
-      // Assign individual values to top-level state properties
-      this.treatment = treatment;
-      this.tick_frequency = tick_frequency;
-      this.num_of_ticks_in_day = num_of_ticks_in_day;
-      this.midday_quiz_tick = midday_quiz_tick;
-
-      this.day_duration = tick_frequency * num_of_ticks_in_day; // Total duration in seconds
-
-      // Calculate dayRemainingTime in milliseconds
-      this.dayRemainingTime = this.day_duration * 1000;
-
-      this.market_signal_strength = market_signal_strength;
-      this.tradingSessionUUID = tradingSessionUUID;
-      this.traderUUID = traderUUID;
-
-      // Log to verify initialization
-      console.debug("Trading system initialized with the following parameters:", {
-        treatment: this.treatment,
-        tick_frequency: this.tick_frequency,
-        num_of_ticks_in_day: this.num_of_ticks_in_day,
-        day_duration: this.day_duration,
-        midday_quiz_tick: parseInt(this.midday_quiz_tick),
-        market_signal_strength: this.market_signal_strength,
-        tradingSessionUUID: this.tradingSessionUUID,
-        traderUUID: this.traderUUID,
-        initial_cash: this.initial_cash,
-        initial_shares: this.initial_shares,
-        spread: this.spread
-      });
-
-      // Generate history after initialization
+          // Perform any necessary setup logic here
+          console.log("Trading system initialized with:", {
+            tick_frequency: this.tick_frequency,
+            num_of_ticks_in_day: this.num_of_ticks_in_day,
+            midday_quiz_tick: this.midday_quiz_tick,
+            market_signal_strength: this.market_signal_strength,
+            initial_cash: this.initial_cash,
+            initial_shares: this.initial_shares,
+            spread: this.spread,
+            tradingSessionUUID: this.tradingSessionUUID,
+            traderUUID: this.traderUUID,
+          });
+    
+          // Initialize state
+          this.cash = this.initial_cash;
+          this.shares = this.initial_shares;
+          this.day_duration = this.tick_frequency * this.num_of_ticks_in_day;
     },
 
     async initializeWebSocket() {

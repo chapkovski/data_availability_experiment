@@ -8,7 +8,7 @@ import Stock from "highcharts/modules/stock";
 import HighchartsVue from "highcharts-vue";
 import 'animate.css';
 // Import other components
-import { Splitpanes, Pane } from "splitpanes";
+
 import VueCountdown from "@chenfengyuan/vue-countdown"; // Example for VueCountdown
 import { registerPlugins } from "./plugins"; // Assuming you have a plugins file
 
@@ -24,8 +24,6 @@ const app = createApp(App);
 app.use(HighchartsVue);
 
 // Register other components
-app.component("Splitpanes", Splitpanes);
-app.component("Pane", Pane);
 app.component(VueCountdown.name, VueCountdown);
 
 // Register plugins and mount app

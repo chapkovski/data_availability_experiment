@@ -1,20 +1,11 @@
-import { createRouter, createWebHistory } from "vue-router";
-import CreateTradingSession from "@/components/createTradingSession.vue";
 import TradingSystem from "@/components/tradingSystem.vue";
-import AdminPage from "@/components/AdminPage.vue";
-import dayOver from "@/components/dayOver.vue";
-import { useTraderStore } from "@/store/app";
-import { storeToRefs } from "pinia";
+import { createRouter, createWebHashHistory } from "vue-router";
+ 
 
 const routes = [
   {
     path: "/",
-    redirect: "/create-trading-session", // Redirect from root to CreateTrader
-  },
-  {
-    path: "/create-trading-session",
-    name: "CreateTradingSession",
-    component: CreateTradingSession,
+    redirect: "/trader/12345", // Redirect to TradingSystem with a hardcoded traderUUID
   },
   {
     path: "/trader/:traderUUID",
@@ -22,35 +13,11 @@ const routes = [
     component: TradingSystem,
     props: true,
   },
-  {
-    path: "/day-over/:traderUUID",
-    name: "DayOver",
-    component: dayOver,
-    props: true,
-  },
-  // let's add a component for showing admin page
-  {
-    path: "/admin/:tradingSessionUUID",
-    component: AdminPage,
-    name: "AdminPage",
-    props: true,
-  },
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
-});
-
-router.beforeEach((to, from, next) => {
-  const traderStore = useTraderStore();
-
-  // Check if navigating to the TradingSystem without a traderUUID
-  if (to.name === "TradingSystem" && !to.params.traderUUID) {
-    next({ name: "CreateTradingSession" });
-  } else {
-    next();
-  }
 });
 
 export default router;
