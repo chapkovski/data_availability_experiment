@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-system-bar v-if="true" elevation="3" color="orange"
+    <v-system-bar v-if="training" elevation="3" color="orange"
         class="d-flex justify-center align-center  border border-thin">
         <div class="">Training round</div>
       </v-system-bar>
@@ -16,11 +16,11 @@
         <div class="d-flex flex-row" style="width:100%">
           <CountdownCard title="Time to next tick" :total-time="tick_frequency" progress-bar-color="red" :interval="100"
             @timer-restarted="handleTimerRestarted"> </CountdownCard>
-          <status-card title="Round number:" small-title="Round:" :stringValue="1" color="orange" />
+          <status-card title="Round number:" small-title="Round:" :stringValue="strRoundNumber" color="orange" />
 
           <v-spacer></v-spacer>
           <div class="d-flex flex-row ">
-            <status-card title="Share of insiders:" small-title="Insiders:"   :stringValue="`50%`" color="red" />
+            <status-card title="Share of insiders:" small-title="Insiders:"   :stringValue="strInsiders" color="red" />
 
             <status-card title="Total Wealth:" :value="totalWealth" color="green" />
             <div class="mr-3">
@@ -58,12 +58,6 @@
     <!-- bottom fixed bar -->
 
 
-    <v-footer v-if='false' app>
-      <v-system-bar v-if="false" elevation="3" color="orange"
-        class="d-flex justify-center align-center  border border-thin">
-        <div class="">JOPA</div>
-      </v-system-bar>
-    </v-footer>
   </v-app>
 </template>
 
@@ -95,9 +89,16 @@ import { watch, ref, onMounted, computed } from "vue";
 const store = useTraderStore();
 store.initializeTradingSystem();
 const { gameParams, totalWealth, currentPrice, dayOver, isTimerPaused, dayRemainingTime, day_duration,
-  midday_quiz_tick, timerCounter, tick_frequency } = storeToRefs(useTraderStore());
+  midday_quiz_tick, timerCounter, tick_frequency,roundNumber, insiders, training } = storeToRefs(useTraderStore());
 
+const strRoundNumber = computed(() => {
+  
+  return (roundNumber.value)
+});
 
+const strInsiders = computed(() => {
+  return (insiders.value*100).toFixed(0) + "%";
+});
 onMounted(() => {
   console.log("Trading system mounted");
   store.makeTick();
@@ -152,6 +153,7 @@ const goalMessage = {
 const finalizingDay = () => {
   //let's just refresh page
   // location.reload();
+  $('#form').submit();
   
 };
 watch(

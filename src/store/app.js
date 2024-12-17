@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import axios from "axios";
 import { useWebSocket } from "@vueuse/core";
-import { spread } from "lodash";
+import { round, spread } from "lodash";
 import _ from 'lodash';
 const wsROOT = "ws://localhost:8000/trader";
 import originalPriceData from '@/assets/data/price.csv';
@@ -22,8 +22,12 @@ const data = [];
 for (let i = 0; i < x; i++) {
   data.push(null); // Random price between 50 and 100
 }
+
+ 
 export const useTraderStore = defineStore("trader", {
   state: () => ({
+   
+    
     // Hardcoded trading session parameters
     tick_frequency: 8,
     num_of_ticks_in_day: 40,
@@ -38,7 +42,7 @@ export const useTraderStore = defineStore("trader", {
     traderUUID: "hardcoded-trader-uuid",
 
     // Game-related state
-    priceData: _.filter(originalPriceData, { round: "1" }),
+    priceData: _.filter(originalPriceData, { round: toString(1) }),
     orders: [],
     priceHistory: Array(5).fill(null),
     currentPrice: 0,
@@ -56,6 +60,7 @@ export const useTraderStore = defineStore("trader", {
     shares: 0,
     cash: 0,
     gameParams: {},
+    ...(typeof js_vars !== "undefined" ? js_vars : {}),
   }),
 
   getters: {
@@ -114,7 +119,7 @@ export const useTraderStore = defineStore("trader", {
 
       // Filter relevant bids using Lodash
       const relevantOrders = _.filter(ordersData, {
-        Round: currentRound.toString(),
+        
         Tick: currentTick.toString(),
       });
 
