@@ -5,14 +5,14 @@ import { useWebSocket } from "@vueuse/core";
 import { round, spread } from "lodash";
 import _ from 'lodash';
 const wsROOT = "ws://localhost:8000/trader";
-import originalPriceData from '@/assets/data/price.csv';
-import ordersData from "@/assets/data/orders.csv"
-console.debug(ordersData);
-function scheduleRelativeTasks(duration, orders, callback) {
+function scheduleRelativeTasks(duration, orders, callback, threshold = 0.875) {
   orders.forEach((order) => {
-    const delay = duration * parseFloat(order.relativeTime); // Calculate the delay based on the Order property
+    // Use the threshold if relativeTime exceeds it
+    const relativeTime = Math.min(parseFloat(order.relativeTime), threshold);
+    const delay = duration * relativeTime; // Calculate the delay based on the adjusted relativeTime
+
     setTimeout(() => {
-      callback(order); // Call the callback with the bid as an argument
+      callback(order); // Call the callback with the order as an argument
     }, delay * 1000); // Convert delay to milliseconds
   });
 }
@@ -42,7 +42,7 @@ export const useTraderStore = defineStore("trader", {
     traderUUID: "hardcoded-trader-uuid",
 
     // Game-related state
-    priceData: _.filter(originalPriceData, { round: toString(1) }),
+    
     orders: [],
     priceHistory: Array(5).fill(null),
     currentPrice: 0,
@@ -116,13 +116,13 @@ export const useTraderStore = defineStore("trader", {
     processOrdersForCurrentTick() {
       const currentRound = this.roundNumber;
       const currentTick = this.timerCounter;
-
+      console.debug('lets see',this.orderData);
       // Filter relevant bids using Lodash
-      const relevantOrders = _.filter(ordersData, {
+      const relevantOrders = _.filter(this.orderData, {
         
-        Tick: currentTick.toString(),
+        Tick: currentTick,
       });
-
+console.debug('relevantOrders',relevantOrders);
       if (_.isEmpty(relevantOrders)) {
         console.debug("No relevant orders found for this round and tick.");
         return;

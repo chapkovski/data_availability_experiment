@@ -7,7 +7,7 @@
     >
       <!-- Conditional rendering based on market_signal_strength -->
       <div v-if="market_signal_strength === 'Low'" class="no-access">
-        You do not have level 2 privileges for TSX
+       {{ no_data_message }}
       </div>
       
       <v-table v-else class="scrollable-table" fixed-header style='width:100%' density="compact">
@@ -62,7 +62,7 @@ const showTableTitle  = computed(() => {
 import { useTraderStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
 const store = useTraderStore();
-const {   market_signal_strength ,orders} = storeToRefs(useTraderStore());
+const {   market_signal_strength ,orders, no_data_message} = storeToRefs(useTraderStore());
 const formatTime = (timestamp) =>{
       // Format the time in 24-hour format
       return new Intl.DateTimeFormat('en-US', {
