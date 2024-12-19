@@ -1,11 +1,22 @@
 <template>
   <v-card height="100%" elevation="3">
+    <v-overlay v-model="tradeForbidden" contained persistent
+    style="align-items: center;"
+              class="text-center align-content-center justify-center justify-content-center d-flex flex-row align-items-center">
+              <v-card>
+                <v-card-text>Trade is not allowed at the moment</v-card-text>
+              </v-card>
+            </v-overlay>
+
     <v-card-title v-if="!smAndDown">Order Entry</v-card-title>
     <v-card-text class="pa-0 pa-xs-0 pa-sm-0 pa-md-3">
       <v-sheet border rounded elevation="3">
         <v-container>
+          
+          <v-row class="d-flex flex-row" style="position: relative">
 
-          <v-row class="d-flex flex-row">
+
+
             <!-- Buy Button -->
             <v-col cols="6" sm="6" class="d-flex justify-center pa-0 pa-xs-1   pa-sm-0 pa-md-3">
               <v-btn :color="isBuyPossible ? `green` : `lightgray`" :disabled="!isBuyPossible" width="100%"
@@ -17,8 +28,7 @@
             <!-- Sell Button -->
             <v-col cols="6" sm="6" class="d-flex justify-center pa-0 pa-xs-1   pa-sm-0 pa-md-3">
               <v-btn large :color="isSellPossible ? `red` : `lightgray`" :disabled="!isSellPossible" width="100%"
-               class="mx-3"
-                @click="handleSell">
+                class="mx-3" @click="handleSell">
                 Sell @ {{ bestBuyingPrice }}
               </v-btn>
             </v-col>
@@ -33,15 +43,14 @@
 <script setup>
 import { useDisplay } from "vuetify";
 const { smAndDown, name, height, width } = useDisplay();
-import { computed } from "vue";
+import { computed ,ref} from "vue";
 import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
 import StatusCard from './StatusCard.vue';
 const tradingStore = useTraderStore();
 const { sendMessage } = tradingStore;
 const {
-  currentPrice,
-  totalWealth,
+  timerCounter,
   bestBuyingPrice,
   bestSellingPrice,
   isBuyPossible,
@@ -50,6 +59,9 @@ const {
   cash,
 } = storeToRefs(tradingStore);
 
+const tradeForbidden = computed(() => {
+  return timerCounter.value <4;
+});
 // Handle Buy action
 function handleBuy() {
   if (isBuyPossible.value) {
