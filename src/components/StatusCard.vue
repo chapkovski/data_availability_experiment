@@ -7,8 +7,10 @@
         {{ smallerScreen ? mobileTitle : title }}
       </div>
       <Transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
-        <span :key="displayValue" class="displayValue">{{ displayValue }}</span>
+        <span :key="displayValue" class="displayValue">{{ displayValue }} <span v-if="suffix" style="font-size:8px">{{suffix}}</span></span>  
+        
       </Transition>
+      
     </v-card-text>
   </v-card>
 </template>
@@ -18,6 +20,10 @@ import { computed, ref, watch } from 'vue';
 import { useDisplay } from 'vuetify';
 
 const props = defineProps({
+  suffix: {
+    type: String,
+    default: null, // Optional suffix
+  },
   title: {
     type: String,
     required: true,
@@ -80,7 +86,8 @@ const leaveClass = computed(() => {
 // Compute display value
 const displayValue = computed(() => {
   if (props.value !== null) {
-    return props.value.toFixed(props.decimalPlaces);
+    const decimalPlaces = smallerScreen.value?0:props.decimalPlaces;
+    return props.value.toFixed(decimalPlaces);
   }
   return props.stringValue || 'N/A'; // Default to 'N/A' if neither value nor stringValue is set
 });

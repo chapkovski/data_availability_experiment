@@ -20,11 +20,12 @@
 
           <v-spacer></v-spacer>
           <div class="d-flex flex-row ">
+            <status-card title="Arrival rate:" small-title="Rate:" :value="arrival_rate" color="yellow" suffix="trades/sec."/>
             <status-card title="Share of insiders:" small-title="Insiders:" :stringValue="strInsiders" color="red" />
 
-            <status-card title="Total Wealth:" :value="totalWealth" color="green" />
+            <status-card title="Total Wealth:" small-title="Wealth" :value="totalWealth" color="green" />
             <div class="">
-              <status-card title="Current Price" :value="currentPrice" color="blue" />
+              <status-card title="Current Price" small-title="Price" :value="currentPrice" color="blue" />
             </div>
             <div class="mr-3 align-self-center ma-0 pa-0 ">
               <v-btn color="green" v-if="!smAndDown"   elevation="4" rounded="lg" size="large" @click="openDialog">Instructions</v-btn>
@@ -129,7 +130,7 @@ import { watch, ref, onMounted, computed } from "vue";
 const store = useTraderStore();
 store.initializeTradingSystem();
 const { gameParams, totalWealth, currentPrice, dayOver, isTimerPaused, dayRemainingTime, day_duration,
-  midday_quiz_tick, timerCounter, tick_frequency, roundNumber, insiders, training } = storeToRefs(useTraderStore());
+  midday_quiz_tick, timerCounter, tick_frequency, roundNumber, insiders, training, arrival_rate } = storeToRefs(useTraderStore());
 
 const strRoundNumber = computed(() => {
 
