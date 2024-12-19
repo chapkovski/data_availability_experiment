@@ -14,34 +14,22 @@
         :model-value="progressValue"
         :value="progressValue"
         :color="progressBarColor"
-        :height="!smAndDown?10:5"
+        :height="!smAndDown ? 10 : 5"
         rounded
         striped
         v-bind="props"
       ></v-progress-linear>
 
-      <!-- Title - Hidden on Small Screens -->
-  
-
       <!-- Countdown -->
-      <vue-countdown
-        @progress="updTime"
-        @end="restartTimer"
-        :time="totTimeInMilliseconds"
-        :key="resetKey"
-        v-if="!isTimerPaused"
-        v-slot="{ days, hours, minutes, seconds }"
-        :interval="interval"
-      >
-        <div class='text-center' v-if="!smAndDown">{{ title }}: <b>{{ Math.round(remainingTime / 1000) }} seconds</b></div>
-      </vue-countdown>
+      <div class="text-center" v-if="!smAndDown">
+        {{ title }}: <b>{{ Math.round(remainingTime / 1000) }} seconds</b>
+      </div>
     </v-card-text>
   </v-card>
 </template>
 
-
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 const props = defineProps({
   title: String,
   progressBarColor: String,
@@ -49,15 +37,14 @@ const props = defineProps({
   overallTime: Number,
   progressType: {
     type: String,
-    default: 'circular', // Default to circular
+    default: "circular",
   },
   interval: {
     type: Number,
     default: 1000, // Default to 1 second
   },
-
 });
-// Reactive state for remainingTime and progressValue
+
 import { useTraderStore } from "@/store/app";
 import { storeToRefs } from "pinia";
 const store = useTraderStore();
@@ -65,16 +52,10 @@ const { isTimerPaused } = storeToRefs(store);
 
 import { useDisplay } from "vuetify";
 const { smAndDown } = useDisplay();
- 
 
+const emit = defineEmits(["timer-restarted", "time-updated"]);
 
-// Dynamically toggle tooltip visibility for small screens
-
-// A dynamic key to force the vue-countdown component to re-render when the timer restarts
-const resetKey = ref(0);
-const emit = defineEmits(['timer-restarted','time-updated']);
-const totTimeInMilliseconds = computed(() => (props.totalTime) * 1000);
-// Use overallTime if provided; otherwise, fallback to totTimeInMilliseconds
+const totTimeInMilliseconds = computed(() => props.totalTime * 1000);
 const baseTimeInMilliseconds = computed(() =>
   props.overallTime ? props.overallTime * 1000 : totTimeInMilliseconds.value
 );
@@ -82,23 +63,58 @@ const baseTimeInMilliseconds = computed(() =>
 const remainingTime = ref(totTimeInMilliseconds.value);
 const progressValue = computed(() => (remainingTime.value / baseTimeInMilliseconds.value) * 100);
 
-// Methods
-const updTime = (time) => {
-  remainingTime.value = time.totalMilliseconds; // Update remaining time
-  emit('time-updated', remainingTime.value); // Emit updated time
+let timer = null;
+let lastTimestamp = null;
+
+const startTimer = () => {
+  lastTimestamp = Date.now();
+  timer = setInterval(() => {
+    if (!isTimerPaused.value) {
+      const now = Date.now();
+      const elapsed = now - lastTimestamp;
+      remainingTime.value = Math.max(0, remainingTime.value - elapsed);
+      lastTimestamp = now;
+
+      emit("time-updated", remainingTime.value);
+
+      if (remainingTime.value <= 0) {
+        clearInterval(timer);
+        restartTimer(); // Restart the timer when it finishes
+      }
+    }
+  }, props.interval);
 };
+
+const pauseTimer = () => {
+  clearInterval(timer);
+  timer = null;
+};
+
+watch(isTimerPaused, (paused) => {
+  if (paused) {
+    pauseTimer();
+  } else {
+    startTimer();
+  }
+});
+
+onMounted(() => {
+  startTimer();
+});
+
+onBeforeUnmount(() => {
+  pauseTimer();
+});
 
 const restartTimer = () => {
-  remainingTime.value = totTimeInMilliseconds.value; // Reset remaining time to total time
-  // Trigger a countdown restart by incrementing the key, forcing re-render
-  resetKey.value += 1;
-
-  emit('timer-restarted'); // Emit event when timer restarts
+  pauseTimer();
+  remainingTime.value = totTimeInMilliseconds.value;
+  startTimer();
+  emit("timer-restarted");
 };
-const cardStyle = computed(() => (props.progressType === 'linear' ? { width: '100%' } : {}));
 
+const cardStyle = computed(() => (props.progressType === "linear" ? { width: "100%" } : {}));
 </script>
-
 <style scoped>
 .timertext {
   display: flex;
