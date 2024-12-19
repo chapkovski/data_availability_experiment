@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto">
-    <v-card-title v-if="showTableTitle">Time & Sales</v-card-title>
+    <v-card-title v-if="showTableTitle">{{premium}}Time & Sales</v-card-title>
     <v-card-text
     class="pt-0 mt-0"
       :class="{ 'full-height-center': market_signal_strength === 'Low'  }"
@@ -62,7 +62,10 @@ const showTableTitle  = computed(() => {
 import { useTraderStore } from '@/store/app';
 import { storeToRefs } from 'pinia';
 const store = useTraderStore();
-const {   market_signal_strength ,orders, no_data_message} = storeToRefs(useTraderStore());
+const {   market_signal_strength ,orders, no_data_message, framing} = storeToRefs(useTraderStore());
+const premium  = computed(() => {
+  return framing.value==='Premium'?'Premium ':''
+});
 const formatTime = (timestamp) =>{
       // Format the time in 24-hour format
       return new Intl.DateTimeFormat('en-US', {

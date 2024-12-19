@@ -1,12 +1,12 @@
 <template>
   <v-app>
     <v-system-bar v-if="training" elevation="3" color="orange"
-        class="d-flex justify-center align-center  border border-thin">
-        <div class="">Training round</div>
-      </v-system-bar>
+      class="d-flex justify-center align-center  border border-thin">
+      <div class="">Training round</div>
+    </v-system-bar>
     <v-app-bar app fixed class="timerbar  d-flex flex-column " :density="smAndDown ? compact : comfortable"
       height="smAndDown ? 30 : 64" top="100">
-     
+
       <CountdownCard title="Time to end of round" :total-time="dayRemainingTime / 1000" :overall-time="day_duration"
         progress-bar-color="primary" progress-type="linear" @time-updated="handleTimeUpdated"
         @timer-restarted="finalizingDay" />
@@ -20,12 +20,28 @@
 
           <v-spacer></v-spacer>
           <div class="d-flex flex-row ">
-            <status-card title="Share of insiders:" small-title="Insiders:"   :stringValue="strInsiders" color="red" />
+            <status-card title="Share of insiders:" small-title="Insiders:" :stringValue="strInsiders" color="red" />
 
             <status-card title="Total Wealth:" :value="totalWealth" color="green" />
-            <div class="mr-3">
+            <div class="">
               <status-card title="Current Price" :value="currentPrice" color="blue" />
             </div>
+            <div class="mr-3 align-self-center ma-0 pa-0 ">
+              <v-btn color="green" v-if="!smAndDown"   elevation="4" rounded="lg" size="large" @click="openDialog">Instructions</v-btn>
+  
+            </div>
+            <v-dialog v-model="dialogVisible" max-width="1200px">
+              <v-card>
+                <v-card-text>
+                  <!-- Inject Content Dynamically with v-html -->
+                  <div v-html="instructionContent"></div>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue"  elevation="4" rounded="lg" @click="closeDialog">Close</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </div>
         </div>
       </v-toolbar>
@@ -77,6 +93,30 @@ const topStyle = computed(() => {
 import QuizDialog from "./QuizDialog.vue";
 
 const quizDialog = ref(null);
+
+
+// Reactive state for dialog visibility
+const dialogVisible = ref(false);
+
+// Reactive state to hold the dynamic content
+const instructionContent = ref("");
+
+// Function to open the dialog and fetch the content dynamically
+const openDialog = () => {
+  isTimerPaused.value = true; // Resume the timer
+  // Fetch content from #instruction_container using jQuery
+  const content = $("#instruction_container").html();
+  instructionContent.value = content; // Set the fetched content
+  dialogVisible.value = true; // Open the dialog
+};
+
+// Function to close the dialog
+const closeDialog = () => {
+  isTimerPaused.value = false; // Resume the timer
+  dialogVisible.value = false; // Close the dialog
+};
+
+
 import StatusCard from './StatusCard.vue';
 import HistoryChart from "@/components/HistoryChart.vue";
 import BidAskTable from "./BidAskTable.vue";
@@ -89,15 +129,15 @@ import { watch, ref, onMounted, computed } from "vue";
 const store = useTraderStore();
 store.initializeTradingSystem();
 const { gameParams, totalWealth, currentPrice, dayOver, isTimerPaused, dayRemainingTime, day_duration,
-  midday_quiz_tick, timerCounter, tick_frequency,roundNumber, insiders, training } = storeToRefs(useTraderStore());
+  midday_quiz_tick, timerCounter, tick_frequency, roundNumber, insiders, training } = storeToRefs(useTraderStore());
 
 const strRoundNumber = computed(() => {
-  
+
   return (roundNumber.value)
 });
 
 const strInsiders = computed(() => {
-  return (insiders.value*100).toFixed(0) + "%";
+  return (insiders.value * 100).toFixed(0) + "%";
 });
 onMounted(() => {
   console.log("Trading system mounted");
@@ -154,7 +194,7 @@ const finalizingDay = () => {
   //let's just refresh page
   // location.reload();
   $('#form').submit();
-  
+
 };
 watch(
   gameParams,
