@@ -4,6 +4,8 @@ import axios from "axios";
 import { useWebSocket } from "@vueuse/core";
 import { round, spread } from "lodash";
 import _ from 'lodash';
+import Scheduler from "./utils";
+const scheduler = new Scheduler();
 const wsROOT = "ws://localhost:8000/trader";
 function scheduleRelativeTasks(duration, orders, callback, threshold = 0.875) {
   orders.forEach((order) => {
@@ -23,16 +25,16 @@ for (let i = 0; i < x; i++) {
   data.push(null); // Random price between 50 and 100
 }
 
- 
+
 export const useTraderStore = defineStore("trader", {
   state: () => ({
-   
-    
+
+
     // Hardcoded trading session parameters
     tick_frequency: 8,
     num_of_ticks_in_day: 40,
-    day_duration: 8*40,  
-    dayRemainingTime: 8*40*1000,
+    day_duration: 8 * 40,
+    dayRemainingTime: 8 * 40 * 1000,
     midday_quiz_tick: 20,
     market_signal_strength: "High",
     initial_cash: 1000,
@@ -42,7 +44,7 @@ export const useTraderStore = defineStore("trader", {
     traderUUID: "hardcoded-trader-uuid",
 
     // Game-related state
-    
+
     orders: [],
     priceHistory: Array(5).fill(null),
     currentPrice: 0,
@@ -89,11 +91,38 @@ export const useTraderStore = defineStore("trader", {
     },
   },
   actions: {
-
+    pauseGame() {
+      this.isTimerPaused = true;
+      scheduler.pauseTasks(); // Pause scheduled tasks
+      console.debug("Game paused");
+    },
+    resumeGame() {
+      this.isTimerPaused = false;
+    
+      scheduler.resumeTasks((order) => {
+        console.debug("Resumed order:", order);
+        // Add order to the queue or handle it here
+        this.addOrderToQueue(order);
+      });
+    
+      // If no remaining tasks were paused, reschedule the current tick's orders
+      if (!scheduler.scheduledTasks.length) {
+        scheduler.scheduleRelativeTasks(
+          this.tick_frequency, // Duration
+          scheduler.currentTickOrders, // Orders
+          (order) => {
+            console.debug("Executing order:", order);
+            this.addOrderToQueue(order);
+          }
+        );
+      }
+    
+      console.debug("Game resumed");
+    },
     makeTick() {
-      
+
       this.tickHappenedAt = Date.now(); // Store the timestamp of this tick
-      this.orders=[];
+      this.orders = [];
       this.currentPrice = parseFloat(this.priceData[this.timerCounter].price);
       this.updatePriceHistory();
       this.timerCounter++;
@@ -116,13 +145,13 @@ export const useTraderStore = defineStore("trader", {
     processOrdersForCurrentTick() {
       const currentRound = this.roundNumber;
       const currentTick = this.timerCounter;
-      console.debug('lets see',this.orderData);
+      console.debug('lets see', this.orderData);
       // Filter relevant bids using Lodash
       const relevantOrders = _.filter(this.orderData, {
-        
+
         Tick: currentTick,
       });
-console.debug('relevantOrders',relevantOrders);
+      console.debug('relevantOrders', relevantOrders);
       if (_.isEmpty(relevantOrders)) {
         console.debug("No relevant orders found for this round and tick.");
         return;
@@ -131,7 +160,7 @@ console.debug('relevantOrders',relevantOrders);
       console.debug("Relevant orders:", relevantOrders);
 
       // Schedule the actions for each order with the Order property determining the delay
-      scheduleRelativeTasks(this.tick_frequency, relevantOrders, (order) => {
+      scheduler.scheduleRelativeTasks(this.tick_frequency, relevantOrders, (order) => {
         console.debug(`Executing order:`, order);
         this.addOrderToQueue(order); // Add bid to queue or handle it in your store
       });
@@ -144,11 +173,11 @@ console.debug('relevantOrders',relevantOrders);
         size: parseInt(order.Quantity), // Use the `Quantity` field
         condition: order.Type, // Use the `Type` field (e.g., "At ask" or "At bid")
       };
-    
+
       // Add the new action to the top of the orders array
       this.orders.unshift(newOrder);
-      
-      
+
+
     },
 
 
@@ -156,23 +185,23 @@ console.debug('relevantOrders',relevantOrders);
 
 
     async initializeTradingSystem(formData) {
-          // Perform any necessary setup logic here
-          console.log("Trading system initialized with:", {
-            tick_frequency: this.tick_frequency,
-            num_of_ticks_in_day: this.num_of_ticks_in_day,
-            midday_quiz_tick: this.midday_quiz_tick,
-            market_signal_strength: this.market_signal_strength,
-            initial_cash: this.initial_cash,
-            initial_shares: this.initial_shares,
-            spread: this.spread,
-            tradingSessionUUID: this.tradingSessionUUID,
-            traderUUID: this.traderUUID,
-          });
-    
-          // Initialize state
-          this.cash = this.initial_cash;
-          this.shares = this.initial_shares;
-          this.day_duration = this.tick_frequency * this.num_of_ticks_in_day;
+      // Perform any necessary setup logic here
+      console.log("Trading system initialized with:", {
+        tick_frequency: this.tick_frequency,
+        num_of_ticks_in_day: this.num_of_ticks_in_day,
+        midday_quiz_tick: this.midday_quiz_tick,
+        market_signal_strength: this.market_signal_strength,
+        initial_cash: this.initial_cash,
+        initial_shares: this.initial_shares,
+        spread: this.spread,
+        tradingSessionUUID: this.tradingSessionUUID,
+        traderUUID: this.traderUUID,
+      });
+
+      // Initialize state
+      this.cash = this.initial_cash;
+      this.shares = this.initial_shares;
+      this.day_duration = this.tick_frequency * this.num_of_ticks_in_day;
     },
 
     async initializeWebSocket() {

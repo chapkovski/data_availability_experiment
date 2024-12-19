@@ -93,6 +93,21 @@ const topStyle = computed(() => {
 });
 import QuizDialog from "./QuizDialog.vue";
 
+import StatusCard from './StatusCard.vue';
+import HistoryChart from "@/components/HistoryChart.vue";
+import BidAskTable from "./BidAskTable.vue";
+import sellingBlock from "./sellingBlock.vue";
+import CountdownCard from "./CountdownCard.vue";
+import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { useTraderStore } from "@/store/app";
+import { watch, ref, onMounted, computed } from "vue";
+const store = useTraderStore();
+const { pauseGame, resumeGame, initializeTradingSystem } = store;
+initializeTradingSystem();
+const { gameParams, totalWealth, currentPrice, dayOver, isTimerPaused, dayRemainingTime, day_duration,
+  midday_quiz_tick, timerCounter, tick_frequency, roundNumber, insiders, training, arrival_rate } = storeToRefs(useTraderStore());
+
 const quizDialog = ref(null);
 
 
@@ -104,7 +119,7 @@ const instructionContent = ref("");
 
 // Function to open the dialog and fetch the content dynamically
 const openDialog = () => {
-  isTimerPaused.value = true; // Resume the timer
+  pauseGame(); // Pause the timer
   // Fetch content from #instruction_container using jQuery
   const content = $("#instruction_container").html();
   instructionContent.value = content; // Set the fetched content
@@ -113,24 +128,10 @@ const openDialog = () => {
 
 // Function to close the dialog
 const closeDialog = () => {
-  isTimerPaused.value = false; // Resume the timer
+  resumeGame();
   dialogVisible.value = false; // Close the dialog
 };
 
-
-import StatusCard from './StatusCard.vue';
-import HistoryChart from "@/components/HistoryChart.vue";
-import BidAskTable from "./BidAskTable.vue";
-import sellingBlock from "./sellingBlock.vue";
-import CountdownCard from "./CountdownCard.vue";
-import { useRouter } from "vue-router";
-import { storeToRefs } from "pinia";
-import { useTraderStore } from "@/store/app";
-import { watch, ref, onMounted, computed } from "vue";
-const store = useTraderStore();
-store.initializeTradingSystem();
-const { gameParams, totalWealth, currentPrice, dayOver, isTimerPaused, dayRemainingTime, day_duration,
-  midday_quiz_tick, timerCounter, tick_frequency, roundNumber, insiders, training, arrival_rate } = storeToRefs(useTraderStore());
 
 const strRoundNumber = computed(() => {
 
@@ -152,7 +153,7 @@ const handleDialogClosed = (response) => {
   console.debug("Quiz responses received:", response);
 
   // Reset dialog state
-  isTimerPaused.value = false; // Resume the timer
+  resumeGame();
   store.processOrdersForCurrentTick();
   dayRemainingTime.value = localRemainingTime.value; // Update Pinia store
 };
@@ -166,7 +167,7 @@ const handleTimerRestarted = () => {
     console.debug("Midday quiz triggered");
 
     quizDialog.value.openDialog(); // Open the quiz dialog
-    isTimerPaused.value = true; // Pause the timer
+    pauseGame(); // Pause the timer
   }
   if (!isTimerPaused.value) {
     store.processOrdersForCurrentTick()
