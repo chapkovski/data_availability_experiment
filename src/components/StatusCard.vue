@@ -7,7 +7,7 @@
         {{ smallerScreen ? mobileTitle : title }}
       </div>
       <Transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
-        <span :key="displayValue" class="displayValue">{{ displayValue }} <span v-if="suffix" style="font-size:8px">{{suffix}}</span></span>  
+        <span :key="displayValue" class="displayValue">{{ displayValue }} <span v-if="suffix" style="font-size:8px;font-weight: normal;">{{suffix}}</span></span>  
         
       </Transition>
       
