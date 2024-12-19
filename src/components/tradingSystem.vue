@@ -31,7 +31,7 @@
               <v-btn color="green" v-if="!smAndDown"   elevation="4" rounded="lg" size="large" @click="openDialog">Instructions</v-btn>
   
             </div>
-            <v-dialog v-model="dialogVisible" max-width="1200px">
+            <v-dialog v-model="dialogVisible" max-width="1200px" persistent>
               <v-card>
                 <v-card-text>
                   <!-- Inject Content Dynamically with v-html -->
