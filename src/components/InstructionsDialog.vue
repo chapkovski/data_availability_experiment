@@ -11,7 +11,7 @@
         </v-btn>
 
         <!-- Dialog -->
-        <v-dialog v-model="dialogVisible" max-width="1200px" persistent>
+        <v-dialog v-model="dialogVisible" max-width="1200px" >
             <v-card>
                 <v-card-text>
                     <div v-html="instructionContent"></div>
@@ -33,14 +33,17 @@ import { watch, ref, onMounted, computed } from "vue";
 const store = useTraderStore();
 const { pauseGame, resumeGame } = store;
 
-// Props
 
-
-// State
+ 
 const dialogVisible = ref(false);
 const instructionContent = ref("");
-
-// Methods
+ 
+watch(dialogVisible, (newVal) => {
+  if (!newVal) {
+    closeDialog();
+  }
+});
+ 
 const openDialog = () => {
     pauseGame(); // Ensure this function is globally accessible or injected
     const content = document.getElementById("instruction_container").innerHTML;
