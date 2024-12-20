@@ -34,7 +34,7 @@
                 @click="openDialog">Instructions</v-btn>
 
             </div>
-            <v-dialog v-model="premiumDialog"   max-width="500">
+            <v-dialog v-model="premiumDialog"   max-width="500" v-if="!no_data_available">
               <v-card class="premium-card">
                 <v-card-title class="white--text text-h6">
                   Premium Feature Access
@@ -127,6 +127,9 @@ const { market_signal_strength, framing, totalWealth, currentPrice, dayOver, isT
 const premium = computed(() => {
   return framing.value === 'Premium'
 });
+const no_data_available = computed(() => {
+  return market_signal_strength.value === 'Low';
+});
 const quizDialog = ref(null);
 
 const premiumDialog = ref(premium.value);
@@ -163,7 +166,7 @@ const strInsiders = computed(() => {
 onMounted(() => {
   pauseGame();
   console.log("Trading system mounted");
-  if (!premiumDialog.value) {
+  if (!premiumDialog.value || no_data_available.value) {
     
     store.makeTick();
     store.processOrdersForCurrentTick()
