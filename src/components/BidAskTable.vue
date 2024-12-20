@@ -10,7 +10,7 @@
        {{ no_data_message }}
       </div>
       
-      <v-table v-else class="scrollable-table" fixed-header style='width:100%' density="compact">
+      <v-table v-else class="scrollable-table order-table" fixed-header style='width:100%' density="compact">
         <thead>
           <tr>
             <th class="text-left pa-0">Time</th>
@@ -105,7 +105,10 @@ const formatTime = (timestamp) =>{
   color: gray;
   text-align: center;
 }
-
+.order-table div.v-table__wrapper {
+    padding: 5px;
+    border-radius: 25px;
+}
 /* Conditional row styling */
 .at-ask {
   color: green;
@@ -195,3 +198,8 @@ thead tr th {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
+<style>
+.order-table div.v-table__wrapper {
+    padding: 5px;
+    border-radius: 25px;
+}</style>
