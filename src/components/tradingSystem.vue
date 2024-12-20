@@ -20,7 +20,9 @@
 
           <v-spacer></v-spacer>
           <div class="d-flex flex-row ">
-            <status-card title="Arrival rate:" small-title="Rate:" :value="arrival_rate" color="yellow" suffix="trades/sec."/>
+            <status-card title="Arrival rate:" small-title="Rate:" :value="arrival_rate" color="yellow"
+            v-if="market_signal_strength === 'High'" small-decimal-places="2"
+              suffix="trades/sec." />
             <status-card title="Share of insiders:" small-title="Insiders:" :stringValue="strInsiders" color="red" />
 
             <status-card title="Total Wealth:" small-title="Wealth" :value="totalWealth" color="green" />
@@ -28,9 +30,24 @@
               <status-card title="Current Price" small-title="Price" :value="currentPrice" color="blue" />
             </div>
             <div class="mr-3 align-self-center ma-0 pa-0 ">
-              <v-btn color="green" v-if="!smAndDown"   elevation="4" rounded="lg" size="large" @click="openDialog">Instructions</v-btn>
-  
+              <v-btn color="green" v-if="!smAndDown" elevation="4" rounded="lg" size="large"
+                @click="openDialog">Instructions</v-btn>
+
             </div>
+            <v-dialog v-model="premiumDialog"   max-width="500">
+              <v-card class="premium-card">
+                <v-card-title class="white--text text-h6">
+                  Premium Feature Access
+                </v-card-title>
+                <v-card-text class="white--text">
+                  You currently have access to the premium feature: <strong>live feed of orders in the market</strong>.
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn text color="white" @click="premiumDialog = false">Close</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
             <v-dialog v-model="dialogVisible" max-width="1200px" persistent>
               <v-card>
                 <v-card-text>
@@ -39,7 +56,7 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="blue"  elevation="4" rounded="lg" @click="closeDialog">Close</v-btn>
+                  <v-btn color="blue" elevation="4" rounded="lg" @click="closeDialog">Close</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -105,19 +122,21 @@ import { watch, ref, onMounted, computed } from "vue";
 const store = useTraderStore();
 const { pauseGame, resumeGame, initializeTradingSystem } = store;
 initializeTradingSystem();
-const { gameParams, totalWealth, currentPrice, dayOver, isTimerPaused, dayRemainingTime, day_duration,
+const { market_signal_strength, framing, totalWealth, currentPrice, dayOver, isTimerPaused, dayRemainingTime, day_duration,
   midday_quiz_tick, timerCounter, tick_frequency, roundNumber, insiders, training, arrival_rate } = storeToRefs(useTraderStore());
-
+const premium = computed(() => {
+  return framing.value === 'Premium'
+});
 const quizDialog = ref(null);
 
-
+const premiumDialog = ref(premium.value);
 // Reactive state for dialog visibility
 const dialogVisible = ref(false);
 
 // Reactive state to hold the dynamic content
 const instructionContent = ref("");
 
-// Function to open the dialog and fetch the content dynamically
+
 const openDialog = () => {
   pauseGame(); // Pause the timer
   // Fetch content from #instruction_container using jQuery
@@ -126,7 +145,7 @@ const openDialog = () => {
   dialogVisible.value = true; // Open the dialog
 };
 
-// Function to close the dialog
+
 const closeDialog = () => {
   resumeGame();
   dialogVisible.value = false; // Close the dialog
@@ -142,9 +161,14 @@ const strInsiders = computed(() => {
   return (insiders.value * 100).toFixed(0) + "%";
 });
 onMounted(() => {
+  pauseGame();
   console.log("Trading system mounted");
-  store.makeTick();
-  store.processOrdersForCurrentTick()
+  if (!premiumDialog.value) {
+    
+    store.makeTick();
+    store.processOrdersForCurrentTick()
+    resumeGame();
+  }
 });
 
 
@@ -180,12 +204,6 @@ const handleTimeUpdated = (remainingTime) => {
   localRemainingTime.value = remainingTime; // Track locally
 };
 
-const router = useRouter();
-const goalMessage = {
-  type: "success",  // Could be 'success', 'error', 'warning', etc.
-  text: "Your goal has been achieved successfully!"  // The message to be displayed
-};
-
 
 
 
@@ -198,15 +216,15 @@ const finalizingDay = () => {
   $('#form').submit();
 
 };
-watch(
-  gameParams,
-  () => {
-    if (gameParams.value.active === false) {
-      finalizingDay();
-    }
-  },
-  { immediate: true, deep: true }
-);
+
+watch(premiumDialog, (newValue) => {
+  
+  if (!newValue) {
+    store.makeTick();
+    store.processOrdersForCurrentTick()
+    resumeGame();
+  }
+});
 
 watch(
   dayOver,
@@ -316,5 +334,11 @@ header.timerbar .v-toolbar__content {
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     /* Optional: add shadow for better visibility */
   }
+}
+
+.premium-card {
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+    radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  background-size: cover;
 }
 </style>

@@ -6,7 +6,7 @@
       <div :class="{ 'small-title': smallerScreen }" class="">
         {{ smallerScreen ? mobileTitle : title }}
       </div>
-      <Transition :enter-active-class="enterClass" :leave-active-class="leaveClass">
+      <Transition :enter-active-class="enterClass" >
         <span :key="displayValue" class="displayValue">{{ displayValue }} <span v-if="suffix" style="font-size:8px;font-weight: normal;">{{suffix}}</span></span>  
         
       </Transition>
@@ -48,6 +48,10 @@ const props = defineProps({
     type: Number,
     default: 2, // Number of decimal places to display
   },
+  smallDecimalPlaces: {
+    type: Number,
+    default: 0, // Number of decimal places to display on small screens
+  },
 });
 
 // Vuetify display composable for screen size detection
@@ -74,19 +78,20 @@ const mobileTitle = computed(() => {
 // Dynamic classes for animations
 const enterClass = computed(() => {
   return direction.value === 'UP'
-    ? 'animate__animated animate__backInUp'
-    : 'animate__animated animate__backInDown';
+    ? 'animate__animated animate__fadeIn'
+    : 'animate__animated animate__fadeIn';
 });
 
 const leaveClass = computed(() => {
   return direction.value === 'UP'
-    ? 'animate__animated animate__backOutUp'
-    : 'animate__animated animate__backOutDown';
+    ? 'animate__animated animate__fadeOut'
+    : 'animate__animated animate__fadeOut';
 });
 // Compute display value
 const displayValue = computed(() => {
   if (props.value !== null) {
-    const decimalPlaces = smallerScreen.value?0:props.decimalPlaces;
+
+    const decimalPlaces = smallerScreen.value?props.smallDecimalPlaces:props.decimalPlaces;
     return props.value.toFixed(decimalPlaces);
   }
   return props.stringValue || 'N/A'; // Default to 'N/A' if neither value nor stringValue is set
