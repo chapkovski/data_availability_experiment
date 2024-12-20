@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto">
+  <v-card class="mx-auto" :class="framing==='Premium'?`premium-card`:``">
     <v-card-title v-if="showTableTitle">{{premium}}Time & Sales</v-card-title>
     <v-card-text
     class="pt-0 mt-0"
@@ -144,5 +144,54 @@ thead > tr > th {
   thead > tr > th {
     font-size: 12px !important; /* Smaller font size for mobile devices */
   }
+}
+
+</style>
+
+<style scoped>
+.premium-card {
+  background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+              radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
+  background-size: cover;
+}
+</style>
+
+<style scoped>
+.v-card-title,
+.v-card-text {
+  background: transparent;
+}
+
+.v-table {
+  background: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+  border-radius: 8px; /* Optional, for better aesthetics */
+}
+
+thead tr th {
+  background: rgba(255, 255, 255, 0.5)!important; /* Semi-transparent white */
+  
+}
+
+.custom-row {
+  background: rgba(255, 255, 255, 0.5); /* Rows with transparency */
+}
+
+.no-access {
+  background: rgba(255, 255, 255, 0.8); /* Slightly opaque for readability */
+  color: #5d4a1f; /* Match the golden theme for text color */
+}
+
+.no-data-message {
+  background: rgba(255, 255, 255, 0.7);
+  color: #5d4a1f;
+  text-align: center;
+}
+</style>
+
+<style scoped>
+.v-card {
+  padding: 5px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 </style>
