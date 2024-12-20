@@ -1,6 +1,6 @@
 <template>
   <v-card class="mx-auto" :class="framing==='Premium'?`premium-card`:``">
-    <v-card-title v-if="showTableTitle">{{premium}}Time & Sales</v-card-title>
+    <v-card-title v-if="true">Time & Sales  <v-chip v-if="framing==='Premium'">{{premium}}</v-chip></v-card-title>
     <v-card-text
     class="pt-0 mt-0"
       :class="{ 'full-height-center': market_signal_strength === 'Low'  }"
