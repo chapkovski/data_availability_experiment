@@ -1,6 +1,6 @@
 <template>
   <v-card height="100%" elevation="3">
-    <v-overlay v-model="tradeForbidden" contained persistent
+    <v-overlay v-model="tradeForbidden" contained persistent z-index="100"
     style="align-items: center;"
               class="text-center align-content-center justify-center justify-content-center d-flex flex-row align-items-center">
               <v-card>
@@ -13,24 +13,29 @@
       <v-sheet border rounded elevation="3">
         <v-container>
           
-          <v-row class="d-flex flex-row" style="position: relative">
+          <v-row class="d-flex flex-row flex-nowrap" style="position: relative">
 
-
+            <v-col class="d-flex flex-row flex-nowrap align-items-center">
+            
+            
 
             <!-- Buy Button -->
-            <v-col cols="6" sm="6" class="d-flex justify-center pa-0 pa-xs-1   pa-sm-0 pa-md-3">
-              <v-btn :color="isBuyPossible ? `green` : `lightgray`" :disabled="!isBuyPossible" width="100%"
-                @click="handleBuy" class="mx-3">
-                Buy @ {{ bestSellingPrice }}
+            
+              <v-btn :color="isBuyPossible ? `green` : `lightgray`" :disabled="!isBuyPossible"  
+                @click="handleBuy" class="mx-1 flex-grow-1 flex-shrink-1">
+                Buy@{{ bestSellingPrice }}
               </v-btn>
-            </v-col>
+            
 
             <!-- Sell Button -->
-            <v-col cols="6" sm="6" class="d-flex justify-center pa-0 pa-xs-1   pa-sm-0 pa-md-3">
-              <v-btn large :color="isSellPossible ? `red` : `lightgray`" :disabled="!isSellPossible" width="100%"
-                class="mx-3" @click="handleSell">
-                Sell @ {{ bestBuyingPrice }}
+            
+              <v-btn large :color="isSellPossible ? `red` : `lightgray`" :disabled="!isSellPossible"  
+                class="mx-1 flex-grow-1 flex-shrink-1" @click="handleSell">
+                Sell@{{ bestBuyingPrice }}
               </v-btn>
+              
+               <instructions-dialog v-if="smAndDown"></instructions-dialog>
+              
             </v-col>
           </v-row>
 
@@ -41,6 +46,7 @@
 </template>
 
 <script setup>
+import InstructionsDialog from "./InstructionsDialog.vue";
 import { useDisplay } from "vuetify";
 const { smAndDown, name, height, width } = useDisplay();
 import { computed ,ref} from "vue";

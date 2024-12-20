@@ -19,7 +19,7 @@
           <status-card title="Round number:" small-title="Round:" :stringValue="strRoundNumber" color="orange" />
 
           <v-spacer></v-spacer>
-          <div class="d-flex flex-row ">
+          <div class="d-flex flex-row align-items-center ">
             <status-card title="Arrival rate:" small-title="Rate:" :value="arrival_rate" color="yellow"
             v-if="market_signal_strength === 'High'" small-decimal-places="2"
               suffix="trades/sec." />
@@ -29,11 +29,7 @@
             <div class="">
               <status-card title="Current Price" small-title="Price" :value="currentPrice" color="blue" />
             </div>
-            <div class="mr-3 align-self-center ma-0 pa-0 ">
-              <v-btn color="green" v-if="!smAndDown" elevation="4" rounded="lg" size="large"
-                @click="openDialog">Instructions</v-btn>
-
-            </div>
+            <instructions-dialog v-if="!smAndDown"></instructions-dialog>
             <v-dialog v-model="premiumDialog"   max-width="500" v-if="!no_data_available">
               <v-card class="premium-card">
                 <v-card-title class="white--text text-h6">
@@ -48,18 +44,7 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
-            <v-dialog v-model="dialogVisible" max-width="1200px" persistent>
-              <v-card>
-                <v-card-text>
-                  <!-- Inject Content Dynamically with v-html -->
-                  <div v-html="instructionContent"></div>
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="blue" elevation="4" rounded="lg" @click="closeDialog">Close</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+     
           </div>
         </div>
       </v-toolbar>
@@ -109,7 +94,7 @@ const topStyle = computed(() => {
   return (height < 400 || width < 900) ? { top: '32px', height: null } : { top: '50px', height: '64px' }
 });
 import QuizDialog from "./QuizDialog.vue";
-
+import InstructionsDialog from "./InstructionsDialog.vue";
 import StatusCard from './StatusCard.vue';
 import HistoryChart from "@/components/HistoryChart.vue";
 import BidAskTable from "./BidAskTable.vue";
