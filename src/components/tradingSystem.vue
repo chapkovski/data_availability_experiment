@@ -21,8 +21,7 @@
           <v-spacer></v-spacer>
           <div class="d-flex flex-row align-items-center ">
             <status-card title="Arrival rate:" small-title="Rate:" :value="arrival_rate" color="yellow"
-            v-if="market_signal_strength === 'High'" small-decimal-places="2"
-              suffix="trades/sec." />
+              v-if="market_signal_strength === 'High'" small-decimal-places="2" suffix="trades/sec." />
             <status-card title="Share of insiders:" small-title="Insiders:" :stringValue="strInsiders" color="red" />
 
             <status-card title="Total Wealth:" small-title="Wealth" :value="totalWealth" color="green" />
@@ -30,7 +29,7 @@
               <status-card title="Current Price" small-title="Price" :value="currentPrice" color="blue" />
             </div>
             <instructions-dialog v-if="!smAndDown"></instructions-dialog>
-            <v-dialog v-model="premiumDialog"   max-width="500" v-if="!no_data_available">
+            <v-dialog v-model="premiumDialog" max-width="500" v-if="!no_data_available">
               <v-card class="premium-card">
                 <v-card-title class="white--text text-h6">
                   Premium Feature Access
@@ -44,7 +43,7 @@
                 </v-card-actions>
               </v-card>
             </v-dialog>
-     
+
           </div>
         </div>
       </v-toolbar>
@@ -103,12 +102,14 @@ import CountdownCard from "./CountdownCard.vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useTraderStore } from "@/store/app";
-import { watch, ref, onMounted, computed } from "vue";
+import { watch, ref, onMounted, computed, nextTick } from "vue";
+
 const store = useTraderStore();
-const { pauseGame, resumeGame, initializeTradingSystem } = store;
+
+const { pauseGame, resumeGame, initializeTradingSystem, sendMessage } = store;
 initializeTradingSystem();
 const { market_signal_strength, framing, totalWealth, currentPrice, dayOver, isTimerPaused, dayRemainingTime, day_duration,
-  midday_quiz_tick, timerCounter, tick_frequency, roundNumber, insiders, training, arrival_rate } = storeToRefs(useTraderStore());
+  midday_quiz_tick, timerCounter, tick_frequency, roundNumber, insiders, training, arrival_rate, shares, cash } = storeToRefs(useTraderStore());
 const premium = computed(() => {
   return framing.value === 'Premium'
 });
@@ -149,10 +150,18 @@ const strInsiders = computed(() => {
   return (insiders.value * 100).toFixed(0) + "%";
 });
 onMounted(() => {
+  sendMessage(
+
+    {
+
+      message: 'system mounted',
+
+    }
+  );
   pauseGame();
   console.log("Trading system mounted");
   if (!premiumDialog.value || no_data_available.value) {
-    
+
     store.makeTick();
     store.processOrdersForCurrentTick()
     resumeGame();
@@ -198,15 +207,24 @@ const handleTimeUpdated = (remainingTime) => {
 
 
 
-const finalizingDay = () => {
+const finalizingDay = async () => {
   //let's just refresh page
-  // location.reload();
+  sendMessage(
+
+    {
+
+      message: 'day over',
+
+
+    }
+  );
+  await nextTick();
   $('#form').submit();
 
 };
 
 watch(premiumDialog, (newValue) => {
-  
+
   if (!newValue) {
     store.makeTick();
     store.processOrdersForCurrentTick()

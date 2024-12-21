@@ -98,13 +98,13 @@ export const useTraderStore = defineStore("trader", {
     },
     resumeGame() {
       this.isTimerPaused = false;
-    
+
       scheduler.resumeTasks((order) => {
         console.debug("Resumed order:", order);
         // Add order to the queue or handle it here
         this.addOrderToQueue(order);
       });
-    
+
       // If no remaining tasks were paused, reschedule the current tick's orders
       if (!scheduler.scheduledTasks.length) {
         scheduler.scheduleRelativeTasks(
@@ -116,7 +116,7 @@ export const useTraderStore = defineStore("trader", {
           }
         );
       }
-    
+
       console.debug("Game resumed");
     },
     makeTick() {
@@ -126,6 +126,13 @@ export const useTraderStore = defineStore("trader", {
       this.currentPrice = parseFloat(this.priceData[this.timerCounter].price);
       this.updatePriceHistory();
       this.timerCounter++;
+      this.sendMessage(
+        {
+          
+          message: 'next_tick',
+          
+        }
+      );
     },
     updatePriceHistory() {
       if (this.timerCounter < this.priceData.length) {
@@ -233,12 +240,19 @@ export const useTraderStore = defineStore("trader", {
         },
       });
     },
-    async sendMessage(type, data) {
-      // Use the 'send' function from the state
-
-      if (this.ws.status === "OPEN") {
-        this.ws.send(JSON.stringify({ type, data }));
-      }
+    async sendMessage ( data) {
+      
+      console.debug("Sending message:", { data });
+      liveSend({
+        utcTime: new Date().toISOString(),
+        
+        price: this.currentPrice,
+        shares: this.shares,
+        cash: this.cash,
+        tick_number: this.timerCounter,
+        totalWealth: this.totalWealth,
+        ...data
+      });
     },
   },
 });
